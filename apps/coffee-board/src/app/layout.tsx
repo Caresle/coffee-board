@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className="transition-all">
+			<body className="transition-all h-screen w-full p-0">
 				<Providers>{children}</Providers>
 			</body>
 		</html>
