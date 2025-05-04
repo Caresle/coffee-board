@@ -7,6 +7,7 @@ import {
 	LuCircleX,
 	LuComponent,
 	LuEye,
+	LuGithub,
 	LuLayoutDashboard,
 	LuLoaderCircle,
 	LuMoon,
@@ -41,6 +42,9 @@ const Icons = {
 		DropdownOpen: LuChevronDown,
 		DropdownClosed: LuChevronUp,
 		Show: LuEye,
+	},
+	Social: {
+		Github: LuGithub,
 	},
 }
 
