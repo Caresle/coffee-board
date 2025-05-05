@@ -1,3 +1,4 @@
+"use client"
 import FormItem from "@/components/shared/form-item"
 import Icons from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
@@ -12,7 +13,22 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { useRouter } from "next/navigation"
 import React from "react"
+
+const ForgotLink = () => {
+	const router = useRouter()
+
+	const goToForgotPassword = () => {
+		router.push("/forgot")
+	}
+
+	return (
+		<Button variant={"link"} onClick={goToForgotPassword}>
+			Forgot Password?
+		</Button>
+	)
+}
 
 export default function LoginPage() {
 	return (
@@ -40,7 +56,7 @@ export default function LoginPage() {
 								<Checkbox id="remember" />
 								<label htmlFor="remember">Remember me</label>
 							</div>
-							<Button variant={"link"}>Forgot Password?</Button>
+							<ForgotLink />
 						</div>
 					</CardContent>
 					<CardFooter className="flex justify-center gap-2 flex-col">

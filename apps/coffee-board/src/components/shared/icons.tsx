@@ -1,4 +1,5 @@
 import {
+	LuArrowLeft,
 	LuBox,
 	LuBoxes,
 	LuChevronDown,
@@ -42,6 +43,7 @@ const Icons = {
 		DropdownOpen: LuChevronDown,
 		DropdownClosed: LuChevronUp,
 		Show: LuEye,
+		Back: LuArrowLeft,
 	},
 	Social: {
 		Github: LuGithub,
