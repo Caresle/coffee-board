@@ -1,3 +1,5 @@
+import Client from "./client"
+
 export default function Home() {
-	return <div>Coffee board</div>
+	return <Client />
 }
