@@ -1,5 +1,6 @@
 import {
 	LuArrowLeft,
+	LuBell,
 	LuBox,
 	LuBoxes,
 	LuChevronDown,
@@ -8,6 +9,7 @@ import {
 	LuCircleX,
 	LuComponent,
 	LuEye,
+	LuFile,
 	LuGithub,
 	LuLayoutDashboard,
 	LuLoaderCircle,
@@ -18,6 +20,7 @@ import {
 	LuTrash2,
 	LuTruck,
 	LuUsersRound,
+	LuWrench,
 } from "react-icons/lu"
 
 const Icons = {
@@ -40,10 +43,13 @@ const Icons = {
 		Loading: LuLoaderCircle,
 		Delete: LuTrash2,
 		Search: LuSearch,
+		File: LuFile,
 		DropdownOpen: LuChevronDown,
 		DropdownClosed: LuChevronUp,
 		Show: LuEye,
 		Back: LuArrowLeft,
+		Settings: LuWrench,
+		Notification: LuBell,
 	},
 	Social: {
 		Github: LuGithub,
