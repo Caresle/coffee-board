@@ -30,6 +30,20 @@ const ForgotLink = () => {
 	)
 }
 
+const CreateAccountLink = () => {
+	const router = useRouter()
+
+	const goToCreateAccount = () => {
+		router.push("/signup")
+	}
+
+	return (
+		<Button variant={"outline"} className="w-full" onClick={goToCreateAccount}>
+			Create Account
+		</Button>
+	)
+}
+
 export default function LoginPage() {
 	return (
 		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center">
@@ -61,9 +75,7 @@ export default function LoginPage() {
 					</CardContent>
 					<CardFooter className="flex justify-center gap-2 flex-col">
 						<Button className="w-full">Login</Button>
-						<Button variant={"outline"} className="w-full">
-							Create Account
-						</Button>
+						<CreateAccountLink />
 
 						<Separator />
 						<div className="flex gap-2">

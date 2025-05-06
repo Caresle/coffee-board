@@ -1,4 +1,3 @@
-"use client"
 import FormItem from "@/components/shared/form-item"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,42 +10,42 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import React from "react"
-import { toast } from "sonner"
 import GoBackButton from "../_components/go-back-button"
 
-const SendResetLink = () => {
-	const onSend = () => {
-		toast.success("Email sent")
-	}
-
+export default function SignUp() {
 	return (
-		<CardFooter className="flex justify-end">
-			<Button onClick={onSend}>Send Reset Link</Button>
-		</CardFooter>
-	)
-}
-
-export default function ForgotPage() {
-	return (
-		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center select-none">
+		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center">
 			<div className="w-1/4">
 				<Card>
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2">
 							<GoBackButton />
-							Forgot Password
+							Sign Up
 						</CardTitle>
 						<CardDescription>
-							Enter your email address and we will send you a link to reset your
-							password
+							Create an account to start tracking your projects
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
+						<FormItem title="Username">
+							<Input placeholder="Username" />
+						</FormItem>
+
 						<FormItem title="Email">
-							<Input type="email" placeholder="Email" />
+							<Input placeholder="Email@email.com" type="email" />
+						</FormItem>
+
+						<FormItem title="Password">
+							<Input placeholder="Password" type="password" />
+						</FormItem>
+
+						<FormItem title="Confirm Password">
+							<Input placeholder="Repeat Password" type="password" />
 						</FormItem>
 					</CardContent>
-					<SendResetLink />
+					<CardFooter>
+						<Button className="w-full">Create Account</Button>
+					</CardFooter>
 				</Card>
 			</div>
 		</div>
