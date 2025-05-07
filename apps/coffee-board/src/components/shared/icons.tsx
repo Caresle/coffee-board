@@ -8,6 +8,7 @@ import {
 	LuCirclePlus,
 	LuCircleX,
 	LuComponent,
+	LuEllipsis,
 	LuEye,
 	LuFile,
 	LuGithub,
@@ -31,6 +32,7 @@ const Icons = {
 		Component: LuComponent,
 		Sun: LuSun,
 		Moon: LuMoon,
+		Menu: LuEllipsis,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,

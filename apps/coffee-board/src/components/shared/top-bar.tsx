@@ -9,6 +9,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import TooltipBasic from "./tooltip-basic"
 
 const UserDropdown = () => {
 	return (
@@ -56,12 +57,16 @@ const SearchSection = () => {
 const UserSection = () => {
 	return (
 		<div className="flex items-center gap-2 w-fit">
-			<Button size={"icon"} variant={"secondary"}>
-				<Icons.Actions.File />
-			</Button>
-			<Button size={"icon"} variant={"secondary"}>
-				<Icons.Actions.Notification />
-			</Button>
+			<TooltipBasic title="Profile">
+				<Button size={"icon"} variant={"secondary"}>
+					<Icons.Actions.File />
+				</Button>
+			</TooltipBasic>
+			<TooltipBasic title="Notifications">
+				<Button size={"icon"} variant={"secondary"}>
+					<Icons.Actions.Notification />
+				</Button>
+			</TooltipBasic>
 			<UserDropdown />
 		</div>
 	)
