@@ -57,6 +57,11 @@ const SearchSection = () => {
 const UserSection = () => {
 	return (
 		<div className="flex items-center gap-2 w-fit">
+			<TooltipBasic title="Swith Theme">
+				<Button size={"icon"} variant={"secondary"}>
+					<Icons.Misc.Moon />
+				</Button>
+			</TooltipBasic>
 			<TooltipBasic title="Profile">
 				<Button size={"icon"} variant={"secondary"}>
 					<Icons.Actions.File />

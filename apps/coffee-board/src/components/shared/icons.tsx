@@ -4,6 +4,7 @@ import {
 	LuBell,
 	LuBox,
 	LuBoxes,
+	LuCalendarDays,
 	LuChevronDown,
 	LuChevronUp,
 	LuCirclePlus,
@@ -39,6 +40,8 @@ const Icons = {
 		Clip: LuPaperclip,
 		Image: LuFileImage,
 		AlignLeft: LuAlignLeft,
+		Calendar: LuCalendarDays,
+		Dashboard: LuLayoutDashboard,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,
