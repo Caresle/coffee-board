@@ -1,4 +1,5 @@
 import {
+	LuAlignLeft,
 	LuArrowLeft,
 	LuBell,
 	LuBox,
@@ -11,10 +12,12 @@ import {
 	LuEllipsis,
 	LuEye,
 	LuFile,
+	LuFileImage,
 	LuGithub,
 	LuLayoutDashboard,
 	LuLoaderCircle,
 	LuMoon,
+	LuPaperclip,
 	LuPencil,
 	LuSearch,
 	LuSun,
@@ -33,6 +36,9 @@ const Icons = {
 		Sun: LuSun,
 		Moon: LuMoon,
 		Menu: LuEllipsis,
+		Clip: LuPaperclip,
+		Image: LuFileImage,
+		AlignLeft: LuAlignLeft,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,

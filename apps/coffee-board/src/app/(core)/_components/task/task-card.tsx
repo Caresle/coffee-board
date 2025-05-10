@@ -3,6 +3,11 @@ import { Separator } from "@/components/ui/separator"
 import React from "react"
 import TaskHeader from "./task-header"
 import TaskAssigned from "./task-assigned"
+import { Button } from "@/components/ui/button"
+import Icons from "@/components/shared/icons"
+import TooltipBasic from "@/components/shared/tooltip-basic"
+import TaskMetaInfoCard from "./task-meta-info-card"
+import TaskTagList from "./task-tag-list"
 
 export default function TaskCard() {
 	return (
@@ -11,11 +16,8 @@ export default function TaskCard() {
 			<Separator />
 			<TaskAssigned />
 
-			<div>
-				<div className="bg-red-50 w-fit text-red-500 rounded-sm px-2 py-1 text-xs">
-					High Priority
-				</div>
-			</div>
+			<TaskTagList />
+			<TaskMetaInfoCard />
 		</div>
 	)
 }
