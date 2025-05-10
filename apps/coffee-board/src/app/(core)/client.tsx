@@ -1,22 +1,44 @@
+"use client"
 import { Separator } from "@/components/ui/separator"
 import React from "react"
 import FilterDisplaySection from "./_components/filter-display-section"
 import TitleActions from "./_components/title-actions"
 import ProjectTitle from "./_components/project-title"
-import BoardCard from "./_components/board/board-card"
+import {
+	useViewSection,
+	VIEW_SECTION,
+	ViewSectionProvider,
+} from "./_hook/use-view-section"
+import BoardView from "./_components/board/board-view"
+
+const ViewDisplay = () => {
+	const { section } = useViewSection()
+	if (section === VIEW_SECTION.OVERVIEW) {
+		return <></>
+	}
+
+	if (section === VIEW_SECTION.BOARD) {
+		return <BoardView />
+	}
+
+	if (section === VIEW_SECTION.CALENDAR) {
+		return <></>
+	}
+	return <></>
+}
 
 export default function Client() {
 	return (
-		<div className="flex flex-col gap-2 flex-1 overflow-y-auto p-2">
-			<div className="flex items-center justify-between">
-				<ProjectTitle />
-				<TitleActions />
+		<ViewSectionProvider>
+			<div className="flex flex-col gap-2 flex-1 overflow-y-auto p-2">
+				<div className="flex items-center justify-between">
+					<ProjectTitle />
+					<TitleActions />
+				</div>
+				<FilterDisplaySection />
+				<Separator />
+				<ViewDisplay />
 			</div>
-			<FilterDisplaySection />
-			<Separator />
-			<div className="flex-1 overflow-y-auto grid grid-cols-4 gap-2">
-				<BoardCard />
-			</div>
-		</div>
+		</ViewSectionProvider>
 	)
 }

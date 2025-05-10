@@ -8,7 +8,7 @@ export default function BoardCard() {
 			<BoardHeader />
 
 			<div className="flex flex-col gap-2 overflow-y-auto flex-1 bg-slate-100 p-2 rounded-lg">
-				{Array(10)
+				{Array(5)
 					.fill(0)
 					.map((_, i) => (
 						<TaskCard key={i} />
