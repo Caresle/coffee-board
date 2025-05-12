@@ -42,6 +42,7 @@ const Icons = {
 		AlignLeft: LuAlignLeft,
 		Calendar: LuCalendarDays,
 		Dashboard: LuLayoutDashboard,
+		Users: LuUsersRound,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,

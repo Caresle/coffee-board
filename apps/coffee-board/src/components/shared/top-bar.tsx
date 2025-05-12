@@ -37,7 +37,9 @@ const UserDropdown = () => {
 const LogoSection = () => {
 	return (
 		<div className="w-fit flex items-center gap-2">
-			<div className="size-6 bg-orange-500 rounded-full"></div>
+			<div className="size-6 bg-orange-500 rounded-full flex items-center justify-center text-white font-semibold">
+				C
+			</div>
 			<div className="font-semibold">Coffee Board</div>
 		</div>
 	)
