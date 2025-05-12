@@ -1,3 +1,4 @@
+import Sidebar from "@/components/shared/sidebar"
 import TopBar from "@/components/shared/top-bar"
 import React from "react"
 
@@ -10,7 +11,7 @@ export default function CoreLayout({
 		<div className="h-full bg-slate-50 flex flex-col select-none overflow-y-auto">
 			<TopBar />
 			<main className="flex-1 overflow-y-auto p-2 flex gap-1">
-				<div className="bg-white border rounded-lg w-1/5 p-1">Sidebar</div>
+				<Sidebar />
 				<div className="bg-white border rounded-lg p-1 w-full flex flex-col overflow-y-auto">
 					{children}
 				</div>
