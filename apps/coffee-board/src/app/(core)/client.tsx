@@ -10,11 +10,12 @@ import {
 	ViewSectionProvider,
 } from "./_hook/use-view-section"
 import BoardView from "./_components/board/board-view"
+import OverviewSection from "./_components/overview/overview-section"
 
 const ViewDisplay = () => {
 	const { section } = useViewSection()
 	if (section === VIEW_SECTION.OVERVIEW) {
-		return <></>
+		return <OverviewSection />
 	}
 
 	if (section === VIEW_SECTION.BOARD) {
