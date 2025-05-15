@@ -1,3 +1,4 @@
+import ShareButton from "@/components/shared/share-button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import React from "react"
@@ -18,7 +19,7 @@ export default function TitleActions() {
 					<AvatarFallback>+2</AvatarFallback>
 				</Avatar>
 			</div>
-			<Button variant={"outline"}>Share</Button>
+			<ShareButton />
 		</div>
 	)
 }
