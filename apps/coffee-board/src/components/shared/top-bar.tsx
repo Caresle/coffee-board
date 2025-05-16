@@ -1,3 +1,4 @@
+"use client"
 import React from "react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -10,8 +11,15 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import TooltipBasic from "./tooltip-basic"
+import { useRouter } from "next/navigation"
 
 const UserDropdown = () => {
+	const router = useRouter()
+
+	const goToProfile = () => {
+		router.push("/profile")
+	}
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -21,7 +29,7 @@ const UserDropdown = () => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuLabel>General</DropdownMenuLabel>
-				<DropdownMenuItem>
+				<DropdownMenuItem onClick={goToProfile}>
 					<Icons.Navbar.Users />
 					Profile
 				</DropdownMenuItem>
