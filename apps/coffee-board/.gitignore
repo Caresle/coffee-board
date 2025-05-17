@@ -43,3 +43,5 @@ next-env.d.ts
 
 # docker
 redis-data/*
+./redis-data
+./redis-data/*
