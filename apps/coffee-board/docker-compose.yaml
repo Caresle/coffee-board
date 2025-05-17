@@ -1,0 +1,23 @@
+services:
+  coffee-board-db:
+    container_name: coffee-board-db
+    image: postgres:17
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+  coffee-board-cache:
+    container_name: coffee-board-cache
+    image: redis:7.4.2-alpine
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./redis-data:/data
