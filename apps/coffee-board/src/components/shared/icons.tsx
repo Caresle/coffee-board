@@ -1,5 +1,6 @@
 import {
 	LuAlignLeft,
+	LuArrowDownUp,
 	LuArrowLeft,
 	LuBell,
 	LuBox,
@@ -47,6 +48,7 @@ const Icons = {
 		Dashboard: LuLayoutDashboard,
 		Users: LuUsersRound,
 		Tags: LuTags,
+		UpDown: LuArrowDownUp,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,

@@ -1,8 +1,10 @@
 "use client"
-import React from "react"
+import React, { useState } from "react"
 import Icons from "./icons"
 import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
+import { ROUTES } from "@/constants/routes"
+import { useSidebar } from "@/hooks/use-sidebar"
 
 type SidebarItemProps = {
 	icon: React.ElementType
@@ -18,8 +20,10 @@ const SidebarItem = ({
 	href,
 }: SidebarItemProps) => {
 	const router = useRouter()
+	const { setActiveItem } = useSidebar()
 
 	const handleClick = () => {
+		setActiveItem(children?.toString() ?? "")
 		router.push(href ?? "#")
 	}
 
@@ -40,19 +44,21 @@ const SidebarItem = ({
 }
 
 export default function Sidebar() {
+	const { active } = useSidebar()
+
 	return (
 		<div className="bg-white border rounded-lg w-1/5 p-1">
 			<ul className="flex flex-col gap-1">
-				<SidebarItem icon={Icons.Misc.Dashboard} href="/">
-					Dashboard
-				</SidebarItem>
-				<SidebarItem icon={Icons.Actions.Settings} isActive>
-					Settings
-				</SidebarItem>
-				<SidebarItem icon={Icons.Misc.Users}>Members</SidebarItem>
-				<SidebarItem icon={Icons.Misc.Tags} href="/tags">
-					Tags
-				</SidebarItem>
+				{ROUTES.map((route, index) => (
+					<SidebarItem
+						icon={route.icon}
+						href={route.path}
+						key={index}
+						isActive={active === route.name}
+					>
+						{route.name}
+					</SidebarItem>
+				))}
 			</ul>
 		</div>
 	)
