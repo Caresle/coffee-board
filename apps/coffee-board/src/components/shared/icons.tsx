@@ -23,6 +23,7 @@ import {
 	LuPencil,
 	LuSearch,
 	LuSun,
+	LuTags,
 	LuTrash2,
 	LuTruck,
 	LuUsersRound,
@@ -45,6 +46,7 @@ const Icons = {
 		Calendar: LuCalendarDays,
 		Dashboard: LuLayoutDashboard,
 		Users: LuUsersRound,
+		Tags: LuTags,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,
