@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/dialog"
 import React from "react"
 import Icons from "@/components/shared/icons"
-import FormItem from "@/components/shared/form-item"
-import { Input } from "@/components/ui/input"
 import { useTagDeleteStore } from "../../_states/tag-delete.state"
 
 export default function TagDeleteModal() {
@@ -21,22 +19,18 @@ export default function TagDeleteModal() {
 		<Dialog open={show} onOpenChange={value => update({ show: value })}>
 			<DialogContent className="max-w-none min-w-[35%]">
 				<DialogHeader>
-					<DialogTitle className="flex gap-2 items-center">
-						<Icons.Misc.Box />
-						Share Project
+					<DialogTitle className="flex gap-2 items-center text-red-500">
+						<Icons.Misc.Tags />
+						Delete Tag
 					</DialogTitle>
-					<DialogDescription>Share your project with others</DialogDescription>
+					<DialogDescription>This action can not be undone</DialogDescription>
 				</DialogHeader>
-				<form className="flex flex-col gap-2">
-					<FormItem title="Add people">
-						<Input placeholder="Email, username, or phone number" />
-					</FormItem>
-				</form>
+				Are you sure you want to delete this tag?
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button variant={"secondary"}>Cancel</Button>
 					</DialogClose>
-					<Button>Save</Button>
+					<Button variant={"destructive"}>Confirm</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
