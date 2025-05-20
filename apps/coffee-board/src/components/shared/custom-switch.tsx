@@ -7,7 +7,7 @@ export default function CustomSwitch({
 	className,
 	...props
 }: {
-	className: string
+	className?: string
 }) {
 	return (
 		<Switch
