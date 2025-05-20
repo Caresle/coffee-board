@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import TooltipBasic from "./tooltip-basic"
 import { useRouter } from "next/navigation"
+import SearchButton from "./search/search-button"
 
 const UserDropdown = () => {
 	const router = useRouter()
@@ -53,17 +54,6 @@ const LogoSection = () => {
 	)
 }
 
-const SearchSection = () => {
-	return (
-		<div className="w-1/3">
-			<Button variant={"secondary"} className="w-full">
-				<Icons.Actions.Search />
-				Search
-			</Button>
-		</div>
-	)
-}
-
 const UserSection = () => {
 	const router = useRouter()
 
@@ -97,7 +87,7 @@ export default function TopBar() {
 	return (
 		<nav className="bg-white p-2 flex items-center justify-between">
 			<LogoSection />
-			<SearchSection />
+			<SearchButton />
 			<UserSection />
 		</nav>
 	)
