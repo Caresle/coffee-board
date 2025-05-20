@@ -13,8 +13,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import React from "react"
+import { toast } from "sonner"
 
 const ForgotLink = () => {
 	const router = useRouter()
@@ -45,6 +47,24 @@ const CreateAccountLink = () => {
 }
 
 export default function LoginPage() {
+	const router = useRouter()
+
+	const mut = useMutation({
+		mutationFn: () => {
+			return new Promise(resolve => setTimeout(resolve, 1000))
+		},
+		onSuccess: () => {
+			toast.success("Login Successful")
+			setTimeout(() => {
+				router.push("/")
+			}, 500)
+		},
+	})
+
+	const onSubmit = () => {
+		mut.mutate()
+	}
+
 	return (
 		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center">
 			<div className="w-1/4">
@@ -74,7 +94,13 @@ export default function LoginPage() {
 						</div>
 					</CardContent>
 					<CardFooter className="flex justify-center gap-2 flex-col">
-						<Button className="w-full">Login</Button>
+						<Button
+							className="w-full"
+							onClick={onSubmit}
+							disabled={mut.isPending}
+						>
+							Login
+						</Button>
 						<CreateAccountLink />
 
 						<Separator />
