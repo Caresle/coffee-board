@@ -65,6 +65,8 @@ const SearchSection = () => {
 }
 
 const UserSection = () => {
+	const router = useRouter()
+
 	return (
 		<div className="flex items-center gap-2 w-fit">
 			<TooltipBasic title="Swith Theme">
@@ -78,7 +80,11 @@ const UserSection = () => {
 				</Button>
 			</TooltipBasic>
 			<TooltipBasic title="Notifications">
-				<Button size={"icon"} variant={"secondary"}>
+				<Button
+					size={"icon"}
+					variant={"secondary"}
+					onClick={() => router.push("/notifications")}
+				>
 					<Icons.Actions.Notification />
 				</Button>
 			</TooltipBasic>
