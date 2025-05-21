@@ -3,6 +3,7 @@ import Icons from "@/components/shared/icons"
 const ROUTES_NAMES = {
 	Dashboard: "Dashboard",
 	Settings: "Settings",
+	Projects: "Projects",
 	Members: "Members",
 	Tags: "Tags",
 	Priorities: "Priorities",
@@ -13,6 +14,11 @@ export const ROUTES = [
 		name: ROUTES_NAMES.Dashboard,
 		path: "/",
 		icon: Icons.Misc.Dashboard,
+	},
+	{
+		name: ROUTES_NAMES.Projects,
+		path: "/projects",
+		icon: Icons.Misc.Books,
 	},
 	{
 		name: ROUTES_NAMES.Settings,

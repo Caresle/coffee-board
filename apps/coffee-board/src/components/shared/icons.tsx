@@ -3,6 +3,7 @@ import {
 	LuArrowDownUp,
 	LuArrowLeft,
 	LuBell,
+	LuBookText,
 	LuBox,
 	LuBoxes,
 	LuCalendarDays,
@@ -34,6 +35,7 @@ import {
 
 const Icons = {
 	Misc: {
+		Books: LuBookText,
 		Error: LuCircleX,
 		Box: LuBox,
 		Boxes: LuBoxes,
