@@ -1,16 +1,16 @@
 "use client"
 import { Separator } from "@/components/ui/separator"
 import React from "react"
-import FilterDisplaySection from "./_components/filter-display-section"
-import TitleActions from "./_components/title-actions"
-import ProjectTitle from "./_components/project-title"
 import {
 	useViewSection,
 	VIEW_SECTION,
 	ViewSectionProvider,
 } from "./_hook/use-view-section"
-import BoardView from "./_components/board/board-view"
+import ProjectTitle from "./_components/project-title"
+import TitleActions from "./_components/title-actions"
+import FilterDisplaySection from "./_components/filter-display-section"
 import OverviewSection from "./_components/overview/overview-section"
+import BoardView from "./_components/board/board-view"
 
 const ViewDisplay = () => {
 	const { section } = useViewSection()

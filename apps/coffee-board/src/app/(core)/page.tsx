@@ -1,5 +1,5 @@
-import Client from "./client"
+import React from "react"
 
 export default function Home() {
-	return <Client />
+	return <div>Home</div>
 }
