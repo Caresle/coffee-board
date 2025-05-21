@@ -1,5 +1,6 @@
 import {
 	LuAlignLeft,
+	LuArchive,
 	LuArrowDownUp,
 	LuArrowLeft,
 	LuBell,
@@ -35,6 +36,7 @@ import {
 
 const Icons = {
 	Misc: {
+		Archive: LuArchive,
 		Books: LuBookText,
 		Error: LuCircleX,
 		Box: LuBox,
