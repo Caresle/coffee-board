@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from "react"
 import ArchiveProjectButton from "./archive-project-button"
+import DeleteProjectButton from "./delete-proejct-button"
 
 export default function ProjectActions() {
 	return (
@@ -18,6 +19,7 @@ export default function ProjectActions() {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<ArchiveProjectButton />
+				<DeleteProjectButton />
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
