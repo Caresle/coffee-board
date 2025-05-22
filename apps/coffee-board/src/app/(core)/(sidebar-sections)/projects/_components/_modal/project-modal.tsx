@@ -1,0 +1,46 @@
+import { Button } from "@/components/ui/button"
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog"
+import React from "react"
+import Icons from "@/components/shared/icons"
+import { useArchiveProjectStore } from "../../_states/archive-project.state"
+import { useProjectStore } from "../../_states/project.state"
+
+export default function ProjectModal() {
+	const { show, update } = useProjectStore(state => state)
+
+	const onSubmit = () => {
+		// mut.mutate()
+	}
+
+	return (
+		<Dialog open={show} onOpenChange={value => update({ show: value })}>
+			<DialogContent className="max-w-none min-w-[35%]">
+				<DialogHeader>
+					<DialogTitle className="flex gap-2 items-center">
+						<Icons.Misc.Books />
+						Project
+					</DialogTitle>
+					<DialogDescription>
+						This action will archive the project and remove it from the projects
+						list
+					</DialogDescription>
+				</DialogHeader>
+
+				<DialogFooter>
+					<DialogClose asChild>
+						<Button variant={"secondary"}>Cancel</Button>
+					</DialogClose>
+					<Button onClick={onSubmit}>Confirm</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	)
+}
