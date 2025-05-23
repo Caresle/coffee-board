@@ -11,6 +11,7 @@ import TitleActions from "./_components/title-actions"
 import FilterDisplaySection from "./_components/filter-display-section"
 import OverviewSection from "./_components/overview/overview-section"
 import BoardView from "./_components/board/board-view"
+import CalendarView from "./_components/calendar/calendar-view"
 
 const ViewDisplay = () => {
 	const { section } = useViewSection()
@@ -23,7 +24,7 @@ const ViewDisplay = () => {
 	}
 
 	if (section === VIEW_SECTION.CALENDAR) {
-		return <></>
+		return <CalendarView />
 	}
 	return <></>
 }
