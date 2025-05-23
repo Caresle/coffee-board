@@ -6,8 +6,8 @@ import { useTagStore } from "../_states/tag.state"
 import { useTagDeleteStore } from "../_states/tag-delete.state"
 
 export default function TagItem({ tag }: { tag: string }) {
-	const { update } = useTagStore(state => state)
-	const { update: udpateDelete } = useTagDeleteStore(state => state)
+	const { update } = useTagStore.getState()
+	const { update: updateDelete } = useTagDeleteStore.getState()
 
 	return (
 		<div
@@ -29,7 +29,7 @@ export default function TagItem({ tag }: { tag: string }) {
 					<Button
 						variant="destructive"
 						size={"icon"}
-						onClick={() => udpateDelete({ show: true })}
+						onClick={() => updateDelete({ show: true })}
 					>
 						<Icons.Actions.Delete />
 					</Button>
