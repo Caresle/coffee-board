@@ -5,8 +5,8 @@ import { usePriorityStore } from "../_states/priority.state"
 import { usePriorityDeleteStore } from "../_states/priority-delete.state"
 
 export default function PriorityItem() {
-	const { update } = usePriorityStore(state => state)
-	const { update: updateDelete } = usePriorityDeleteStore(state => state)
+	const { update } = usePriorityStore.getState()
+	const { update: updateDelete } = usePriorityDeleteStore.getState()
 
 	return (
 		<div className="bg-white p-2 rounded-lg flex items-center justify-between">
