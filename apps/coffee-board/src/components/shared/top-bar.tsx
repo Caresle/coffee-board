@@ -13,6 +13,7 @@ import {
 import TooltipBasic from "./tooltip-basic"
 import { useRouter } from "next/navigation"
 import SearchButton from "./search/search-button"
+import ThemeSwitcher from "./theme/theme-switcher"
 
 const UserDropdown = () => {
 	const router = useRouter()
@@ -59,11 +60,7 @@ const UserSection = () => {
 
 	return (
 		<div className="flex items-center gap-2 w-fit">
-			<TooltipBasic title="Swith Theme">
-				<Button size={"icon"} variant={"secondary"}>
-					<Icons.Misc.Moon />
-				</Button>
-			</TooltipBasic>
+			<ThemeSwitcher />
 			<TooltipBasic title="Profile">
 				<Button size={"icon"} variant={"secondary"}>
 					<Icons.Actions.File />
