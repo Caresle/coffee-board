@@ -1,3 +1,4 @@
+"use client"
 import FormItem from "@/components/shared/form-item"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,8 +12,24 @@ import {
 import { Input } from "@/components/ui/input"
 import React from "react"
 import GoBackButton from "../_components/go-back-button"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 export default function SignUp() {
+	const mut = useMutation({
+		mutationFn: async () => {},
+		onSuccess: () => {
+			toast.success("Account created successfully")
+			setTimeout(() => {
+				window.location.href = "/"
+			}, 400)
+		},
+	})
+
+	const onSubmit = () => {
+		mut.mutate()
+	}
+
 	return (
 		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center">
 			<div className="w-1/4">
@@ -44,7 +61,9 @@ export default function SignUp() {
 						</FormItem>
 					</CardContent>
 					<CardFooter>
-						<Button className="w-full">Create Account</Button>
+						<Button className="w-full" onClick={onSubmit}>
+							Create Account
+						</Button>
 					</CardFooter>
 				</Card>
 			</div>
