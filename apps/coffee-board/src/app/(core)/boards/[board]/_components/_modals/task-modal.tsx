@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import TaskExtras from "./_task/task-extras"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import FileUploader from "@/components/shared/file-uploader"
 
 export default function TaskModal() {
 	const { show, update } = useTaskStore(state => state)
@@ -37,6 +38,7 @@ export default function TaskModal() {
 						<MetaInfo />
 						<Separator />
 						<Textarea placeholder="Description" rows={10} />
+						<FileUploader />
 						<TaskExtras />
 					</div>
 					<div className="col-span-4 p-2 flex flex-col gap-2">
