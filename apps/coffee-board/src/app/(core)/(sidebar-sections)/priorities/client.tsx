@@ -26,11 +26,11 @@ export default function Client() {
 			<PriorityDeleteModal />
 
 			<h1 className="text-2xl font-semibold">Priorities</h1>
-			<div className="bg-slate-100 p-2 rounded-lg">
+			<div className="bg-slate-100 p-2 rounded-lg dark:bg-neutral-900">
 				<CreatePriorityButton />
 			</div>
 
-			<div className="flex-1 rounded-lg p-2 border bg-slate-100 flex flex-col gap-2 overflow-y-auto">
+			<div className="flex-1 rounded-lg p-2 border bg-slate-100 flex flex-col gap-2 overflow-y-auto dark:bg-neutral-900">
 				{Array(10)
 					.fill(0)
 					.map((_, index) => (
