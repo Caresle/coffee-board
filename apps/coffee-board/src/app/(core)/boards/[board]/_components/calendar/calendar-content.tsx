@@ -10,8 +10,8 @@ export default function CalendarContent() {
 					.map((_, i) => (
 						<div
 							key={i}
-							className={cn("bg-slate-50 flex-1 p-1", {
-								"bg-slate-100": i % 2 === 0,
+							className={cn("bg-slate-50 flex-1 p-1 dark:bg-neutral-800", {
+								"bg-slate-100 dark:bg-neutral-700": i % 2 === 0,
 							})}
 						>
 							{i}
