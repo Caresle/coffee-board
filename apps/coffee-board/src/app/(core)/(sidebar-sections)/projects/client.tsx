@@ -15,7 +15,7 @@ export default function Client() {
 			<ProjectModal />
 
 			<TopActions />
-			<div className="flex-1 overflow-y-auto bg-slate-100 rounded-lg">
+			<div className="flex-1 overflow-y-auto bg-slate-100 rounded-lg dark:bg-neutral-900">
 				<div className="gap-2 overflow-y-auto p-2 grid grid-cols-3">
 					<ProjectCard />
 				</div>
