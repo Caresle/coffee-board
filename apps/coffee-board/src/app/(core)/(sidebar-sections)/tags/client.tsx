@@ -25,10 +25,10 @@ export default function Client() {
 			<TagDeleteModal />
 
 			<h1 className="text-2xl font-semibold">Tags</h1>
-			<div className="bg-slate-100 p-2 rounded-lg">
+			<div className="bg-slate-100 p-2 rounded-lg dark:bg-slate-900">
 				<CreateTagButton />
 			</div>
-			<div className="bg-slate-100 flex-1 rounded-lg grid grid-cols-2 gap-2 p-2 overflow-y-auto">
+			<div className="bg-slate-100 flex-1 rounded-lg grid grid-cols-2 gap-2 p-2 overflow-y-auto dark:bg-slate-900">
 				<TagSection tags={["1", "2", "3"]} title="Global Tags" />
 				<TagSection tags={["1", "2", "3"]} title="Tags for project" />
 			</div>
