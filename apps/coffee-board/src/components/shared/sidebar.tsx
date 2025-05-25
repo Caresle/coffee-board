@@ -1,10 +1,8 @@
 "use client"
-import React, { useState } from "react"
-import Icons from "./icons"
+import React from "react"
 import { cn } from "@/lib/utils"
 import { useRouter, usePathname } from "next/navigation"
 import { ROUTES } from "@/constants/routes"
-import { useSidebar } from "@/hooks/use-sidebar"
 
 type SidebarItemProps = {
 	icon: React.ElementType
@@ -20,10 +18,8 @@ const SidebarItem = ({
 	href,
 }: SidebarItemProps) => {
 	const router = useRouter()
-	const { setActiveItem } = useSidebar()
 
 	const handleClick = () => {
-		setActiveItem(children?.toString() ?? "")
 		router.push(href ?? "#")
 	}
 
@@ -44,7 +40,16 @@ const SidebarItem = ({
 }
 
 export default function Sidebar() {
-	const { active } = useSidebar()
+	const pathname = usePathname()
+
+	const activeRoute = ROUTES.filter(route => {
+		const currentRoute = pathname.split("/")?.[1]
+		const routePath = route.path?.split("/")?.[1]
+
+		if (currentRoute !== "" && routePath === "") return false
+
+		return currentRoute.includes(routePath)
+	})?.[0]
 
 	return (
 		<div className="bg-white border rounded-lg w-1/5 p-1 dark:bg-neutral-800">
@@ -54,7 +59,7 @@ export default function Sidebar() {
 						icon={route.icon}
 						href={route.path}
 						key={index}
-						isActive={active === route.name}
+						isActive={activeRoute?.path === route.path}
 					>
 						{route.name}
 					</SidebarItem>
