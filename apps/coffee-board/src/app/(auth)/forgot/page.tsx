@@ -28,7 +28,7 @@ const SendResetLink = () => {
 
 export default function ForgotPage() {
 	return (
-		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center select-none">
+		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center select-none dark:bg-neutral-900">
 			<div className="w-1/4">
 				<Card>
 					<CardHeader>
