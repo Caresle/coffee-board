@@ -9,7 +9,7 @@ export default function PriorityItem() {
 	const { update: updateDelete } = usePriorityDeleteStore.getState()
 
 	return (
-		<div className="bg-white p-2 rounded-lg flex items-center justify-between">
+		<div className="bg-white p-2 rounded-lg flex items-center justify-between dark:bg-neutral-800">
 			<h2>Priority</h2>
 			<div className="flex items-center gap-2">
 				<Button
