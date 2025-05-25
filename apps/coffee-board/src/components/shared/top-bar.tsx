@@ -13,7 +13,16 @@ import {
 import TooltipBasic from "./tooltip-basic"
 import { useRouter } from "next/navigation"
 import SearchButton from "./search/search-button"
-import ThemeSwitcher from "./theme/theme-switcher"
+import dynamic from "next/dynamic"
+
+const ThemeSwitcher = dynamic(() => import("./theme/theme-switcher"), {
+	ssr: false,
+	loading: () => (
+		<Button size={"icon"} variant={"secondary"}>
+			<Icons.Misc.Refresh />
+		</Button>
+	),
+})
 
 const UserDropdown = () => {
 	const router = useRouter()

@@ -1,3 +1,4 @@
+"use client"
 import React from "react"
 import TooltipBasic from "../tooltip-basic"
 import { Button } from "@/components/ui/button"
