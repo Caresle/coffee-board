@@ -12,7 +12,7 @@ export default function TagItem({ tag }: { tag: string }) {
 	return (
 		<div
 			key={tag}
-			className="bg-white rounded-lg p-2 border flex items-center justify-between dark:bg-slate-800"
+			className="bg-white rounded-lg p-2 border flex items-center justify-between dark:bg-neutral-800"
 		>
 			<div>{tag}</div>
 			<div className="flex items-center gap-2">
