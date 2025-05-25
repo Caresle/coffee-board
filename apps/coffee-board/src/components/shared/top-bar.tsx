@@ -82,7 +82,7 @@ const UserSection = () => {
 
 export default function TopBar() {
 	return (
-		<nav className="bg-white p-2 flex items-center justify-between">
+		<nav className="bg-white p-2 flex items-center justify-between dark:bg-neutral-900">
 			<LogoSection />
 			<SearchButton />
 			<UserSection />

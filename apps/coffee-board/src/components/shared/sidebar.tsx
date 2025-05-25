@@ -47,7 +47,7 @@ export default function Sidebar() {
 	const { active } = useSidebar()
 
 	return (
-		<div className="bg-white border rounded-lg w-1/5 p-1">
+		<div className="bg-white border rounded-lg w-1/5 p-1 dark:bg-neutral-800">
 			<ul className="flex flex-col gap-1">
 				{ROUTES.map((route, index) => (
 					<SidebarItem
