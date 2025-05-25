@@ -11,7 +11,7 @@ export default function OverviewSubCard({
 	title: string
 }) {
 	return (
-		<div className="bg-white rounded-lg border p-2 col-span-6 flex flex-col gap-1">
+		<div className="bg-white rounded-lg border p-2 col-span-6 flex flex-col gap-1 dark:bg-neutral-800">
 			<div className="flex items-center justify-between">
 				<h3 className="font-semibold text-lg">{title}</h3>
 				<TooltipBasic title="Actions">
