@@ -11,7 +11,7 @@ import TaskTagList from "./task-tag-list"
 
 export default function TaskCard() {
 	return (
-		<div className="flex gap-1 border rounded-lg p-2 bg-white flex-col transition-all ring-0 ring-orange-500 hover:ring-2">
+		<div className="flex gap-1 border rounded-lg p-2 bg-white flex-col transition-all ring-0 ring-orange-500 hover:ring-2 dark:bg-neutral-800">
 			<TaskHeader />
 			<Separator />
 			<TaskAssigned />

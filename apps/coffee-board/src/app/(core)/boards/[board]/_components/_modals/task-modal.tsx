@@ -43,7 +43,7 @@ export default function TaskModal() {
 					</div>
 					<div className="col-span-4 p-2 flex flex-col gap-2">
 						<h2 className="text-lg font-semibold">Activity</h2>
-						<div className="bg-slate-100 flex-1 rounded-lg"></div>
+						<div className="bg-slate-100 flex-1 rounded-lg dark:bg-neutral-900"></div>
 						<div className="flex items-center gap-2">
 							<Input placeholder="Write a comment" />
 							<Button>Send</Button>
