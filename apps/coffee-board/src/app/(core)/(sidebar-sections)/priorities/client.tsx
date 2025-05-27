@@ -5,7 +5,9 @@ import React from "react"
 import PriorityModal from "./_components/_modals/priority-modal"
 import { usePriorityStore } from "./_states/priority.state"
 import PriorityDeleteModal from "./_components/_modals/priority-delete-modal"
-import PriorityItem from "./_components/priority-item"
+import { Priority } from "@/entities/priority.entity"
+import { PriorityProvider } from "./_hook/use-priority"
+import PriorityList from "./_components/priority-list"
 
 const CreatePriorityButton = () => {
 	const { update } = usePriorityStore(state => state)
@@ -19,24 +21,23 @@ const CreatePriorityButton = () => {
 	)
 }
 
-export default function Client() {
+export default function Client({
+	initialPriorities = [],
+}: {
+	initialPriorities: Priority[]
+}) {
 	return (
-		<div className="flex-1 flex flex-col gap-2 overflow-y-auto p-2">
-			<PriorityModal />
-			<PriorityDeleteModal />
+		<PriorityProvider priorities={initialPriorities}>
+			<div className="flex-1 flex flex-col gap-2 overflow-y-auto p-2">
+				<PriorityModal />
+				<PriorityDeleteModal />
 
-			<h1 className="text-2xl font-semibold">Priorities</h1>
-			<div className="bg-slate-100 p-2 rounded-lg dark:bg-neutral-900">
-				<CreatePriorityButton />
+				<h1 className="text-2xl font-semibold">Priorities</h1>
+				<div className="bg-slate-100 p-2 rounded-lg dark:bg-neutral-900">
+					<CreatePriorityButton />
+				</div>
+				<PriorityList />
 			</div>
-
-			<div className="flex-1 rounded-lg p-2 border bg-slate-100 flex flex-col gap-2 overflow-y-auto dark:bg-neutral-900">
-				{Array(10)
-					.fill(0)
-					.map((_, index) => (
-						<PriorityItem key={index} />
-					))}
-			</div>
-		</div>
+		</PriorityProvider>
 	)
 }

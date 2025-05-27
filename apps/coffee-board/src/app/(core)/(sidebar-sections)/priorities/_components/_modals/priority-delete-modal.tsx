@@ -11,12 +11,25 @@ import {
 import React from "react"
 import Icons from "@/components/shared/icons"
 import { usePriorityDeleteStore } from "../../_states/priority-delete.state"
+import { useMutation } from "@tanstack/react-query"
+import priorityService from "@/services/priority.service"
+import { Priority } from "@/entities/priority.entity"
+import { usePriority } from "../../_hook/use-priority"
 
 export default function PriorityDeleteModal() {
-	const { show, update } = usePriorityDeleteStore(state => state)
+	const { QPriority } = usePriority()
+	const { show, update, item } = usePriorityDeleteStore(state => state)
+
+	const mut = useMutation({
+		mutationFn: () => priorityService.deletePriority(item.id),
+		onSuccess: () => {
+			QPriority.refetch()
+			update({ show: false, item: {} as Priority })
+		},
+	})
 
 	const onSubmit = () => {
-		// mut.mutate()
+		mut.mutate()
 	}
 
 	return (

@@ -16,6 +16,7 @@ import {
 	LuCirclePlus,
 	LuCircleX,
 	LuComponent,
+	LuDatabaseZap,
 	LuEllipsis,
 	LuEllipsisVertical,
 	LuEye,
@@ -58,6 +59,7 @@ const Icons = {
 		Users: LuUsersRound,
 		Tags: LuTags,
 		UpDown: LuArrowDownUp,
+		NoData: LuDatabaseZap,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,
