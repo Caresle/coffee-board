@@ -1,5 +1,6 @@
 "use server"
 
+import { Priority } from "@/entities/priority.entity"
 import { pgQuery } from "@/lib/pg"
 
 const query = `
@@ -7,10 +8,10 @@ const query = `
     order by value desc
 `
 
-export async function getAllPriorities() {
+export async function getAllPriorities(): Promise<Priority[]> {
 	try {
 		const data = await pgQuery(query)
-		return data
+		return data as Priority[]
 	} catch (error) {
 		console.error(error)
 		return []
