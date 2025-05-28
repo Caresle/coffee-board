@@ -18,7 +18,7 @@ export default function TagItem({ tag }: { tag: Tag }) {
 					<Button
 						variant="outline"
 						size={"icon"}
-						onClick={() => update({ show: true, isEdit: true })}
+						onClick={() => update({ show: true, isEdit: true, item: tag })}
 					>
 						<Icons.Actions.Edit />
 					</Button>
@@ -27,7 +27,7 @@ export default function TagItem({ tag }: { tag: Tag }) {
 					<Button
 						variant="destructive"
 						size={"icon"}
-						onClick={() => updateDelete({ show: true })}
+						onClick={() => updateDelete({ show: true, item: tag })}
 					>
 						<Icons.Actions.Delete />
 					</Button>
