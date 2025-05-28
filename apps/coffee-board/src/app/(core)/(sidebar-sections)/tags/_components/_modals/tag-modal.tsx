@@ -15,14 +15,25 @@ import { Input } from "@/components/ui/input"
 import { useTagStore } from "../../_states/tag.state"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
+import ColorSelector from "../color-selector"
+import tagService from "@/services/tag.service"
+import { Tag } from "@/entities/tag.entity"
+import { useTags } from "../../_hook/use-tags"
 
 export default function TagModal() {
 	const { show, update, isEdit, item } = useTagStore(state => state)
+	const { QTags } = useTags()
 
 	const mut = useMutation({
-		mutationFn: () => Promise.resolve(),
+		mutationFn: (data: Tag) => {
+			if (isEdit) {
+				return tagService.updateTag(data)
+			}
+			return tagService.createTag(data)
+		},
 		onSuccess: () => {
-			update({ show: false })
+			QTags.refetch()
+			update({ show: false, item: {} as Tag, isEdit: false })
 			if (isEdit) {
 				toast.success("Tag updated successfully")
 				return
@@ -32,8 +43,10 @@ export default function TagModal() {
 	})
 
 	const onSubmit = () => {
-		console.log(item)
-		// mut.mutate()
+		if (!item.color) {
+			item.color = "#000000"
+		}
+		mut.mutate(item)
 	}
 
 	return (
@@ -51,23 +64,15 @@ export default function TagModal() {
 				<form className="flex flex-col gap-2">
 					<FormItem title="Name">
 						<Input
+							disabled={mut.isPending}
 							placeholder="Name"
-							value={item.name}
+							value={item.name ?? ""}
 							onChange={e =>
 								update({ item: { ...item, name: e.target.value } })
 							}
 						/>
 					</FormItem>
-					<FormItem title="Color">
-						<Input
-							placeholder="Color"
-							type="color"
-							value={item.color}
-							onChange={e =>
-								update({ item: { ...item, color: e.target.value } })
-							}
-						/>
-					</FormItem>
+					<ColorSelector disabled={mut.isPending} />
 				</form>
 				<DialogFooter>
 					<DialogClose asChild>

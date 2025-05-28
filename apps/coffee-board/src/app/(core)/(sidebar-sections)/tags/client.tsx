@@ -7,6 +7,9 @@ import TagSection from "./_components/tag-section"
 import TagModal from "./_components/_modals/tag-modal"
 import { useTagStore } from "./_states/tag.state"
 import TagDeleteModal from "./_components/_modals/tag-delete-modal"
+import { Tag } from "@/entities/tag.entity"
+import { TagProvider } from "./_hook/use-tags"
+import TagContainers from "./_components/tag-containers"
 
 const CreateTagButton = () => {
 	const { update } = useTagStore(state => state)
@@ -18,20 +21,19 @@ const CreateTagButton = () => {
 	)
 }
 
-export default function Client() {
+export default function Client({ initialTags = [] }: { initialTags: Tag[] }) {
 	return (
-		<div className="flex-1 flex flex-col gap-2 overflow-y-auto p-2">
-			<TagModal />
-			<TagDeleteModal />
+		<TagProvider tags={initialTags}>
+			<div className="flex-1 flex flex-col gap-2 overflow-y-auto p-2">
+				<TagModal />
+				<TagDeleteModal />
 
-			<h1 className="text-2xl font-semibold">Tags</h1>
-			<div className="bg-slate-100 p-2 rounded-lg dark:bg-neutral-900">
-				<CreateTagButton />
+				<h1 className="text-2xl font-semibold">Tags</h1>
+				<div className="bg-slate-100 p-2 rounded-lg dark:bg-neutral-900">
+					<CreateTagButton />
+				</div>
+				<TagContainers />
 			</div>
-			<div className="bg-slate-100 flex-1 rounded-lg grid grid-cols-2 gap-2 p-2 overflow-y-auto dark:bg-neutral-900">
-				<TagSection tags={["1", "2", "3"]} title="Global Tags" />
-				<TagSection tags={["1", "2", "3"]} title="Tags for project" />
-			</div>
-		</div>
+		</TagProvider>
 	)
 }
