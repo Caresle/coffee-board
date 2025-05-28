@@ -11,9 +11,28 @@ import {
 import React from "react"
 import Icons from "@/components/shared/icons"
 import { useTagDeleteStore } from "../../_states/tag-delete.state"
+import { useMutation } from "@tanstack/react-query"
+import tagService from "@/services/tag.service"
+import { Tag } from "@/entities/tag.entity"
+import { toast } from "sonner"
+import { useTags } from "../../_hook/use-tags"
 
 export default function TagDeleteModal() {
-	const { show, update } = useTagDeleteStore(state => state)
+	const { show, update, item } = useTagDeleteStore(state => state)
+	const { QTags } = useTags()
+
+	const mut = useMutation({
+		mutationFn: tagService.deleteTag,
+		onSuccess: () => {
+			QTags.refetch()
+			update({ show: false, item: {} as Tag })
+			toast.success("Tag deleted successfully")
+		},
+	})
+
+	const onSubmit = () => {
+		mut.mutate(item.id)
+	}
 
 	return (
 		<Dialog open={show} onOpenChange={value => update({ show: value })}>
@@ -30,7 +49,13 @@ export default function TagDeleteModal() {
 					<DialogClose asChild>
 						<Button variant={"secondary"}>Cancel</Button>
 					</DialogClose>
-					<Button variant={"destructive"}>Confirm</Button>
+					<Button
+						variant={"destructive"}
+						onClick={onSubmit}
+						disabled={mut.isPending}
+					>
+						Confirm
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -2,6 +2,7 @@
 
 import { queryKeys } from "@/constants/queryKeys"
 import { Tag } from "@/entities/tag.entity"
+import tagService from "@/services/tag.service"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { createContext, useContext, useMemo } from "react"
 
@@ -26,7 +27,7 @@ export const TagProvider = ({
 }) => {
 	const QTags = useQuery<Tag[], void>({
 		queryKey: [queryKeys.tags],
-		queryFn: () => Promise.resolve(initialTags),
+		queryFn: () => tagService.getTags(),
 		initialData: initialTags,
 	})
 
