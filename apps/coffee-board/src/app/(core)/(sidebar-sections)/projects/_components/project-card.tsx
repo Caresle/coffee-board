@@ -10,19 +10,19 @@ import { useRouter } from "next/navigation"
 import React from "react"
 import ProjectActions from "./project-actions"
 import { Project } from "@/entities/project.entity"
+import Icons from "@/components/shared/icons"
+import { useProject } from "../_hook/use-project"
 
-const ProjectCard = React.memo(function ProjectCard({
-	project,
-}: {
-	project: Project
-}) {
+export default function ProjectCard() {
+	const { project } = useProject()
 	const router = useRouter()
 
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
-					<div>
+					<div className="flex items-center gap-2">
+						{project.visibility === "private" && <Icons.Misc.Private />}
 						{project.id} - {project.name}
 					</div>
 					<ProjectActions />
@@ -39,6 +39,4 @@ const ProjectCard = React.memo(function ProjectCard({
 			</CardFooter>
 		</Card>
 	)
-})
-
-export default ProjectCard
+}

@@ -2,6 +2,7 @@ import React from "react"
 import ProjectCard from "./project-card"
 import { useProjects } from "../_hook/use-projects"
 import Icons from "@/components/shared/icons"
+import { ProjectProvider } from "../_hook/use-project"
 
 const NoProjects = () => {
 	return (
@@ -32,7 +33,9 @@ export default function ProjectContainer() {
 			{!isLoading && projects.length > 0 && (
 				<div className="gap-2 overflow-y-auto p-2 grid grid-cols-3">
 					{projects.map(project => (
-						<ProjectCard key={project.id} project={project} />
+						<ProjectProvider key={`project-${project.id}`} project={project}>
+							<ProjectCard />
+						</ProjectProvider>
 					))}
 				</div>
 			)}
