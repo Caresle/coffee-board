@@ -5,6 +5,8 @@ import { pgQuery } from "@/lib/pg"
 
 const query = `
     SELECT * FROM v_cf_projects_base
+	where deleted = 0
+	order by id desc
 `
 
 export async function getAllProjects(): Promise<Project[]> {
