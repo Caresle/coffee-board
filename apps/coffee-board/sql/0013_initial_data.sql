@@ -1,5 +1,3 @@
-use coffee_board;
-
 -- insert initial tags
 insert into tags (id, name, color)
 values
@@ -40,7 +38,7 @@ values
     (1, 'Gym system', 'A mobile app for the gym owner to manage suscriptions', 1, 'private', 0),
     (2, 'Inventory', 'For the inventory of the coffee shop', 1, 'private', 1),
     (3, 'Task Manager', 'A web app to manage personal and team tasks', 2, 'public', 0),
-    (4, 'Book Tracker', 'Tracks reading progress and book collections', 1, 'public', 1)
+    (4, 'Book Tracker', 'Tracks reading progress and book collections', 1, 'public', 1);
 
 select setval('projects_id_seq', 4);
 

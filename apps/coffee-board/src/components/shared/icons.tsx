@@ -23,6 +23,7 @@ import {
 	LuFile,
 	LuFileImage,
 	LuGithub,
+	LuGlobeLock,
 	LuLayoutDashboard,
 	LuLoaderCircle,
 	LuMoon,
@@ -40,6 +41,7 @@ import {
 
 const Icons = {
 	Misc: {
+		Private: LuGlobeLock,
 		Archive: LuArchive,
 		Books: LuBookText,
 		Error: LuCircleX,

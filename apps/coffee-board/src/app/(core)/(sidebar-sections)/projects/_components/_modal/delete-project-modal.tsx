@@ -11,12 +11,27 @@ import {
 import React from "react"
 import Icons from "@/components/shared/icons"
 import { useDeleteProjectStore } from "../../_states/delete-project.state"
+import { useMutation } from "@tanstack/react-query"
+import projectService from "@/services/project.service"
+import { Project } from "@/entities/project.entity"
+import { toast } from "sonner"
+import { useProjects } from "../../_hook/use-projects"
 
 export default function DeleteProjectModal() {
-	const { show, update } = useDeleteProjectStore(state => state)
+	const { QProject } = useProjects()
+	const { show, update, item } = useDeleteProjectStore(state => state)
+
+	const mut = useMutation({
+		mutationFn: projectService.delete,
+		onSuccess: () => {
+			QProject.refetch()
+			toast.success("Project deleted successfully")
+			update({ show: false, item: {} as Project })
+		},
+	})
 
 	const onSubmit = () => {
-		// mut.mutate()
+		mut.mutate(item.id)
 	}
 
 	return (
@@ -36,7 +51,11 @@ export default function DeleteProjectModal() {
 					<DialogClose asChild>
 						<Button variant={"secondary"}>Cancel</Button>
 					</DialogClose>
-					<Button onClick={onSubmit} variant={"destructive"}>
+					<Button
+						onClick={onSubmit}
+						variant={"destructive"}
+						disabled={mut.isPending}
+					>
 						Confirm
 					</Button>
 				</DialogFooter>

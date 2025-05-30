@@ -57,7 +57,7 @@ export async function DELETE(
 	try {
 		const project = (await params).project
 
-		const id = projectDeleteValidator.parse({ id: project })
+		const id = projectDeleteValidator.parse({ id: project }).id
 
 		const value = (await pgQuery(QueriesProject.deleteProjectSoft, [id]))?.[0]
 
