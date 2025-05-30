@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button"
 import Icons from "@/components/shared/icons"
 import DeleteTaskModal from "../_modals/delete-task-modal"
 import TaskModal from "../_modals/task-modal"
+import { useTheme } from "next-themes"
 
 export default function BoardView() {
+	const { resolvedTheme } = useTheme()
 	const [boards, setBoards] = useState([{}])
 
 	const onAddBoard = () => {
@@ -23,7 +25,7 @@ export default function BoardView() {
 					<BoardCard key={index} />
 				))}
 				<Button
-					variant={"secondary"}
+					variant={resolvedTheme === "dark" ? "outline" : "secondary"}
 					onClick={onAddBoard}
 					className="w-[300px]"
 				>
