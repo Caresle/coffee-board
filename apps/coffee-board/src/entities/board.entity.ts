@@ -10,5 +10,13 @@ export interface Board {
 	description: string | null
 	deleted: number
 	visibility: BoardVisibility
-	details: any[]
+	details: BoardDetails[]
+}
+
+export interface BoardDetails {
+	id: number
+	id_board: number
+	name: string
+	board_order: number
+	deleted: number
 }
