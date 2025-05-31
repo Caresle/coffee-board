@@ -3,12 +3,15 @@ import TooltipBasic from "@/components/shared/tooltip-basic"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import { useTaskStore } from "../../_states/task.state"
+import { useBoard } from "../../_hook/use-board"
 
 export default function BoardHeader() {
+	const { boardDetail } = useBoard()
 	const { update } = useTaskStore.getState()
+
 	return (
 		<div className="flex items-center justify-between">
-			<h2 className="text-xl font-bold">In progress</h2>
+			<h2 className="text-xl font-bold">{boardDetail.name}</h2>
 			<div>
 				<TooltipBasic title="Options">
 					<Button variant={"ghost"}>
