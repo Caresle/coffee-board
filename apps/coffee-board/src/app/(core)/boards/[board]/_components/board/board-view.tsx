@@ -1,14 +1,16 @@
 "use client"
+
 import React, { useState } from "react"
 import BoardCard from "./board-card"
-import { Button } from "@/components/ui/button"
-import Icons from "@/components/shared/icons"
 import DeleteTaskModal from "../_modals/delete-task-modal"
 import TaskModal from "../_modals/task-modal"
-import { useTheme } from "next-themes"
+import dynamic from "next/dynamic"
+
+const BoardAddButton = dynamic(() => import("./board-add-button"), {
+	ssr: false,
+})
 
 export default function BoardView() {
-	const { resolvedTheme } = useTheme()
 	const [boards, setBoards] = useState([{}])
 
 	const onAddBoard = () => {
@@ -24,13 +26,7 @@ export default function BoardView() {
 				{boards.map((_, index) => (
 					<BoardCard key={index} />
 				))}
-				<Button
-					variant={resolvedTheme === "dark" ? "outline" : "secondary"}
-					onClick={onAddBoard}
-					className="w-[300px]"
-				>
-					<Icons.Actions.Add />
-				</Button>
+				<BoardAddButton onAddBoard={onAddBoard} />
 			</div>
 		</>
 	)
