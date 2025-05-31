@@ -55,7 +55,9 @@ export default function SearchButton() {
 										className="flex flex-col items-start"
 									>
 										<h3 className="font-semibold">{item.title}</h3>
-										<p className="text-slate-700">{item.description}</p>
+										<p className="text-slate-700 dark:text-slate-300">
+											{item.description}
+										</p>
 									</CommandItem>
 								))}
 							</CommandGroup>
