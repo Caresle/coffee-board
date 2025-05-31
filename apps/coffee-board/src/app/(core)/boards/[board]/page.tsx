@@ -1,3 +1,4 @@
+import getAllBoardsByProject from "@/actions/boards/get-all-boards-by-project"
 import Client from "./client"
 
 export default async function BoardPage({
@@ -6,6 +7,7 @@ export default async function BoardPage({
 	params: Promise<{ board: string }>
 }) {
 	const { board } = await params
-	console.log(board)
-	return <Client />
+	const boardData = await getAllBoardsByProject(+board)
+
+	return <Client initialBoards={boardData} />
 }
