@@ -37,7 +37,7 @@ export function ViewSectionProvider({
 		(typeof VIEW_SECTION)[keyof typeof VIEW_SECTION]
 	>(VIEW_SECTION.BOARD)
 
-	const boardSelected = useCombobox<Board>()
+	const boardSelected = useCombobox<Board>(initialBoards?.[0])
 
 	const value: IViewSectionContext = {
 		boards: initialBoards,
