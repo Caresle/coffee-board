@@ -11,7 +11,7 @@ export default function BoardHeader() {
 
 	return (
 		<div className="flex items-center justify-between">
-			<h2 className="text-xl font-bold">{boardDetail.name}</h2>
+			<h2 className="text-xl font-bold capitalize">{boardDetail.name}</h2>
 			<div>
 				<TooltipBasic title="Options">
 					<Button variant={"ghost"}>
