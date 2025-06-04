@@ -22,6 +22,8 @@ import {
 	LuEye,
 	LuFile,
 	LuFileImage,
+	LuFolder,
+	LuFolderOpen,
 	LuGithub,
 	LuGlobeLock,
 	LuLayoutDashboard,
@@ -62,6 +64,9 @@ const Icons = {
 		Tags: LuTags,
 		UpDown: LuArrowDownUp,
 		NoData: LuDatabaseZap,
+		Folder: LuFolder,
+		FolderOpen: LuFolderOpen,
+		File: LuFile,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,
