@@ -3,6 +3,8 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { useRouter, usePathname } from "next/navigation"
 import { ROUTES } from "@/constants/routes"
+import { Separator } from "../ui/separator"
+import ProjectTree from "./project-tree/project-tree"
 
 type SidebarItemProps = {
 	icon: React.ElementType
@@ -65,6 +67,7 @@ export default function Sidebar() {
 					</SidebarItem>
 				))}
 			</ul>
+			<ProjectTree />
 		</div>
 	)
 }
