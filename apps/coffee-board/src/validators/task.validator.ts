@@ -10,3 +10,7 @@ export const taskValidator = z.object({
 	id_assigned: z.nullable(z.number({ coerce: true })).default(null),
 	time_estimation: z.nullable(z.number({ coerce: true })).default(null),
 })
+
+export const taskUpdateValidator = taskValidator.extend({
+	id: z.number({ coerce: true }),
+})
