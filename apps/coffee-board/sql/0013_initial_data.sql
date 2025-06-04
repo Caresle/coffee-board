@@ -95,7 +95,7 @@ values
 );
 
 
-select setval('tasks_id_seq', 4);
+select setval('tasks_id_seq', 5);
 
 -- task tags
 insert into task_tags (id, id_tag, id_task)
