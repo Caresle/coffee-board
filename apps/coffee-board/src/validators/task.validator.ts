@@ -24,3 +24,24 @@ export const taskHistoryValidator = z.object({
 export const taskHistoryUpdateValidator = taskHistoryValidator.extend({
 	id: z.number({ coerce: true }),
 })
+
+export const taskCheckListValidator = z.object({
+	id_task: z.number({ coerce: true }),
+	name: z.string().min(1).max(255),
+})
+
+export const taskChecklistUpdateValidator = taskCheckListValidator
+	.extend({
+		id: z.number({ coerce: true }),
+	})
+	.omit({
+		id_task: true,
+	})
+
+export const taskCheckListItemValidator = z.object({
+	id_checklist: z.number({ coerce: true }),
+	name: z.string().min(1).max(255),
+	completed: z.number({ coerce: true }).min(0).max(1).default(0),
+	level: z.number({ coerce: true }).min(0).max(100).default(0),
+	id_parent: z.nullable(z.number({ coerce: true })).default(null),
+})
