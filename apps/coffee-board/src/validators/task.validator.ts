@@ -14,3 +14,13 @@ export const taskValidator = z.object({
 export const taskUpdateValidator = taskValidator.extend({
 	id: z.number({ coerce: true }),
 })
+
+export const taskHistoryValidator = z.object({
+	id_task: z.number({ coerce: true }),
+	msg: z.string().min(1).max(255),
+	id_user: z.number({ coerce: true }),
+})
+
+export const taskHistoryUpdateValidator = taskHistoryValidator.extend({
+	id: z.number({ coerce: true }),
+})
