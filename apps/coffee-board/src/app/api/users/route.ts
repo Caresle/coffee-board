@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 			await pgQuery(QueriesUsers.createUser, [
 				validated.username,
 				validated.email,
-				validated.password,
+				password,
 				validated.first_name,
 				validated.last_name,
 			])
