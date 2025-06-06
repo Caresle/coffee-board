@@ -48,6 +48,10 @@ const UserDropdown = () => {
 					<Icons.Actions.Settings />
 					Settings
 				</DropdownMenuItem>
+				<DropdownMenuItem className="text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 group">
+					<Icons.Misc.Logout className="text-red-500" />
+					<div className="text-red-500">Log Out</div>
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
