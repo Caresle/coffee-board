@@ -1,7 +1,7 @@
 export const QueriesUsers = {
 	createUser: `
         insert into users (username, email, password, first_name, last_name, app_role)
-        values ($1, $2, $3, $4, $5, 'user')
+        values ($1, $2, $3, $4, $5, 1)
         returning *
     `,
 	updateUser: `
