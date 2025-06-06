@@ -28,6 +28,7 @@ import {
 	LuGlobeLock,
 	LuLayoutDashboard,
 	LuLoaderCircle,
+	LuLogOut,
 	LuMoon,
 	LuPaperclip,
 	LuPencil,
@@ -67,6 +68,7 @@ const Icons = {
 		Folder: LuFolder,
 		FolderOpen: LuFolderOpen,
 		File: LuFile,
+		Logout: LuLogOut,
 	},
 	Navbar: {
 		Home: LuLayoutDashboard,
