@@ -50,3 +50,5 @@ redis-data/*
 /mailpit/*
 ./mailpit
 ./mailpit/*
+
+!.env.example
