@@ -11,12 +11,27 @@ import {
 import React from "react"
 import Icons from "@/components/shared/icons"
 import { useDeleteTaskStore } from "../../_states/delete-task.state"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import taskService from "@/services/task.service"
+import { Task } from "@/entities/task.entity"
+import { queryKeys } from "@/constants/queryKeys"
 
 export default function DeleteTaskModal() {
-	const { show, update } = useDeleteTaskStore(state => state)
+	const { show, update, item } = useDeleteTaskStore(state => state)
+	const queryClient = useQueryClient()
+
+	const mut = useMutation({
+		mutationFn: taskService.delete,
+		onSuccess: () => {
+			update({ show: false, item: {} as Task })
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.tasks, { id: item.id_board_det }],
+			})
+		},
+	})
 
 	const onSubmit = () => {
-		// mut.mutate()
+		mut.mutate(item.id)
 	}
 
 	return (
@@ -32,11 +47,24 @@ export default function DeleteTaskModal() {
 					</DialogDescription>
 				</DialogHeader>
 
+				<p>Are you sure you want to delete this task?</p>
+				<div className="bg-slate-100 p-2 rounded-lg border dark:bg-neutral-900 dark:border-neutral-800">
+					<div className="bg-white rounded-lg p-2 border dark:bg-neutral-800 dark:border-neutral-700">
+						{item.name}
+					</div>
+				</div>
+
 				<DialogFooter>
 					<DialogClose asChild>
-						<Button variant={"secondary"}>Cancel</Button>
+						<Button variant={"secondary"} disabled={mut.isPending}>
+							Cancel
+						</Button>
 					</DialogClose>
-					<Button onClick={onSubmit} variant={"destructive"}>
+					<Button
+						onClick={onSubmit}
+						variant={"destructive"}
+						disabled={mut.isPending}
+					>
 						Confirm
 					</Button>
 				</DialogFooter>
