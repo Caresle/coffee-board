@@ -10,23 +10,40 @@ import {
 	CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import React from "react"
+import React, { useState } from "react"
 import { toast } from "sonner"
 import GoBackButton from "../_components/go-back-button"
+import { useMutation } from "@tanstack/react-query"
+import { forgotPassword } from "./_actions/forgot-password"
 
-const SendResetLink = () => {
+const SendResetLink = ({ email }: { email: string }) => {
+	const mut = useMutation({
+		mutationFn: forgotPassword,
+		onSuccess: () => {
+			toast.success("Email sent")
+		},
+	})
+
 	const onSend = () => {
-		toast.success("Email sent")
+		if (!email) {
+			toast.error("Email is required")
+			return
+		}
+
+		mut.mutate(email)
 	}
 
 	return (
 		<CardFooter className="flex justify-end">
-			<Button onClick={onSend}>Send Reset Link</Button>
+			<Button onClick={onSend} disabled={mut.isPending}>
+				Send Reset Link
+			</Button>
 		</CardFooter>
 	)
 }
 
 export default function ForgotPage() {
+	const [email, setEmail] = useState("")
 	return (
 		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center select-none dark:bg-neutral-900">
 			<div className="w-1/4">
@@ -43,10 +60,15 @@ export default function ForgotPage() {
 					</CardHeader>
 					<CardContent>
 						<FormItem title="Email">
-							<Input type="email" placeholder="Email" />
+							<Input
+								type="email"
+								placeholder="Email"
+								value={email}
+								onChange={e => setEmail(e.target.value)}
+							/>
 						</FormItem>
 					</CardContent>
-					<SendResetLink />
+					<SendResetLink email={email} />
 				</Card>
 			</div>
 		</div>
