@@ -22,7 +22,10 @@ export default function CalendarContent() {
 				{Array(168)
 					.fill(0)
 					.map((_, i) => (
-						<div key={i} className="border"></div>
+						<div
+							key={i}
+							className="border transition-all hover:bg-orange-200 cursor-pointer dark:hover:bg-orange-700"
+						></div>
 					))}
 			</div>
 		</div>
