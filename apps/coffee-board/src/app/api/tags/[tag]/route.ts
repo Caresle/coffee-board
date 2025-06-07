@@ -4,6 +4,8 @@ import { pgQuery } from "@/lib/pg"
 import { NextRequest } from "next/server"
 import { QueriesTag } from "../queries"
 import { tagUpdateValidator } from "@/validators/tag.validator"
+import { appCache } from "@/lib/cache"
+import { CACHE_KEYS } from "@/constants/cacheKeys"
 
 export async function GET(
 	_: NextRequest,
@@ -38,6 +40,8 @@ export async function PUT(
 			])
 		)?.[0]
 
+		await appCache.delete(CACHE_KEYS.tags)
+
 		return apiResponse({ data, message: "Tag updated successfully" })
 	} catch (error) {
 		console.error(error)
@@ -52,6 +56,7 @@ export async function DELETE(
 	try {
 		const tag = (await params).tag
 		const value = (await pgQuery(QueriesTag.deleteTag, [tag]))?.[0]
+		await appCache.delete(CACHE_KEYS.tags)
 
 		return apiResponse({ data: value, message: "Tag deleted successfully" })
 	} catch (error) {
