@@ -17,3 +17,5 @@ export interface Task {
 	checklist: []
 	history: []
 }
+
+export type TaskQuick = Pick<Task, "name" | "id_board_det">

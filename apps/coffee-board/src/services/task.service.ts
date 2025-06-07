@@ -1,10 +1,21 @@
 import { TaskDatasource } from "@/datasources/task.datasource"
-import { Task } from "@/entities/task.entity"
+import { Task, TaskQuick } from "@/entities/task.entity"
 import { axiosInstance } from "@/lib/axios"
 
 const BASE_ROUTE = `/tasks`
 
 class TaskService implements TaskDatasource {
+	async createQuickTask(body: TaskQuick): Promise<Task | null> {
+		try {
+			const res = await axiosInstance.post(BASE_ROUTE, body)
+
+			return res.data.data as Task
+		} catch (error) {
+			console.error(error)
+			return null
+		}
+	}
+
 	async getByBoardDetId(id: number): Promise<Task[]> {
 		try {
 			const res = await axiosInstance.get(BASE_ROUTE, {
