@@ -32,8 +32,14 @@ class TaskService implements TaskDatasource {
 	update(body: Task): Promise<Task | null> {
 		throw new Error("Method not implemented.")
 	}
-	delete(id: number): Promise<void> {
-		throw new Error("Method not implemented.")
+
+	async delete(id: number): Promise<void> {
+		try {
+			const res = await axiosInstance.delete(`${BASE_ROUTE}/${id}`)
+			console.log(res.data)
+		} catch (error) {
+			console.error(error)
+		}
 	}
 }
 
