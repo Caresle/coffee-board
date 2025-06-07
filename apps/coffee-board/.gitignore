@@ -46,3 +46,7 @@ redis-data/*
 ./redis-data
 ./redis-data/*
 /redis-data
+/mailpit
+/mailpit/*
+./mailpit
+./mailpit/*
