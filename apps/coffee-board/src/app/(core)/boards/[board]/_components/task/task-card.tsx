@@ -1,13 +1,10 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import React from "react"
 import TaskHeader from "./task-header"
 import TaskAssigned from "./task-assigned"
-import { Button } from "@/components/ui/button"
-import Icons from "@/components/shared/icons"
-import TooltipBasic from "@/components/shared/tooltip-basic"
 import TaskMetaInfoCard from "./task-meta-info-card"
 import TaskTagList from "./task-tag-list"
+import TaskPriority from "./task-priority"
 
 export default function TaskCard() {
 	return (
@@ -16,6 +13,7 @@ export default function TaskCard() {
 			<Separator />
 			<TaskAssigned />
 
+			<TaskPriority />
 			<TaskTagList />
 			<TaskMetaInfoCard />
 		</div>

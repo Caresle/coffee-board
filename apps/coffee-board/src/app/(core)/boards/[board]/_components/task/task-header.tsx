@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from "react"
 import TaskDeleteButton from "./task-delete-button"
+import { useTask } from "../../_hook/use-task"
 
 const TaskDropdownMenu = () => {
 	return (
@@ -25,9 +26,10 @@ const TaskDropdownMenu = () => {
 }
 
 export default function TaskHeader() {
+	const { task } = useTask()
 	return (
 		<div className="flex justify-between items-center">
-			<h3>Test</h3>
+			<h3>{task.name}</h3>
 			<div className="flex items-center gap-2">
 				<TaskDropdownMenu />
 			</div>
