@@ -5,7 +5,7 @@ export interface Task {
 	id: number
 	id_board_det: number
 	name: string
-	decription: string | null
+	description: string | null
 	date_begin: Date | null
 	date_end: Date | null
 	id_priority: number | null
@@ -16,6 +16,7 @@ export interface Task {
 	tags: Tag[]
 	checklist: []
 	history: []
+	attachments: []
 }
 
 export type TaskQuick = Pick<Task, "name" | "id_board_det">
