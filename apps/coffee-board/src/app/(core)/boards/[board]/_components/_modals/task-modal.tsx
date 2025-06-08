@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 import FileUploader from "@/components/shared/file-uploader"
 
 export default function TaskModal() {
-	const { show, update } = useTaskStore(state => state)
+	const { show, update, item } = useTaskStore(state => state)
 
 	const onSubmit = () => {
 		// mut.mutate()
@@ -37,7 +37,12 @@ export default function TaskModal() {
 						<TaskName />
 						<MetaInfo />
 						<Separator />
-						<Textarea placeholder="Description" rows={10} />
+						<Textarea
+							placeholder="Description"
+							rows={10}
+							value={item?.description ?? ""}
+							onChange={() => {}}
+						/>
 						<FileUploader />
 						<TaskExtras />
 					</div>
