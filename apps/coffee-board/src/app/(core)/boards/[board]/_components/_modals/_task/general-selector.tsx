@@ -6,12 +6,14 @@ interface GeneralSelectorProps {
 	icon?: React.ReactNode
 	title?: string
 	triggerText?: string
+	children?: React.ReactNode
 }
 
 export default function GeneralSelector({
 	icon: Icon,
 	title,
 	triggerText,
+	children,
 }: GeneralSelectorProps) {
 	return (
 		<div className="flex items-center gap-2 w-full">
@@ -20,9 +22,11 @@ export default function GeneralSelector({
 				{title}
 			</div>
 			<div className="w-full">
-				<Button variant={"ghost"} className="w-full">
-					{triggerText}
-				</Button>
+				{children || (
+					<Button variant={"ghost"} className="w-full">
+						{triggerText}
+					</Button>
+				)}
 			</div>
 		</div>
 	)
