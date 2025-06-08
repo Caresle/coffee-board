@@ -15,8 +15,21 @@ export interface Task {
 	priority: Priority
 	tags: Tag[]
 	checklist: []
-	history: []
+	history: Array<TaskHistory> | null
 	attachments: []
 }
 
 export type TaskQuick = Pick<Task, "name" | "id_board_det">
+
+export interface TaskHistory {
+	user: Object
+	message: TaskMessage
+}
+
+export interface TaskMessage {
+	id: number
+	id_task: number
+	msg: string
+	stamp: Date
+	id_user: number
+}
