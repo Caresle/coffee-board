@@ -3,4 +3,5 @@ export const queryKeys = {
 	tag: "tag",
 	priorities: "priorities",
 	projects: "projects",
+	tasks: "tasks",
 }

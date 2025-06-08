@@ -12,16 +12,11 @@ import MetaInfo from "./_task/meta-info"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import TaskExtras from "./_task/task-extras"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import FileUploader from "@/components/shared/file-uploader"
+import ActivitySection from "./_task/activity-section"
 
 export default function TaskModal() {
-	const { show, update } = useTaskStore(state => state)
-
-	const onSubmit = () => {
-		// mut.mutate()
-	}
+	const { show, update, item } = useTaskStore(state => state)
 
 	return (
 		<Dialog open={show} onOpenChange={value => update({ show: value })}>
@@ -37,18 +32,16 @@ export default function TaskModal() {
 						<TaskName />
 						<MetaInfo />
 						<Separator />
-						<Textarea placeholder="Description" rows={10} />
+						<Textarea
+							placeholder="Description"
+							rows={10}
+							value={item?.description ?? ""}
+							onChange={() => {}}
+						/>
 						<FileUploader />
 						<TaskExtras />
 					</div>
-					<div className="col-span-4 p-2 flex flex-col gap-2">
-						<h2 className="text-lg font-semibold">Activity</h2>
-						<div className="bg-slate-100 flex-1 rounded-lg dark:bg-neutral-900"></div>
-						<div className="flex items-center gap-2">
-							<Input placeholder="Write a comment" />
-							<Button>Send</Button>
-						</div>
-					</div>
+					<ActivitySection />
 				</div>
 			</DialogContent>
 		</Dialog>
