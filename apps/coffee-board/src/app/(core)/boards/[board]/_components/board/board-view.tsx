@@ -8,6 +8,7 @@ import dynamic from "next/dynamic"
 import { useViewSection } from "../../_hook/use-view-section"
 import { BoardDetailProvider } from "../../_hook/use-board"
 import Icons from "@/components/shared/icons"
+import BoardNewInput from "./board-new-input"
 
 const BoardAddButton = dynamic(() => import("./board-add-button"), {
 	ssr: false,
@@ -23,11 +24,7 @@ const SelectBoard = () => {
 }
 
 export default function BoardView() {
-	const { boardSelected } = useViewSection()
-
-	const onAddBoard = () => {
-		// setBoards([...boards, {}])
-	}
+	const { boardSelected, isNewBoard } = useViewSection()
 
 	return (
 		<>
@@ -45,7 +42,8 @@ export default function BoardView() {
 								<BoardCard />
 							</BoardDetailProvider>
 						))}
-						{boardSelected.value && <BoardAddButton onAddBoard={onAddBoard} />}
+						{!isNewBoard && <BoardAddButton />}
+						{isNewBoard && <BoardNewInput />}
 					</>
 				) : (
 					<SelectBoard />

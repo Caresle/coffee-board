@@ -13,6 +13,8 @@ interface IViewSectionContext {
 	setSection: (
 		section: (typeof VIEW_SECTION)[keyof typeof VIEW_SECTION],
 	) => void
+	isNewBoard: boolean
+	setIsNewBoard: (isNewBoard: boolean) => void
 	boards: Board[]
 	boardSelected: ComboboxState<Board>
 }
@@ -21,6 +23,8 @@ const ViewSectionContext = createContext<IViewSectionContext>({
 	section: VIEW_SECTION.BOARD,
 	setSection: () => {},
 	boards: [],
+	isNewBoard: false,
+	setIsNewBoard: () => {},
 	boardSelected: {} as ComboboxState<Board>,
 })
 
@@ -33,6 +37,7 @@ export function ViewSectionProvider({
 	initialBoards?: Board[]
 	children: React.ReactNode
 }) {
+	const [isNewBoard, setIsNewBoard] = useState(false)
 	const [section, setSection] = useState<
 		(typeof VIEW_SECTION)[keyof typeof VIEW_SECTION]
 	>(VIEW_SECTION.BOARD)
@@ -44,6 +49,8 @@ export function ViewSectionProvider({
 		section,
 		setSection,
 		boardSelected,
+		isNewBoard,
+		setIsNewBoard,
 	}
 
 	return <ViewSectionContext value={value}>{children}</ViewSectionContext>
