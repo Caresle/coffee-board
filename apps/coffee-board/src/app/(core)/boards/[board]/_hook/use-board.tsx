@@ -54,5 +54,5 @@ export function BoardDetailProvider({
 		setIsNewTask,
 	}
 
-	return <BoardContext.Provider value={value}>{children}</BoardContext.Provider>
+	return <BoardContext value={value}>{children}</BoardContext>
 }
