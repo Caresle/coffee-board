@@ -25,3 +25,7 @@ export const boardDetailValidator = z.object({
 		.default(false)
 		.transform(val => (val ? 1 : 0)),
 })
+
+export const boardDetailUpdateValidator = boardDetailValidator.extend({
+	id: z.number({ coerce: true }),
+})
