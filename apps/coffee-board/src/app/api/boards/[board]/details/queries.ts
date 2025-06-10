@@ -7,13 +7,13 @@ export const QueriesBoardDetails = {
 	updateOne: `
         UPDATE board_details
         SET name = $1, board_order = $2, deleted = $3
-        WHERE id_board = $4
+        WHERE id = $4
         RETURNING *;
     `,
 	deleteOne: `
         UPDATE board_details
         SET deleted = 1
-        WHERE id_board = $1
+        WHERE id = $1
         RETURNING *;
     `,
 }
