@@ -25,13 +25,27 @@ create view v_cf_tasks as (
 		join task_tags tt on tt.id_task = th.id
 		join tags t on t.id = tt.id_tag
 		group by th.id
+	), task_checklist_header as (
+		select
+			tc.id,
+			tc.id_task,
+			row_to_json(tc.*) header
+		from task_checklist tc 
+	), task_checklist_details as (
+		select
+			tcd.id_checklist,
+			json_agg(row_to_json(tcd.*)) details
+		from task_checklist_det tcd
+		group by tcd.id_checklist
 	), tasks_checklist_ds as (
 		select
-			tc.id_task,
-			json_agg(row_to_json(tcd.*)) details
-		from task_checklist tc
-		left join task_checklist_det tcd on tcd.id_checklist = tc.id
-		group by tc.id_task
+			tch.id_task,
+			json_build_object(
+				'header', tch.header,
+				'details', tcd.details
+			) checklist
+		from task_checklist_header tch
+		left join task_checklist_details tcd on tcd.id_checklist = tch.id
 	), tasks_history_ds as (
 		select
 			h.id_task,
@@ -52,7 +66,7 @@ create view v_cf_tasks as (
 	select
 		h.*,
 		ta.tags,
-		tc.details checklist,
+		tc.checklist,
 		th.details history
 	from tasks_header_ds h
 	left join tasks_tags ta on ta.id_task = h.id
