@@ -14,7 +14,7 @@ export interface Task {
 	created_at: Date
 	priority: Priority
 	tags: Tag[]
-	checklist: []
+	checklist: TaskCheckList | null
 	history: Array<TaskHistory> | null
 	attachments: []
 }
@@ -32,4 +32,24 @@ export interface TaskMessage {
 	msg: string
 	stamp: Date
 	id_user: number
+}
+
+export interface TaskCheckList {
+	header: TaskCheckListHeader
+	details: TaskCheckListDetails[]
+}
+
+export interface TaskCheckListHeader {
+	id: number
+	id_task: number
+	name: string
+}
+
+export interface TaskCheckListDetails {
+	id: number
+	id_checklist: number
+	name: string
+	completed: boolean
+	level: number
+	id_parent: number | null
 }
