@@ -40,12 +40,13 @@ create view v_cf_tasks as (
 	), tasks_checklist_ds as (
 		select
 			tch.id_task,
-			json_build_object(
+			json_agg(json_build_object(
 				'header', tch.header,
 				'details', tcd.details
-			) checklist
+			)) checklist
 		from task_checklist_header tch
 		left join task_checklist_details tcd on tcd.id_checklist = tch.id
+		group by tch.id_task
 	), tasks_history_ds as (
 		select
 			h.id_task,

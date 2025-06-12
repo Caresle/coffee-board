@@ -14,7 +14,7 @@ export interface Task {
 	created_at: Date
 	priority: Priority
 	tags: Tag[]
-	checklist: TaskCheckList | null
+	checklist: Array<TaskCheckList> | null
 	history: Array<TaskHistory> | null
 	attachments: []
 }
