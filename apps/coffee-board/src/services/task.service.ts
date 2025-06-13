@@ -1,5 +1,6 @@
 import { TaskDatasource } from "@/datasources/task.datasource"
-import { Task, TaskQuick } from "@/entities/task.entity"
+import { Task, TaskCheckList, TaskQuick } from "@/entities/task.entity"
+import { ApiResponse } from "@/helpers/api-response"
 import { axiosInstance } from "@/lib/axios"
 
 const BASE_ROUTE = `/tasks`
@@ -28,6 +29,19 @@ class TaskService implements TaskDatasource {
 		} catch (error) {
 			console.error(error)
 			return []
+		}
+	}
+
+	async addChecklistItem(body: TaskCheckList): Promise<void> {
+		try {
+			const url = `${BASE_ROUTE}/${body.header.id_task}/checklist/${body.header.id}/item`
+			const axiosResponse = await axiosInstance.post(url, body)
+			const res: ApiResponse = axiosResponse.data
+
+			return res.data
+		} catch (error) {
+			console.error(error)
+			return
 		}
 	}
 
