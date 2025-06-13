@@ -14,16 +14,25 @@ export async function POST(req: NextRequest, { params }: CheckListItemParams) {
 
 		const json = await req.json()
 
+		const detail = json.details?.[0] ?? {}
 		const validated = taskCheckListItemValidator.parse({
 			id_checklist: +checklist,
-			...json,
+			...detail,
 		})
 
-		// const data = await pgQuery(QueriesTaskChecklistItem.createCheckListItem)
+		const data = (
+			await pgQuery(QueriesTaskChecklistItem.createCheckListItem, [
+				validated.id_checklist,
+				validated.name,
+				validated.completed,
+				validated.level,
+				validated.id_parent,
+			])
+		)?.[0]
 
 		return apiResponse({
 			message: "CheckList item created successfully",
-			data: {},
+			data,
 		})
 	} catch (error) {
 		console.error(error)

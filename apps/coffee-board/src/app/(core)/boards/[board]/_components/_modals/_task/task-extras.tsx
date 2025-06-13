@@ -2,6 +2,22 @@ import React from "react"
 import TaskChecklistSection from "./task-checklist-section"
 import { useTaskStore } from "../../../_states/task.state"
 import { CheckListTaskProvider } from "../../../_hook/use-checklist"
+import { Button } from "@/components/ui/button"
+import Icons from "@/components/shared/icons"
+
+const AddCheckListButton = () => {
+	return (
+		<div className="w-full">
+			<Button
+				variant={"secondary"}
+				className="w-full flex justify-start items-center"
+			>
+				<Icons.Actions.Add />
+				Add Checklist
+			</Button>
+		</div>
+	)
+}
 
 export default function TaskExtras() {
 	const { item } = useTaskStore(state => state)
@@ -17,6 +33,7 @@ export default function TaskExtras() {
 					<TaskChecklistSection />
 				</CheckListTaskProvider>
 			))}
+			<AddCheckListButton />
 		</div>
 	)
 }
