@@ -1,7 +1,13 @@
-import { Task, TaskCheckList, type TaskQuick } from "@/entities/task.entity"
+import {
+	Task,
+	TaskCheckList,
+	TaskCheckListHeader,
+	type TaskQuick,
+} from "@/entities/task.entity"
 import { GeneralDatasource } from "./general.datasource"
 
 export interface TaskCheckListDatasource {
+	addChecklistHeader(body: TaskCheckListHeader): Promise<void>
 	addChecklistItem(body: TaskCheckList): Promise<void>
 	removeChecklistItem(id: number, body: TaskCheckList): Promise<void>
 }
