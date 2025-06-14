@@ -45,6 +45,19 @@ class TaskService implements TaskDatasource {
 		}
 	}
 
+	async removeChecklistItem(id: number, body: TaskCheckList): Promise<void> {
+		try {
+			const url = `${BASE_ROUTE}/${body.header.id_task}/checklist/${body.header.id}/item/${id}`
+			const axiosResponse = await axiosInstance.delete(url)
+			const res: ApiResponse = axiosResponse.data
+
+			return res.data
+		} catch (error) {
+			console.error(error)
+			return
+		}
+	}
+
 	getAll(): Promise<Task[]> {
 		throw new Error("Method not implemented.")
 	}
