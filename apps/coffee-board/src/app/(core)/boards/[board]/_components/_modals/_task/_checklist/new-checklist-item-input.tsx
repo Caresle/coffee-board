@@ -15,12 +15,16 @@ export default function NewChecklistItemInput({
 			<Input
 				id="new-checklist-item-input"
 				placeholder="New checklist item"
-				onBlur={onBlur}
+				onBlur={e => {
+					e.stopPropagation()
+					onBlur?.()
+				}}
 				value={name}
 				onChange={e => setName(e.target.value)}
 				onKeyDown={e => {
 					if (e.key === "Enter") {
-						onBlur?.()
+						e.preventDefault()
+						e.stopPropagation()
 						onSubmit?.(name)
 					}
 				}}
