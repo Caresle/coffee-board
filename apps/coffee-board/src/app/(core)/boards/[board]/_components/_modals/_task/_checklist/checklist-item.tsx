@@ -42,8 +42,8 @@ export default function CheckListItem({
 				<div>{detail.name}</div>
 			</div>
 			<TooltipBasic title="Delete Item">
-				<Button variant={"ghost"} onClick={onDelete}>
-					<Icons.Actions.Delete className="size-5" size={"sm"} />
+				<Button variant={"ghost"} onClick={onDelete} size={"sm"}>
+					<Icons.Actions.Delete className="size-5" />
 				</Button>
 			</TooltipBasic>
 		</div>
