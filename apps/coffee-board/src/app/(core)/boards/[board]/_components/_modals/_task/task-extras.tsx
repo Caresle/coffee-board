@@ -19,12 +19,21 @@ const AddCheckListButton = () => {
 	)
 }
 
+/**
+ * This component is used to display right now the multiple checklists that
+ * a single task can have.
+ */
 export default function TaskExtras() {
 	const { item } = useTaskStore(state => state)
 
 	const checklist = item?.checklist || []
 
-	if (checklist.length === 0) return <></>
+	if (checklist.length === 0)
+		return (
+			<>
+				<AddCheckListButton />
+			</>
+		)
 
 	return (
 		<div className="flex flex-col gap-2">

@@ -52,12 +52,13 @@ const AddCheckListItemButton = ({
 }
 
 export default function TaskChecklistSection() {
-	const { header, details } = useChecklistTaskContext()
+	const { header, details, QSubChecklist } = useChecklistTaskContext()
 	const [newChecklist, setNewChecklist] = useState(false)
 
 	const mut = useMutation({
 		mutationFn: taskService.addChecklistItem,
 		onSuccess: () => {
+			QSubChecklist.refetch()
 			setNewChecklist(false)
 		},
 	})
