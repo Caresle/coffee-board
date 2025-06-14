@@ -4,4 +4,9 @@ export const QueriesTaskChecklistItem = {
 		values ($1, $2, $3, $4, $5)
 		returning *
 	`,
+	deleteCheckListItem: `
+		delete from task_checklist_det
+		where id = $1
+		returning *
+	`,
 }
