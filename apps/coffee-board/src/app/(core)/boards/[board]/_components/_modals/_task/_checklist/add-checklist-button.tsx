@@ -7,6 +7,12 @@ export default function AddCheckListButton() {
 
 	const onClick = () => {
 		update({ isNew: true })
+		setTimeout(() => {
+			const input = document.getElementById("new-checklist-input")
+			if (input) {
+				input.focus()
+			}
+		}, 100)
 	}
 
 	return (

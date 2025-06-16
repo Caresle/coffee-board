@@ -46,6 +46,13 @@ export default function TaskChecklistSection() {
 		},
 	})
 
+	const mutDelete = useMutation({
+		mutationFn: taskService.removeChecklistHeader,
+		onSuccess: () => {
+			QSubChecklist.refetch()
+		},
+	})
+
 	const onSubmit = (name: string) => {
 		const newDetail: TaskCheckList = {
 			header,
@@ -64,9 +71,23 @@ export default function TaskChecklistSection() {
 		mut.mutate(newDetail)
 	}
 
+	const onDelete = () => {
+		mutDelete.mutate(header)
+	}
+
 	return (
 		<div className="flex flex-col gap-2">
-			<h3 className="font-semibold text-lg">{header.name}</h3>
+			<div className="flex justify-between items-center">
+				<h3 className="font-semibold text-lg">{header.name}</h3>
+				<Button
+					variant={"destructive"}
+					size={"icon"}
+					onClick={onDelete}
+					disabled={mutDelete.isPending}
+				>
+					<Icons.Actions.Delete className="size-5" />
+				</Button>
+			</div>
 			<div className="flex flex-col gap-2">
 				{details.map((detail, index) => (
 					<CheckListItem

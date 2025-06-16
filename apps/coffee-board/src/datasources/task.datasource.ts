@@ -10,6 +10,7 @@ export interface TaskCheckListDatasource {
 	addChecklistHeader(body: TaskCheckListHeader): Promise<void>
 	addChecklistItem(body: TaskCheckList): Promise<void>
 	removeChecklistItem(id: number, body: TaskCheckList): Promise<void>
+	removeChecklistHeader(body: TaskCheckListHeader): Promise<void>
 }
 
 export interface TaskDatasource

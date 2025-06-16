@@ -35,19 +35,22 @@ const NewChecklist = () => {
 	return (
 		<div>
 			{!isNew && <AddCheckListButton />}
-			<Input
-				disabled={mut.isPending}
-				placeholder="Add a new checklist"
-				onBlur={onBlur}
-				onChange={e => update({ item: { ...item, name: e.target.value } })}
-				value={item.name ?? ""}
-				onKeyDown={e => {
-					if (e.key === "Enter") {
-						if (item.name.trim() === "") return
-						onSubmit()
-					}
-				}}
-			/>
+			{isNew && (
+				<Input
+					id="new-checklist-input"
+					disabled={mut.isPending}
+					placeholder="Add a new checklist"
+					onBlur={onBlur}
+					onChange={e => update({ item: { ...item, name: e.target.value } })}
+					value={item.name ?? ""}
+					onKeyDown={e => {
+						if (e.key === "Enter") {
+							if (item.name.trim() === "") return
+							onSubmit()
+						}
+					}}
+				/>
+			)}
 		</div>
 	)
 }
@@ -65,11 +68,17 @@ export default function TaskExtras() {
 
 	return (
 		<div className="flex flex-col gap-2">
-			{checklist.map((check, index) => (
-				<CheckListTaskProvider checklist={check} key={index}>
-					<TaskChecklistSection />
-				</CheckListTaskProvider>
-			))}
+			{checklist.map((check, index) => {
+				console.log(check.header)
+				return (
+					<CheckListTaskProvider
+						checklist={check}
+						key={`checklist-${check.header?.id_task}-${check.header?.id}-${index}`}
+					>
+						<TaskChecklistSection />
+					</CheckListTaskProvider>
+				)
+			})}
 			<NewChecklist />
 		</div>
 	)

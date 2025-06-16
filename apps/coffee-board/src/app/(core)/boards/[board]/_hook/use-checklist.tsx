@@ -56,10 +56,13 @@ export function CheckListTaskProvider({
 		initialData: checklist,
 	})
 
-	const { header, details } = useMemo(
-		() => QSubChecklist?.data || {},
-		[QSubChecklist],
-	)
+	const header = QSubChecklist?.data?.header
+	const details = QSubChecklist?.data?.details
+
+	// const { header, details } = useMemo(
+	// 	() => QSubChecklist?.data || {},
+	// 	[QSubChecklist, checklist?.header?.id],
+	// )
 
 	const value: ChecklistTaskContext = {
 		checklist,

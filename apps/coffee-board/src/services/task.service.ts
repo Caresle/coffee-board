@@ -24,6 +24,19 @@ class TaskService implements TaskDatasource {
 		}
 	}
 
+	async removeChecklistHeader(body: TaskCheckListHeader): Promise<void> {
+		try {
+			const url = `${BASE_ROUTE}/${body.id_task}/checklist/${body.id}`
+			const axiosResponse = await axiosInstance.delete(url)
+			const res: ApiResponse = axiosResponse.data
+
+			return res.data
+		} catch (error) {
+			console.error(error)
+			return
+		}
+	}
+
 	async createQuickTask(body: TaskQuick): Promise<Task | null> {
 		try {
 			const res = await axiosInstance.post(BASE_ROUTE, body)
