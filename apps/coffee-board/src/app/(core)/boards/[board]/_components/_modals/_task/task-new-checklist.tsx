@@ -2,7 +2,7 @@ import Icons from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import React from "react"
 
-export default function TaskExtraSection() {
+export default function TaskNewChecklist() {
 	return (
 		<div className="flex flex-col gap-2">
 			<h3 className="font-semibold text-lg">Checklist</h3>
