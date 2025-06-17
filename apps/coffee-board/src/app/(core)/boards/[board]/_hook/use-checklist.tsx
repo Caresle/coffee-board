@@ -1,14 +1,14 @@
 "use client"
 
-import getChecklistByTask from "@/actions/tasks/checklist/get-checklist-by-task"
 import { queryKeys } from "@/constants/queryKeys"
 import {
 	TaskCheckList,
 	TaskCheckListDetails,
 	TaskCheckListHeader,
 } from "@/entities/task.entity"
+import taskService from "@/services/task.service"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import { createContext, useContext, useMemo } from "react"
+import { createContext, useContext } from "react"
 
 interface ChecklistTaskContext {
 	QSubChecklist: UseQueryResult<TaskCheckList>
@@ -45,30 +45,30 @@ export function CheckListTaskProvider({
 	 * `QSubChecklist` is used to fetch the checklist of the task.
 	 * don't confuse with the global section of the checklist
 	 */
-	const QSubChecklist = useQuery({
+	const QSubChecklist = useQuery<TaskCheckList>({
 		queryKey: [
 			queryKeys.tasksChecklist,
 			{
-				id: checklist.header.id_task,
+				id: checklist.header.id,
 			},
 		],
-		queryFn: () => getChecklistByTask(checklist.header.id_task),
+		queryFn: () =>
+			taskService.getChecklistById(
+				checklist.header.id_task,
+				checklist.header.id,
+			),
 		initialData: checklist,
 	})
 
-	const header = QSubChecklist?.data?.header
-	const details = QSubChecklist?.data?.details
-
-	// const { header, details } = useMemo(
-	// 	() => QSubChecklist?.data || {},
-	// 	[QSubChecklist, checklist?.header?.id],
-	// )
+	const header = QSubChecklist?.data?.header || ({} as TaskCheckListHeader)
+	const details =
+		QSubChecklist?.data?.details || ([] as Array<TaskCheckListDetails>)
 
 	const value: ChecklistTaskContext = {
 		checklist,
 		QSubChecklist,
-		header: header || {},
-		details: details || [],
+		header,
+		details,
 	}
 
 	return <ChecklistTaskContext value={value}>{children}</ChecklistTaskContext>

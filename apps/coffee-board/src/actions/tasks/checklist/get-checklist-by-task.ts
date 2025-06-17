@@ -9,12 +9,12 @@ const query = `
 
 export default async function getChecklistByTask(
 	id: number,
-): Promise<TaskCheckList> {
+): Promise<TaskCheckList[]> {
 	try {
 		const data = (await pgQuery(query, [id]))?.[0]?.checklist
-		return data?.[0] as TaskCheckList
+		return data
 	} catch (error) {
 		console.error(error)
-		return {} as TaskCheckList
+		return [] as TaskCheckList[]
 	}
 }
