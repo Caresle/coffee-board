@@ -1,3 +1,4 @@
+import getChecklistByTask from "@/actions/tasks/checklist/get-checklist-by-task"
 import { TaskDatasource } from "@/datasources/task.datasource"
 import {
 	Task,
@@ -11,6 +12,18 @@ import { axiosInstance } from "@/lib/axios"
 const BASE_ROUTE = `/tasks`
 
 class TaskService implements TaskDatasource {
+	async getChecklistById(id_task: number, id: number): Promise<TaskCheckList> {
+		try {
+			const checklistData = await getChecklistByTask(id_task)
+			const found = checklistData.find(c => c.header.id === id)
+
+			if (!found) return {} as TaskCheckList
+			return found
+		} catch (error) {
+			return {} as TaskCheckList
+		}
+	}
+
 	async addChecklistHeader(body: TaskCheckListHeader): Promise<void> {
 		try {
 			const url = `${BASE_ROUTE}/${body.id_task}/checklist`

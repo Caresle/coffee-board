@@ -69,7 +69,6 @@ export default function TaskExtras() {
 	return (
 		<div className="flex flex-col gap-2">
 			{checklist.map((check, index) => {
-				console.log(check.header)
 				return (
 					<CheckListTaskProvider
 						checklist={check}
