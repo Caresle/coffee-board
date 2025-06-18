@@ -1,5 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
+import fileConvert from "./file-convert"
 
 const UPLOAD_FOLDER = path.join(process.env.FOLDER_DATA || "", "uploads")
 
@@ -11,15 +12,22 @@ class FileManager {
 	}
 
 	async uploadFile(file: File, taskId: number) {
-		const fileBuffer = await file.arrayBuffer()
+		let fileBuffer = await file.arrayBuffer()
+		const filePath = path.join(UPLOAD_FOLDER, `${taskId}`)
+		let fileName = `${taskId}-${file.name}`
 
-		fs.writeFileSync(
-			path.join(UPLOAD_FOLDER, `${taskId}-${file.name}`),
-			Buffer.from(fileBuffer),
-		)
+		if (!fs.existsSync(filePath)) fs.mkdirSync(filePath, { recursive: true })
+
+		if (file.type.includes("image")) {
+			const fileWebp = await fileConvert.convertToWebp(file)
+			fileBuffer = await fileWebp.arrayBuffer()
+			fileName = `${taskId}-${file.name.replace(/\.[^/.]+$/, "")}.webp`
+		}
+
+		fs.writeFileSync(path.join(filePath, fileName), Buffer.from(fileBuffer))
 
 		return {
-			path: path.join(UPLOAD_FOLDER, `${taskId}-${file.name}`),
+			path: path.join(filePath, fileName),
 			name: file.name,
 			type: file.type,
 			size: file.size,
