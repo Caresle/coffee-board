@@ -1,3 +1,14 @@
+create view v_cf_tasks_attachments as (
+	with tasks_attachments_ds as (
+		select
+			ta.id_task,
+			json_agg(row_to_json(ta.*)) attachments
+		from task_attachments ta
+		group by ta.id_task
+	)
+	select * from tasks_attachments_ds
+)
+
 create view v_cf_tasks_checklist as (
 	with task_checklist_header as (
 		select
@@ -73,9 +84,11 @@ create view v_cf_tasks as (
 		h.*,
 		ta.tags,
 		tc.checklist,
-		th.details history
+		th.details history,
+		tca.attachments
 	from tasks_header_ds h
 	left join tasks_tags ta on ta.id_task = h.id
 	left join v_cf_tasks_checklist tc on tc.id_task = h.id
 	left join tasks_history_ds th on th.id_task = h.id
+	left join v_cf_tasks_attachments tca on tca.id_task = h.id
 )
