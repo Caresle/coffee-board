@@ -7,6 +7,13 @@ const instance = axios.create({
 	},
 })
 
+const instanceFormData = axios.create({
+	baseURL: process.env.NEXT_PUBLIC_API_URL,
+	headers: {
+		"Content-Type": "multipart/form-data",
+	},
+})
+
 export const tokenInterceptor = instance.interceptors.request.use(
 	function (config) {
 		const token = window.localStorage.getItem("token")
@@ -34,3 +41,4 @@ export const responseInterceptor = instance.interceptors.response.use(
 )
 
 export const axiosInstance = instance
+export const axiosInstanceFormData = instanceFormData

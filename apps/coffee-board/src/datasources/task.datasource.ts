@@ -14,9 +14,14 @@ export interface TaskCheckListDatasource {
 	removeChecklistHeader(body: TaskCheckListHeader): Promise<void>
 }
 
+export interface TaskAttachmentDatasource {
+	uploadAttachment(id_task: number, file: File): Promise<boolean>
+}
+
 export interface TaskDatasource
 	extends GeneralDatasource<Task>,
-		TaskCheckListDatasource {
+		TaskCheckListDatasource,
+		TaskAttachmentDatasource {
 	getByBoardDetId(id: number): Promise<Task[]>
 	createQuickTask(body: TaskQuick): Promise<Task | null>
 }

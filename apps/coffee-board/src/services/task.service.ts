@@ -7,11 +7,27 @@ import {
 	TaskQuick,
 } from "@/entities/task.entity"
 import { ApiResponse } from "@/helpers/api-response"
-import { axiosInstance } from "@/lib/axios"
+import { axiosInstance, axiosInstanceFormData } from "@/lib/axios"
 
 const BASE_ROUTE = `/tasks`
 
 class TaskService implements TaskDatasource {
+	async uploadAttachment(id_task: number, file: File): Promise<boolean> {
+		try {
+			const formData = new FormData()
+			formData.append("file_", file)
+			const axiosResponse = await axiosInstanceFormData.post(
+				`${BASE_ROUTE}/${id_task}/attachment`,
+				formData,
+			)
+			const res: ApiResponse = axiosResponse.data
+
+			return res.data
+		} catch (error) {
+			return false
+		}
+	}
+
 	async getChecklistById(id_task: number, id: number): Promise<TaskCheckList> {
 		try {
 			const checklistData = await getChecklistByTask(id_task)
