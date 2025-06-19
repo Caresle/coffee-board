@@ -7,7 +7,7 @@ create view v_cf_tasks_attachments as (
 		group by ta.id_task
 	)
 	select * from tasks_attachments_ds
-)
+);
 
 create view v_cf_tasks_checklist as (
 	with task_checklist_header as (
@@ -91,4 +91,4 @@ create view v_cf_tasks as (
 	left join v_cf_tasks_checklist tc on tc.id_task = h.id
 	left join tasks_history_ds th on th.id_task = h.id
 	left join v_cf_tasks_attachments tca on tca.id_task = h.id
-)
+);
