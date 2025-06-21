@@ -13,6 +13,7 @@ import OverviewSection from "./_components/overview/overview-section"
 import BoardView from "./_components/board/board-view"
 import CalendarView from "./_components/calendar/calendar-view"
 import { Board } from "@/entities/board.entity"
+import DeleteProjectItemModal from "@/components/shared/project-tree/modals/delete-project-item-modal"
 
 const ViewDisplay = () => {
 	const { section } = useViewSection()
@@ -39,6 +40,8 @@ export default function Client({
 }) {
 	return (
 		<ViewSectionProvider initialBoards={initialBoards} boardId={boardId}>
+			<DeleteProjectItemModal />
+
 			<div className="flex flex-col gap-2 flex-1 overflow-y-auto p-2">
 				<div className="flex items-center justify-between">
 					<ProjectTitle />

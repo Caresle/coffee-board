@@ -10,8 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useBoardGlobal } from "@/hooks/use-board-global"
 import { useRouter } from "next/navigation"
+import { useTreeItemDeleteStore } from "@/states/project-tree.state"
 
 const TreeItemActions = () => {
+	const { update } = useTreeItemDeleteStore.getState()
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -23,9 +26,16 @@ const TreeItemActions = () => {
 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
 				<DropdownMenuItem>
 					<Icons.Actions.Edit className="size-5" />
+					Rename
+				</DropdownMenuItem>
+				<DropdownMenuItem>
+					<Icons.Actions.Edit className="size-5" />
 					Edit description
 				</DropdownMenuItem>
-				<DropdownMenuItem variant="destructive">
+				<DropdownMenuItem
+					variant="destructive"
+					onClick={() => update({ show: true })}
+				>
 					<Icons.Actions.Delete className="size-5" />
 					Delete
 				</DropdownMenuItem>
