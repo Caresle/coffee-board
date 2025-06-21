@@ -8,6 +8,8 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useBoardGlobal } from "@/hooks/use-board-global"
+import { useRouter } from "next/navigation"
 
 const TreeItemActions = () => {
 	return (
@@ -33,13 +35,29 @@ const TreeItemActions = () => {
 }
 
 export default function ProjectTreeItem({ board }: { board: Board }) {
+	const { setSelectedBoard, boardSelected } = useBoardGlobal()
+	const router = useRouter()
+
+	const handleBoardClick = () => {
+		// Update the global board context
+		setSelectedBoard(board)
+		boardSelected.set(board)
+
+		// Navigate to the board page
+		const projectId = board.id_project
+		router.push(`/boards/${projectId}`)
+	}
+
 	return (
 		<li className="flex items-center justify-between gap-2">
 			<div className="flex items-center gap-2 w-full">
 				<div className="size-5 flex justify-center">
 					<div className="w-[1px] h-5 border border-slate-400 dark:border-neutral-700"></div>
 				</div>
-				<div className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full">
+				<div
+					className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full"
+					onClick={handleBoardClick}
+				>
 					<Icons.Misc.File className="size-5" />
 					{board.name}
 				</div>

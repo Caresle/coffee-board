@@ -2,12 +2,9 @@ import Icons from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import { useViewSection, VIEW_SECTION } from "../_hook/use-view-section"
-import Combobox from "@/components/shared/combobox"
-import { UseQueryResult } from "@tanstack/react-query"
-import { Board } from "@/entities/board.entity"
 
 export default function FilterDisplaySection() {
-	const { section, setSection, boards, boardSelected } = useViewSection()
+	const { section, setSection } = useViewSection()
 
 	const changeSection = (section: string) => {
 		setSection(section)
@@ -53,16 +50,6 @@ export default function FilterDisplaySection() {
 				<Icons.Misc.Calendar />
 				Calendar
 			</Button>
-
-			<Combobox
-				combobox={boardSelected}
-				label="name"
-				Query={
-					{
-						data: boards,
-					} as UseQueryResult<Board[]>
-				}
-			/>
 		</div>
 	)
 }

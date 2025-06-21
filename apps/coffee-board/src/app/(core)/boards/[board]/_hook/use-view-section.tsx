@@ -1,7 +1,6 @@
 import getAllBoardsByProject from "@/actions/boards/get-all-boards-by-project"
 import { queryKeys } from "@/constants/queryKeys"
 import { Board } from "@/entities/board.entity"
-import { ComboboxState, useCombobox } from "@/hooks/use-combobox"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { createContext, useContext, useState } from "react"
 
@@ -19,7 +18,6 @@ interface IViewSectionContext {
 	isNewBoard: boolean
 	setIsNewBoard: (isNewBoard: boolean) => void
 	boards: Board[]
-	boardSelected: ComboboxState<Board>
 	QBoards: UseQueryResult<Board[]>
 }
 
@@ -29,7 +27,6 @@ const ViewSectionContext = createContext<IViewSectionContext>({
 	boards: [],
 	isNewBoard: false,
 	setIsNewBoard: () => {},
-	boardSelected: {} as ComboboxState<Board>,
 	QBoards: {} as UseQueryResult<Board[]>,
 })
 
@@ -54,13 +51,10 @@ export function ViewSectionProvider({
 		queryFn: () => getAllBoardsByProject(+boardId),
 	})
 
-	const boardSelected = useCombobox<Board>(initialBoards?.[0])
-
 	const value: IViewSectionContext = {
 		boards: initialBoards,
 		section,
 		setSection,
-		boardSelected,
 		isNewBoard,
 		setIsNewBoard,
 		QBoards,
