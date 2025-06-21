@@ -1,21 +1,75 @@
 import { Separator } from "@/components/ui/separator"
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import Icons from "../icons"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useQuery } from "@tanstack/react-query"
 import { queryKeys } from "@/constants/queryKeys"
 import getAllBoardsByProject from "@/actions/boards/get-all-boards-by-project"
+import { Input } from "@/components/ui/input"
+
+const AddBoardButton = ({ projectId }: { projectId: number }) => {
+	const [isNew, setIsNew] = useState(false)
+	const [boardName, setBoardName] = useState("")
+
+	const handleAddBoard = () => {
+		setIsNew(true)
+		setTimeout(() => {
+			const input = document.getElementById("new-board-input")
+			if (input) {
+				input.focus()
+			}
+		}, 100)
+	}
+
+	const onSubmit = () => {
+		console.log(boardName)
+		console.log(projectId)
+		setBoardName("")
+		setIsNew(false)
+	}
+
+	return (
+		<>
+			{!isNew && (
+				<Button
+					variant="ghost"
+					className="w-full flex items-center justify-start gap-2"
+					onClick={handleAddBoard}
+				>
+					<Icons.Actions.Add className="size-5" />
+					Add board
+				</Button>
+			)}
+			{isNew && (
+				<div className="flex items-center gap-2">
+					<Input
+						id={"new-board-input"}
+						value={boardName}
+						placeholder="Board name"
+						onBlur={() => setIsNew(false)}
+						onChange={e => setBoardName(e.target.value)}
+						onKeyDown={e => {
+							if (e.key === "Enter") {
+								onSubmit()
+							}
+						}}
+					/>
+				</div>
+			)}
+		</>
+	)
+}
 
 export default function ProjectTree() {
 	const pathName = usePathname()
 
 	if (!pathName.includes("/boards/")) return <></>
 
-	const boardId = +pathName.split("/boards/")[1] || 0
+	const projectId = +pathName.split("/boards/")[1] || 0
 	const QBoards = useQuery({
-		queryKey: [queryKeys.boards, { id: boardId }],
-		queryFn: () => getAllBoardsByProject(+boardId),
+		queryKey: [queryKeys.boards, { id: projectId }],
+		queryFn: () => getAllBoardsByProject(+projectId),
 	})
 
 	const data = useMemo(() => QBoards.data || [], [QBoards.data])
@@ -40,13 +94,7 @@ export default function ProjectTree() {
 					</li>
 				))}
 			</ul>
-			<Button
-				variant="ghost"
-				className="w-full flex items-center justify-start gap-2"
-			>
-				<Icons.Actions.Add className="size-5" />
-				Add board
-			</Button>
+			<AddBoardButton projectId={projectId} />
 		</div>
 	)
 }

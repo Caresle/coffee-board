@@ -9,5 +9,5 @@ export default async function BoardPage({
 	const { board } = await params
 	const boardData = await getAllBoardsByProject(+board)
 
-	return <Client initialBoards={boardData} />
+	return <Client initialBoards={boardData} boardId={+board} />
 }

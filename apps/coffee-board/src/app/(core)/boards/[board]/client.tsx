@@ -32,11 +32,13 @@ const ViewDisplay = () => {
 
 export default function Client({
 	initialBoards = [],
+	boardId,
 }: {
 	initialBoards?: Board[]
+	boardId: number
 }) {
 	return (
-		<ViewSectionProvider initialBoards={initialBoards}>
+		<ViewSectionProvider initialBoards={initialBoards} boardId={boardId}>
 			<div className="flex flex-col gap-2 flex-1 overflow-y-auto p-2">
 				<div className="flex items-center justify-between">
 					<ProjectTitle />
