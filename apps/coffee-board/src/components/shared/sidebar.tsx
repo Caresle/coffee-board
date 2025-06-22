@@ -6,6 +6,7 @@ import { ROUTES } from "@/constants/routes"
 import ProjectTree from "./project-tree/project-tree"
 import { Button } from "../ui/button"
 import Icons from "./icons"
+import TooltipBasic from "./tooltip-basic"
 
 type SidebarItemProps = {
 	icon: React.ElementType
@@ -28,20 +29,39 @@ const SidebarItem = ({
 		router.push(href ?? "#")
 	}
 
+	const Wrapper = ({
+		children,
+		name,
+	}: {
+		children: React.ReactNode
+		name: string
+	}) => {
+		if (isExpanded) {
+			return children
+		}
+		return (
+			<TooltipBasic title={name} side="right">
+				{children}
+			</TooltipBasic>
+		)
+	}
+
 	return (
-		<li
-			onClick={handleClick}
-			className={cn(
-				"flex items-center gap-2 text-lg font-semibold p-2 rounded-lg transition-all hover:shadow-lg border border-transparent hover:border-blue-500 hover:scale-100 scale-95 cursor-pointer select-none hover:text-white hover:bg-blue-500",
-				{
-					"bg-blue-50 text-blue-500": isActive,
-					"w-fit": !isExpanded,
-				},
-			)}
-		>
-			<Icon className="size-5" />
-			{isExpanded && children}
-		</li>
+		<Wrapper name={children as string}>
+			<li
+				onClick={handleClick}
+				className={cn(
+					"flex items-center gap-2 text-lg font-semibold p-2 rounded-lg transition-all hover:shadow-lg border border-transparent hover:border-blue-500 hover:scale-100 scale-95 cursor-pointer select-none hover:text-white hover:bg-blue-500",
+					{
+						"bg-blue-50 text-blue-500": isActive,
+						"w-fit": !isExpanded,
+					},
+				)}
+			>
+				<Icon className="size-5" />
+				{isExpanded && children}
+			</li>
+		</Wrapper>
 	)
 }
 
