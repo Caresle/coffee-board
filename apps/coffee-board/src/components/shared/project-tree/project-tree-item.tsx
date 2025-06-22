@@ -11,9 +11,14 @@ import {
 import { useBoardGlobal } from "@/hooks/use-board-global"
 import { useRouter } from "next/navigation"
 import { useTreeItemDeleteStore } from "@/states/project-tree.state"
+import {
+	ProjectTreeItemProvider,
+	useProjectTreeItem,
+} from "@/hooks/use-project-tree-item"
 
 const TreeItemActions = () => {
 	const { update } = useTreeItemDeleteStore.getState()
+	const { board } = useProjectTreeItem()
 
 	return (
 		<DropdownMenu>
@@ -34,7 +39,7 @@ const TreeItemActions = () => {
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					variant="destructive"
-					onClick={() => update({ show: true })}
+					onClick={() => update({ show: true, item: board })}
 				>
 					<Icons.Actions.Delete className="size-5" />
 					Delete
@@ -59,20 +64,22 @@ export default function ProjectTreeItem({ board }: { board: Board }) {
 	}
 
 	return (
-		<li className="flex items-center justify-between gap-2">
-			<div className="flex items-center gap-2 w-full">
-				<div className="size-5 flex justify-center">
-					<div className="w-[1px] h-5 border border-slate-400 dark:border-neutral-700"></div>
+		<ProjectTreeItemProvider board={board}>
+			<li className="flex items-center justify-between gap-2">
+				<div className="flex items-center gap-2 w-full">
+					<div className="size-5 flex justify-center">
+						<div className="w-[1px] h-5 border border-slate-400 dark:border-neutral-700"></div>
+					</div>
+					<div
+						className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full"
+						onClick={handleBoardClick}
+					>
+						<Icons.Misc.File className="size-5" />
+						{board.name}
+					</div>
 				</div>
-				<div
-					className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full"
-					onClick={handleBoardClick}
-				>
-					<Icons.Misc.File className="size-5" />
-					{board.name}
-				</div>
-			</div>
-			<TreeItemActions />
-		</li>
+				<TreeItemActions />
+			</li>
+		</ProjectTreeItemProvider>
 	)
 }

@@ -10,17 +10,22 @@ import {
 import React from "react"
 import Icons from "../../icons"
 import { useTreeItemDeleteStore } from "@/states/project-tree.state"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import boardService from "@/services/board.service"
 import { Board } from "@/entities/board.entity"
+import { queryKeys } from "@/constants/queryKeys"
 
 export default function DeleteProjectItemModal() {
 	const { show, update, item } = useTreeItemDeleteStore(state => state)
+	const queryClient = useQueryClient()
 
 	const mut = useMutation({
 		mutationFn: (id: number) => boardService.delete(id),
 		onSuccess: () => {
 			update({ show: false, item: {} as Board })
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.boards, { id: item.id_project }],
+			})
 		},
 	})
 

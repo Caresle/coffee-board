@@ -51,10 +51,10 @@ export async function DELETE(
 ) {
 	try {
 		const id = (await params).board
-		const value = await pgQuery(QueriesBoard.deleteBoardSoft, [id])
+		const data = await pgQuery(QueriesBoard.deleteBoardSoft, [id])
 
 		return apiResponse({
-			data: value,
+			data,
 			message: "Board deleted successfully",
 		})
 	} catch (error) {
