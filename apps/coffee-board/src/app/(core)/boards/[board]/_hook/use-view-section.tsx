@@ -1,5 +1,7 @@
+import getAllBoardsByProject from "@/actions/boards/get-all-boards-by-project"
+import { queryKeys } from "@/constants/queryKeys"
 import { Board } from "@/entities/board.entity"
-import { ComboboxState, useCombobox } from "@/hooks/use-combobox"
+import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { createContext, useContext, useState } from "react"
 
 export const VIEW_SECTION = {
@@ -16,7 +18,7 @@ interface IViewSectionContext {
 	isNewBoard: boolean
 	setIsNewBoard: (isNewBoard: boolean) => void
 	boards: Board[]
-	boardSelected: ComboboxState<Board>
+	QBoards: UseQueryResult<Board[]>
 }
 
 const ViewSectionContext = createContext<IViewSectionContext>({
@@ -25,16 +27,18 @@ const ViewSectionContext = createContext<IViewSectionContext>({
 	boards: [],
 	isNewBoard: false,
 	setIsNewBoard: () => {},
-	boardSelected: {} as ComboboxState<Board>,
+	QBoards: {} as UseQueryResult<Board[]>,
 })
 
 export const useViewSection = () => useContext(ViewSectionContext)
 
 export function ViewSectionProvider({
 	initialBoards = [],
+	boardId,
 	children,
 }: {
 	initialBoards?: Board[]
+	boardId: number
 	children: React.ReactNode
 }) {
 	const [isNewBoard, setIsNewBoard] = useState(false)
@@ -42,15 +46,18 @@ export function ViewSectionProvider({
 		(typeof VIEW_SECTION)[keyof typeof VIEW_SECTION]
 	>(VIEW_SECTION.BOARD)
 
-	const boardSelected = useCombobox<Board>(initialBoards?.[0])
+	const QBoards = useQuery<Board[]>({
+		queryKey: [queryKeys.boards, { id: boardId }],
+		queryFn: () => getAllBoardsByProject(+boardId),
+	})
 
 	const value: IViewSectionContext = {
 		boards: initialBoards,
 		section,
 		setSection,
-		boardSelected,
 		isNewBoard,
 		setIsNewBoard,
+		QBoards,
 	}
 
 	return <ViewSectionContext value={value}>{children}</ViewSectionContext>

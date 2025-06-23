@@ -9,6 +9,7 @@ import { useViewSection } from "../../_hook/use-view-section"
 import { BoardDetailProvider } from "../../_hook/use-board"
 import Icons from "@/components/shared/icons"
 import BoardNewInput from "./board-new-input"
+import { useBoardGlobal } from "@/hooks/use-board-global"
 
 const BoardAddButton = dynamic(() => import("./board-add-button"), {
 	ssr: false,
@@ -24,7 +25,8 @@ const SelectBoard = () => {
 }
 
 export default function BoardView() {
-	const { boardSelected, isNewBoard } = useViewSection()
+	const { isNewBoard } = useViewSection()
+	const { boardSelected } = useBoardGlobal()
 
 	return (
 		<>
