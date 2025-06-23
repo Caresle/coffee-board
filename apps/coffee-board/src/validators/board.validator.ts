@@ -20,9 +20,9 @@ export const boardDetailValidator = z.object({
 	name: z.string().min(1).max(255),
 	board_order: z.number({ coerce: true }).optional().default(0),
 	deleted: z
-		.boolean()
+		.number({ coerce: true })
 		.optional()
-		.default(false)
+		.default(0)
 		.transform(val => (val ? 1 : 0)),
 })
 

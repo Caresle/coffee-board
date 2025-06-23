@@ -3,7 +3,7 @@ import { Board } from "@/entities/board.entity"
 import { ComboboxState, useCombobox } from "@/hooks/use-combobox"
 import { createContext, useContext, useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { queryKeys } from "@/constants/queryKeys"
 import getAllBoardsByProject from "@/actions/boards/get-all-boards-by-project"
 
@@ -11,6 +11,7 @@ interface BoardContextType {
 	selectedBoard: Board | null
 	setSelectedBoard: (board: Board | null) => void
 	boardSelected: ComboboxState<Board>
+	QBoards: UseQueryResult<Board[]>
 }
 
 const BoardContext = createContext<BoardContextType | undefined>(undefined)
@@ -53,6 +54,7 @@ export const BoardProvider = ({ children }: { children: React.ReactNode }) => {
 		selectedBoard,
 		setSelectedBoard,
 		boardSelected,
+		QBoards,
 	}
 
 	return <BoardContext value={value}>{children}</BoardContext>

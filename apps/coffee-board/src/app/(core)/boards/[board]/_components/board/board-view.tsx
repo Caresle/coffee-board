@@ -26,7 +26,7 @@ const SelectBoard = () => {
 
 export default function BoardView() {
 	const { isNewBoard } = useViewSection()
-	const { boardSelected } = useBoardGlobal()
+	const { selectedBoard } = useBoardGlobal()
 
 	return (
 		<>
@@ -34,12 +34,12 @@ export default function BoardView() {
 			<DeleteTaskModal />
 
 			<div className="flex-1 overflow-y-auto flex gap-2 overflow-x-auto">
-				{boardSelected.value ? (
+				{selectedBoard ? (
 					<>
-						{boardSelected.value?.details?.map((boardDetail, index) => (
+						{selectedBoard?.details?.map((boardDetail, index) => (
 							<BoardDetailProvider
 								boardDetail={boardDetail}
-								key={`board-details-${boardSelected.value?.id}-${index}`}
+								key={`board-details-${boardDetail.id}-${selectedBoard?.id}-${index}`}
 							>
 								<BoardCard />
 							</BoardDetailProvider>
