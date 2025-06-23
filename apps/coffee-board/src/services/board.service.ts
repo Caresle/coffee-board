@@ -24,8 +24,19 @@ class BoardService implements BoardDatasource {
 		}
 	}
 
-	update(body: Board): Promise<Board | null> {
-		throw new Error("Method not implemented.")
+	async update(body: Board): Promise<Board | null> {
+		try {
+			const axiosResponse = await axiosInstance.put(
+				`${BASE_ROUTE}/${body.id}`,
+				body,
+			)
+			const res: ApiResponse = axiosResponse.data
+
+			return res.data
+		} catch (error) {
+			console.error(error)
+			return null
+		}
 	}
 
 	async delete(id: number): Promise<void> {

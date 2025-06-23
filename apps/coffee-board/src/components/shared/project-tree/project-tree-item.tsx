@@ -15,10 +15,22 @@ import {
 	ProjectTreeItemProvider,
 	useProjectTreeItem,
 } from "@/hooks/use-project-tree-item"
+import { Input } from "@/components/ui/input"
+import { useState } from "react"
+import { focusById } from "@/helpers/focusById"
+import { FOCUS_IDS } from "@/constants/focus"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import boardService from "@/services/board.service"
+import { queryKeys } from "@/constants/queryKeys"
 
 const TreeItemActions = () => {
 	const { update } = useTreeItemDeleteStore.getState()
-	const { board } = useProjectTreeItem()
+	const { board, setIsRenaming } = useProjectTreeItem()
+
+	const onRename = () => {
+		setIsRenaming(true)
+		focusById(FOCUS_IDS.projectTree.renaming)
+	}
 
 	return (
 		<DropdownMenu>
@@ -29,7 +41,7 @@ const TreeItemActions = () => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuLabel>Actions</DropdownMenuLabel>
-				<DropdownMenuItem>
+				<DropdownMenuItem onClick={onRename}>
 					<Icons.Actions.Edit className="size-5" />
 					Rename
 				</DropdownMenuItem>
@@ -49,7 +61,52 @@ const TreeItemActions = () => {
 	)
 }
 
-export default function ProjectTreeItem({ board }: { board: Board }) {
+const TreeItemRenaming = () => {
+	const { isRenaming, setIsRenaming, board } = useProjectTreeItem()
+	const [name, setName] = useState(board.name)
+	const queryClient = useQueryClient()
+
+	const mut = useMutation({
+		mutationFn: boardService.update,
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.boards, { id: board.id_project }],
+			})
+		},
+	})
+
+	if (!isRenaming) return <></>
+
+	const onSubmit = () => {
+		setIsRenaming(false)
+
+		mut.mutate({
+			...board,
+			name,
+		})
+	}
+
+	return (
+		<>
+			<Input
+				id={FOCUS_IDS.projectTree.renaming}
+				value={name}
+				onBlur={() => setIsRenaming(false)}
+				onChange={e => {
+					setName(e.target.value)
+				}}
+				onKeyDown={e => {
+					if (e.key === "Enter") {
+						onSubmit()
+					}
+				}}
+			/>
+		</>
+	)
+}
+
+const TreeItem = () => {
+	const { board, isRenaming } = useProjectTreeItem()
 	const { setSelectedBoard, boardSelected } = useBoardGlobal()
 	const router = useRouter()
 
@@ -63,23 +120,32 @@ export default function ProjectTreeItem({ board }: { board: Board }) {
 		router.push(`/boards/${projectId}`)
 	}
 
+	if (isRenaming) return <></>
+
+	return (
+		<li className="flex items-center justify-between gap-2">
+			<div className="flex items-center gap-2 w-full">
+				<div className="size-5 flex justify-center">
+					<div className="w-[1px] h-5 border border-slate-400 dark:border-neutral-700"></div>
+				</div>
+				<div
+					className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full"
+					onClick={handleBoardClick}
+				>
+					<Icons.Misc.File className="size-5" />
+					{board.name}
+				</div>
+			</div>
+			<TreeItemActions />
+		</li>
+	)
+}
+
+export default function ProjectTreeItem({ board }: { board: Board }) {
 	return (
 		<ProjectTreeItemProvider board={board}>
-			<li className="flex items-center justify-between gap-2">
-				<div className="flex items-center gap-2 w-full">
-					<div className="size-5 flex justify-center">
-						<div className="w-[1px] h-5 border border-slate-400 dark:border-neutral-700"></div>
-					</div>
-					<div
-						className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full"
-						onClick={handleBoardClick}
-					>
-						<Icons.Misc.File className="size-5" />
-						{board.name}
-					</div>
-				</div>
-				<TreeItemActions />
-			</li>
+			<TreeItemRenaming />
+			<TreeItem />
 		</ProjectTreeItemProvider>
 	)
 }
