@@ -49,6 +49,14 @@ class BoardDetailsService implements BoardDetailsDatasource {
 			console.error(error)
 		}
 	}
+
+	async archive(id: number): Promise<void> {
+		try {
+			await axiosInstance.put(`${BASE_ROUTE}/${id}/details/${id}/archive`)
+		} catch (error) {
+			console.error(error)
+		}
+	}
 }
 
 const boardDetailsService = new BoardDetailsService()

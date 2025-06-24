@@ -10,6 +10,8 @@ import { BoardDetailProvider } from "../../_hook/use-board"
 import Icons from "@/components/shared/icons"
 import BoardNewInput from "./board-new-input"
 import { useBoardGlobal } from "@/hooks/use-board-global"
+import DeleteBoardModal from "../_modals/_board/delete-board-modal"
+import ArchiveBoardModal from "../_modals/_board/archive-board-modal"
 
 const BoardAddButton = dynamic(() => import("./board-add-button"), {
 	ssr: false,
@@ -26,20 +28,22 @@ const SelectBoard = () => {
 
 export default function BoardView() {
 	const { isNewBoard } = useViewSection()
-	const { boardSelected } = useBoardGlobal()
+	const { selectedBoard } = useBoardGlobal()
 
 	return (
 		<>
 			<TaskModal />
 			<DeleteTaskModal />
+			<DeleteBoardModal />
+			<ArchiveBoardModal />
 
 			<div className="flex-1 overflow-y-auto flex gap-2 overflow-x-auto">
-				{boardSelected.value ? (
+				{selectedBoard ? (
 					<>
-						{boardSelected.value?.details?.map((boardDetail, index) => (
+						{selectedBoard?.details?.map((boardDetail, index) => (
 							<BoardDetailProvider
 								boardDetail={boardDetail}
-								key={`board-details-${boardSelected.value?.id}-${index}`}
+								key={`board-details-${boardDetail.id}-${selectedBoard?.id}-${index}`}
 							>
 								<BoardCard />
 							</BoardDetailProvider>
