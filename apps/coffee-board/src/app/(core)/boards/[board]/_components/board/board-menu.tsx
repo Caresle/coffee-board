@@ -1,6 +1,6 @@
 "use client"
+
 import Icons from "@/components/shared/icons"
-import TooltipBasic from "@/components/shared/tooltip-basic"
 import { Button } from "@/components/ui/button"
 import {
 	DropdownMenu,
@@ -9,6 +9,54 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import React from "react"
+import {
+	useDetailArchiveStore,
+	useDetailDeleteStore,
+} from "../../_states/boardDetails.state"
+import { useBoard } from "../../_hook/use-board"
+
+const DeleteDetail = () => {
+	const { update } = useDetailDeleteStore.getState()
+	const { boardDetail } = useBoard()
+
+	const onDelete = () => {
+		update({
+			show: true,
+			item: boardDetail,
+		})
+	}
+
+	return (
+		<DropdownMenuItem
+			onClick={() => onDelete()}
+			className="text-red-500 hover:text-red-600"
+		>
+			<Icons.Actions.Delete className="text-red-500 hover:text-red-600" />
+			Delete
+		</DropdownMenuItem>
+	)
+}
+
+const ArchiveDetail = () => {
+	const { update } = useDetailArchiveStore.getState()
+	const { boardDetail } = useBoard()
+
+	const onArchive = () => {
+		update({
+			show: true,
+			item: boardDetail,
+		})
+	}
+	return (
+		<DropdownMenuItem
+			onClick={() => onArchive()}
+			className="text-purple-500 hover:text-purple-600"
+		>
+			<Icons.Misc.Archive className="text-purple-500 hover:text-purple-600" />
+			Archive
+		</DropdownMenuItem>
+	)
+}
 
 export default function BoardMenu() {
 	return (
@@ -19,20 +67,8 @@ export default function BoardMenu() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem
-					onClick={() => {}}
-					className="text-purple-500 hover:text-purple-600"
-				>
-					<Icons.Misc.Archive className="text-purple-500 hover:text-purple-600" />
-					Archive
-				</DropdownMenuItem>
-				<DropdownMenuItem
-					onClick={() => {}}
-					className="text-red-500 hover:text-red-600"
-				>
-					<Icons.Actions.Delete className="text-red-500 hover:text-red-600" />
-					Delete
-				</DropdownMenuItem>
+				<ArchiveDetail />
+				<DeleteDetail />
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)
