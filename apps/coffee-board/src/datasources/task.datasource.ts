@@ -18,10 +18,15 @@ export interface TaskAttachmentDatasource {
 	uploadAttachment(id_task: number, file: File): Promise<boolean>
 }
 
+export interface TaskHistoryDatasource {
+	createTaskHistory(id_task: number, body: string): Promise<void>
+}
+
 export interface TaskDatasource
 	extends GeneralDatasource<Task>,
 		TaskCheckListDatasource,
-		TaskAttachmentDatasource {
+		TaskAttachmentDatasource,
+		TaskHistoryDatasource {
 	getByBoardDetId(id: number): Promise<Task[]>
 	createQuickTask(body: TaskQuick): Promise<Task | null>
 }
