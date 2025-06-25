@@ -1,14 +1,46 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import React from "react"
+import React, { useState } from "react"
 import { useTaskStore } from "../../../_states/task.state"
 import Icons from "@/components/shared/icons"
+import { useMutation } from "@tanstack/react-query"
+import taskService from "@/services/task.service"
 
 const WriteComment = () => {
+	const { item } = useTaskStore(state => state)
+	const [comment, setComment] = useState("")
+
+	const mut = useMutation({
+		mutationFn: ({ id_task, msg }: { id_task: number; msg: string }) =>
+			taskService.createTaskHistory(id_task, msg),
+		onSuccess: () => {
+			setComment("")
+		},
+	})
+
+	const onSubmit = () => {
+		mut.mutate({
+			id_task: item.id,
+			msg: comment,
+		})
+	}
+
 	return (
 		<div className="flex items-center gap-2">
-			<Input placeholder="Write a comment" />
-			<Button>Send</Button>
+			<Input
+				placeholder="Write a comment"
+				onChange={e => setComment(e.target.value)}
+				value={comment}
+				onKeyDown={e => {
+					if (e.key === "Enter") {
+						onSubmit()
+					}
+				}}
+				disabled={mut.isPending}
+			/>
+			<Button onClick={onSubmit} disabled={mut.isPending}>
+				Send
+			</Button>
 		</div>
 	)
 }
