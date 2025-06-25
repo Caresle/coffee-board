@@ -4,6 +4,7 @@ import {
 	Task,
 	TaskCheckList,
 	TaskCheckListHeader,
+	TaskHistory,
 	TaskQuick,
 } from "@/entities/task.entity"
 import { ApiResponse } from "@/helpers/api-response"
@@ -137,6 +138,19 @@ class TaskService implements TaskDatasource {
 			console.log(res.data)
 		} catch (error) {
 			console.error(error)
+		}
+	}
+
+	async createTaskHistory(id_task: number, msg: string): Promise<void> {
+		try {
+			const res = await axiosInstance.post(`${BASE_ROUTE}/${id_task}/history`, {
+				msg,
+				id_user: 1,
+			})
+			return
+		} catch (error) {
+			console.error(error)
+			return
 		}
 	}
 }
