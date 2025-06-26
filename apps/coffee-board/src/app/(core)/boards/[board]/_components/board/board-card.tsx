@@ -5,6 +5,8 @@ import Icons from "@/components/shared/icons"
 import { useBoard } from "../../_hook/use-board"
 import { TaskProvider } from "../../_hook/use-task"
 import TaskCreateCard from "../task/task-create-card"
+import { useDroppable } from "@dnd-kit/core"
+import { cn } from "@/lib/utils"
 
 const NoTasks = () => {
 	return (
@@ -25,13 +27,22 @@ const Loading = () => {
 }
 
 export default function BoardCard() {
-	const { QTasks, isNewTask, tasks } = useBoard()
+	const { QTasks, isNewTask, tasks, boardDetail } = useBoard()
+
+	const { setNodeRef } = useDroppable({
+		id: boardDetail.id,
+	})
 
 	return (
 		<div className="border p-2 bg-white rounded-lg flex flex-col gap-2 overflow-y-auto w-[300px] dark:bg-neutral-800">
 			<BoardHeader />
 
-			<div className="flex flex-col gap-2 overflow-y-auto flex-1 bg-slate-100 p-2 rounded-lg dark:bg-neutral-900">
+			<div
+				ref={setNodeRef}
+				className={cn(
+					"flex flex-col gap-2 overflow-y-auto flex-1 bg-slate-100 p-2 rounded-lg dark:bg-neutral-900",
+				)}
+			>
 				{isNewTask && <TaskCreateCard />}
 				{QTasks.isLoading && <Loading />}
 				{!QTasks.isLoading && tasks.length === 0 && <NoTasks />}
