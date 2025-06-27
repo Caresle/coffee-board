@@ -9,11 +9,12 @@ import { useDraggable } from "@dnd-kit/core"
 import { useTask } from "../../_hook/use-task"
 import { cn } from "@/lib/utils"
 
-export default function TaskCard() {
+export default function TaskCard({ disabled }: { disabled?: boolean }) {
 	const { task } = useTask()
 	const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
 		id: task.id,
 		data: task,
+		disabled,
 	})
 
 	return (

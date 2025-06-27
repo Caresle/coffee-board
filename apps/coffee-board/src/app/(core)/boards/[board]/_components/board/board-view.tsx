@@ -19,6 +19,7 @@ import {
 	DragStartEvent,
 } from "@dnd-kit/core"
 import { Task } from "@/entities/task.entity"
+import TaskCardFloat from "../task/task-card-float"
 const BoardAddButton = dynamic(() => import("./board-add-button"), {
 	ssr: false,
 })
@@ -57,7 +58,7 @@ export default function BoardView() {
 
 			<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
 				<DragOverlay>
-					<div>{parent && <div>{draggedItem?.name}</div>}</div>
+					<div>{parent && <TaskCardFloat task={draggedItem!} />}</div>
 				</DragOverlay>
 				<div className="flex-1 overflow-y-auto flex gap-2 overflow-x-auto">
 					{selectedBoard ? (
