@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils"
 import React, { useMemo } from "react"
 import { useCalendarStore } from "../../_states/calendar.state"
+import { useCalendar } from "../../_hook/use-calendar"
+import { CalendarEvent } from "@/entities/calendar.entity"
 
 interface CalendarDayCellProps {
 	value: number
-	children: React.ReactNode
+	children?: React.ReactNode
 	column: number
 }
 
@@ -14,24 +16,42 @@ export default function CalendarDayCell({
 	column,
 }: CalendarDayCellProps) {
 	const { update, selectedIndex } = useCalendarStore(state => state)
-	const isSelected = useMemo(() => {
-		if (selectedIndex.start === value || selectedIndex.end === value) {
-			return true
-		}
+	const { events, setEvents } = useCalendar()
 
-		if (
-			selectedIndex.columnStart !== column ||
-			selectedIndex.columnEnd !== column
-		) {
-			return false
-		}
+	const { isSelected, isEnd, isStart } = useMemo(() => {
+		const result = events.reduce(
+			(acc, event) => {
+				if (event.timeStart === value && event.column === column) {
+					acc.isSelected = true
+					acc.isStart = true
+					acc.isEnd = false
+				}
 
-		if (selectedIndex.start < value && selectedIndex.end > value) {
-			return true
-		}
+				if (event.timeEnd === value && event.column === column) {
+					acc.isSelected = true
+					acc.isStart = false
+					acc.isEnd = true
+				}
 
-		return false
-	}, [value, column, selectedIndex])
+				if (
+					value > event.timeStart &&
+					value < event.timeEnd &&
+					column === event.column
+				) {
+					acc.isSelected = true
+				}
+
+				return acc
+			},
+			{
+				isSelected: false,
+				isStart: false,
+				isEnd: false,
+			},
+		)
+
+		return result
+	}, [value, column, events])
 
 	const onClick = () => {
 		if (selectedIndex.start === -1) {
@@ -46,17 +66,22 @@ export default function CalendarDayCell({
 			return
 		}
 
-		if (selectedIndex.end === -1) {
-			update({
-				selectedIndex: {
-					start: selectedIndex.start,
-					end: value,
-					columnStart: selectedIndex.columnStart,
-					columnEnd: column,
-				},
-			})
-			return
+		const newEvent: CalendarEvent = {
+			id: events.length + 1,
+			timeStart: selectedIndex.start,
+			timeEnd: value,
+			column,
 		}
+
+		setEvents([...events, newEvent])
+		update({
+			selectedIndex: {
+				start: -1,
+				end: -1,
+				columnStart: -1,
+				columnEnd: -1,
+			},
+		})
 	}
 
 	return (
@@ -66,6 +91,8 @@ export default function CalendarDayCell({
 				{
 					"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
 						isSelected,
+					"rounded-b-lg": isEnd,
+					"rounded-t-lg": isStart,
 				},
 			)}
 			onClick={onClick}

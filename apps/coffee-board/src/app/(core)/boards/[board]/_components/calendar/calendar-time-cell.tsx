@@ -9,7 +9,7 @@ export default function CalendarTimeCell({
 }) {
 	return (
 		<div
-			className={cn("bg-slate-50 flex-1 p-1 dark:bg-neutral-800", {
+			className={cn("bg-slate-50 flex-1 dark:bg-neutral-800", {
 				"bg-slate-100 dark:bg-neutral-700": isEven,
 			})}
 		>
