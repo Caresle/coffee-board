@@ -29,4 +29,5 @@ export interface TaskDatasource
 		TaskHistoryDatasource {
 	getByBoardDetId(id: number): Promise<Task[]>
 	createQuickTask(body: TaskQuick): Promise<Task | null>
+	updateBoard(body: { id_task: number; id_board_det: number }): Promise<void>
 }
