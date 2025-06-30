@@ -4,7 +4,6 @@ import {
 	Task,
 	TaskCheckList,
 	TaskCheckListHeader,
-	TaskHistory,
 	TaskQuick,
 } from "@/entities/task.entity"
 import { ApiResponse } from "@/helpers/api-response"
@@ -25,6 +24,8 @@ class TaskService implements TaskDatasource {
 
 			return res.data
 		} catch (error) {
+			console.error(error)
+
 			return false
 		}
 	}
@@ -37,6 +38,7 @@ class TaskService implements TaskDatasource {
 			if (!found) return {} as TaskCheckList
 			return found
 		} catch (error) {
+			console.error(error)
 			return {} as TaskCheckList
 		}
 	}
@@ -147,6 +149,22 @@ class TaskService implements TaskDatasource {
 				msg,
 				id_user: 1,
 			})
+			return
+		} catch (error) {
+			console.error(error)
+			return
+		}
+	}
+
+	async updateBoard(body: {
+		id_task: number
+		id_board_det: number
+	}): Promise<void> {
+		try {
+			const res = await axiosInstance.put(
+				`${BASE_ROUTE}/${body.id_task}/board`,
+				body,
+			)
 			return
 		} catch (error) {
 			console.error(error)
