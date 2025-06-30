@@ -20,6 +20,10 @@ import {
 } from "@dnd-kit/core"
 import { Task } from "@/entities/task.entity"
 import TaskCardFloat from "../task/task-card-float"
+import { BoardDetails } from "@/entities/board.entity"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import taskService from "@/services/task.service"
+import { queryKeys } from "@/constants/queryKeys"
 const BoardAddButton = dynamic(() => import("./board-add-button"), {
 	ssr: false,
 })
@@ -38,6 +42,26 @@ export default function BoardView() {
 	const { selectedBoard } = useBoardGlobal()
 	const [parent, setParent] = useState<string | null>(null)
 	const [draggedItem, setDraggedItem] = useState<Task | null>(null)
+	const queryClient = useQueryClient()
+
+	const mut = useMutation({
+		mutationFn: async (body: {
+			id_task: number
+			id_board_det: number
+			id_board_original: number
+		}) => {
+			await taskService.updateBoard(body)
+			return body
+		},
+		onSuccess: body => {
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.tasks, { id: body.id_board_original }],
+			})
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.tasks, { id: body.id_board_det }],
+			})
+		},
+	})
 
 	const onDragStart = (event: DragStartEvent) => {
 		setParent(event.active.id as string)
@@ -45,8 +69,23 @@ export default function BoardView() {
 	}
 
 	const onDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event
+
 		setParent(null)
 		setDraggedItem(null)
+
+		if (!over) return
+
+		const boardDetail = over.data.current as BoardDetails
+		const task = active.data.current as Task
+
+		const body = {
+			id_task: task.id,
+			id_board_original: task.id_board_det,
+			id_board_det: boardDetail.id,
+		}
+
+		mut.mutate(body)
 	}
 
 	return (

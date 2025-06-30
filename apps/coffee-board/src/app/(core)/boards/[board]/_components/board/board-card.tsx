@@ -1,4 +1,3 @@
-import React, { useMemo } from "react"
 import BoardHeader from "./board-header"
 import TaskCard from "../task/task-card"
 import Icons from "@/components/shared/icons"
@@ -31,6 +30,7 @@ export default function BoardCard() {
 
 	const { setNodeRef } = useDroppable({
 		id: boardDetail.id,
+		data: boardDetail,
 	})
 
 	return (
@@ -49,7 +49,10 @@ export default function BoardCard() {
 				{!QTasks.isLoading &&
 					tasks.length > 0 &&
 					tasks.map((task, index) => (
-						<TaskProvider key={`task-${task.id}-${index}`} task={task}>
+						<TaskProvider
+							key={`task-${task.id}-${task.id_board_det}-${index}`}
+							task={task}
+						>
 							<TaskCard />
 						</TaskProvider>
 					))}
