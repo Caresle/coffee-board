@@ -17,6 +17,9 @@ import {
 	DragEndEvent,
 	DragOverlay,
 	DragStartEvent,
+	MouseSensor,
+	useSensor,
+	useSensors,
 } from "@dnd-kit/core"
 import { Task } from "@/entities/task.entity"
 import TaskCardFloat from "../task/task-card-float"
@@ -43,6 +46,15 @@ export default function BoardView() {
 	const [parent, setParent] = useState<string | null>(null)
 	const [draggedItem, setDraggedItem] = useState<Task | null>(null)
 	const queryClient = useQueryClient()
+
+	// Sensors
+	const mouseSensor = useSensor(MouseSensor, {
+		activationConstraint: {
+			distance: 10,
+		},
+	})
+
+	const sensors = useSensors(mouseSensor)
 
 	const mut = useMutation({
 		mutationFn: async (body: {
@@ -95,7 +107,11 @@ export default function BoardView() {
 			<DeleteBoardModal />
 			<ArchiveBoardModal />
 
-			<DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+			<DndContext
+				onDragStart={onDragStart}
+				onDragEnd={onDragEnd}
+				sensors={sensors}
+			>
 				<DragOverlay>
 					<div>{parent && <TaskCardFloat task={draggedItem!} />}</div>
 				</DragOverlay>
