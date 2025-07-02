@@ -1,12 +1,10 @@
 import Icons from "@/components/shared/icons"
-import TooltipBasic from "@/components/shared/tooltip-basic"
 import { Button } from "@/components/ui/button"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import React from "react"
 import TaskDeleteButton from "./task-delete-button"
 import { useTask } from "../../_hook/use-task"
 import { useTaskStore } from "../../_states/task.state"
