@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Button } from "../ui/button"
 import {
@@ -11,7 +11,7 @@ import {
 } from "../ui/command"
 import { UseQueryResult } from "@tanstack/react-query"
 import Icons from "./icons"
-import { ComboboxState, useCombobox } from "@/hooks/use-combobox"
+import { ComboboxState } from "@/hooks/use-combobox"
 
 interface ComboboxProps<T> {
 	Query: UseQueryResult<T[]>

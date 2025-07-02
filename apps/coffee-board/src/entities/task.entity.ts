@@ -22,7 +22,7 @@ export interface Task {
 export type TaskQuick = Pick<Task, "name" | "id_board_det">
 
 export interface TaskHistory {
-	user: Object
+	user: object
 	message: TaskMessage
 }
 
