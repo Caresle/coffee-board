@@ -101,7 +101,7 @@ export default function TagSelector() {
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
 					<Button className="w-full" variant={"ghost"}>
-						{item.tags.length > 0 ? <TagList /> : "Add Tags"}
+						{item.tags?.length > 0 ? <TagList /> : "Add Tags"}
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent>
