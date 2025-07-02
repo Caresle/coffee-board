@@ -3,6 +3,7 @@ import GeneralSelector from "./general-selector"
 import Icons from "@/components/shared/icons"
 import PrioritySelector from "./_meta_info/priority-selector"
 import DatesSelector from "./_meta_info/dates-selector"
+import TagSelector from "./_meta_info/tag-selector"
 
 export default function MetaInfo() {
 	return (
@@ -18,11 +19,7 @@ export default function MetaInfo() {
 
 			<div className="flex flex-col gap-2 col-span-1">
 				<PrioritySelector />
-				<GeneralSelector
-					icon={<Icons.Misc.Tags />}
-					title="Tags"
-					triggerText="Add Tags"
-				/>
+				<TagSelector />
 			</div>
 		</div>
 	)
