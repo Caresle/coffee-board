@@ -6,6 +6,7 @@ import { createServer } from "node:http";
 import { Server } from "socket.io";
 import { socketTagController } from "./controllers/tag.controller";
 import { socketProjectController } from "./controllers/project.controller";
+import { socketPriorityController } from "./controllers/priority.controller";
 
 const app = express();
 const server = createServer(app);
@@ -24,6 +25,7 @@ io.on("connection", (socket) => {
 
   socketTagController(socket);
   socketProjectController(socket);
+  socketPriorityController(socket);
 });
 
 server.listen(PORT, () => {
