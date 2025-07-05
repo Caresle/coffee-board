@@ -1,8 +1,6 @@
 import Combobox from "@/components/shared/combobox"
 import FormItem from "@/components/shared/form-item"
-import { useCombobox } from "@/hooks/use-combobox"
 import { UseQueryResult } from "@tanstack/react-query"
-import React from "react"
 import { useProjectStore } from "../../_states/project.state"
 
 export default function VisibilitySelector() {
@@ -12,7 +10,7 @@ export default function VisibilitySelector() {
 		<FormItem title="Visibility">
 			<Combobox
 				combobox={{
-					value: { name: item.visibility, id: item.visibility },
+					value: { name: item.visibility, id: item.visibility ?? null },
 					set: value =>
 						update({
 							item: { ...item, visibility: value.id as "public" | "private" },
