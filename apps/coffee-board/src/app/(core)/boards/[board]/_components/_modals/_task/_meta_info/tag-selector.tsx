@@ -89,7 +89,7 @@ export default function TagSelector() {
 	const tags = useMemo(() => {
 		const allTags = QTags?.data || []
 
-		return allTags.filter(tag => !item?.tags.find(t => t.id === tag.id))
+		return allTags.filter(tag => !item?.tags?.find(t => t.id === tag.id))
 	}, [QTags?.data, item])
 
 	return (
@@ -109,7 +109,7 @@ export default function TagSelector() {
 						<CommandList>
 							<CommandGroup>
 								<div className="grid grid-cols-2 gap-1 max-h-[200px] overflow-y-auto">
-									{item.tags.map(tag => (
+									{item?.tags?.map(tag => (
 										<TagCommandItem
 											tag={tag}
 											onSelect={removeTagFromTask}

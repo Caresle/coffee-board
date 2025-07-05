@@ -13,7 +13,7 @@ export default function useTaskTag() {
 	const addTagToTask = (tag: Tag) => {
 		const { id_board_det, id, tags: tagsTask } = item
 
-		const newTags = [...tagsTask, tag]
+		const newTags = [...(tagsTask ?? []), tag]
 
 		const tasks = queryClient.getQueryData<Task[]>([
 			queryKeys.tasks,
@@ -40,7 +40,7 @@ export default function useTaskTag() {
 	const removeTagFromTask = (tag: Tag) => {
 		const { id_board_det, id, tags: tagsTask } = item
 
-		const newTags = tagsTask.filter(t => t.id !== tag.id)
+		const newTags = tagsTask?.filter(t => t.id !== tag.id)
 
 		const tasks = queryClient.getQueryData<Task[]>([
 			queryKeys.tasks,
