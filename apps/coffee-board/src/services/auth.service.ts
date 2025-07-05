@@ -1,9 +1,21 @@
 import { AuthDatasource, SignUpUser } from "@/datasources/auth.datasource"
+import { ApiResponse } from "@/helpers/api-response"
 import { axiosInstance } from "@/lib/axios"
 
 class AuthService implements AuthDatasource {
 	async login(username: string, password: string): Promise<string | null> {
-		throw new Error("Method not implemented.")
+		try {
+			const axiosRes = await axiosInstance.post("/auth/", {
+				username,
+				password,
+			})
+			const res: ApiResponse = axiosRes.data
+
+			return res.data
+		} catch (error) {
+			console.error(error)
+			throw new Error("Error logging in")
+		}
 	}
 
 	async signup(body: SignUpUser): Promise<string | null> {

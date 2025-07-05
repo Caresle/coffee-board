@@ -1,4 +1,5 @@
 "use client"
+import { saveToken } from "@/actions/save-token"
 import FormItem from "@/components/shared/form-item"
 import Icons from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
@@ -13,9 +14,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import authService from "@/services/auth.service"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
-import React from "react"
+import { useState } from "react"
 import { toast } from "sonner"
 
 const ForgotLink = () => {
@@ -48,16 +50,27 @@ const CreateAccountLink = () => {
 
 export default function LoginPage() {
 	const router = useRouter()
+	const [usernmae, setUsername] = useState("")
+	const [password, setPassword] = useState("")
 
 	const mut = useMutation({
-		mutationFn: () => {
-			return new Promise(resolve => setTimeout(resolve, 1000))
-		},
-		onSuccess: () => {
+		mutationFn: () => authService.login(usernmae, password),
+		onSuccess: async (token: string | null) => {
+			if (!token) {
+				toast.error("Invalid username or password")
+				return
+			}
+
 			toast.success("Login Successful")
+			await saveToken(token)
+
 			setTimeout(() => {
 				router.push("/")
 			}, 500)
+		},
+		onError: error => {
+			console.error("Error logging in:", error)
+			toast.error("Error logging in. Please try again.")
 		},
 	})
 
@@ -78,11 +91,20 @@ export default function LoginPage() {
 					<CardContent>
 						<div className="flex flex-col gap-2">
 							<FormItem title="Username">
-								<Input placeholder="Username" />
+								<Input
+									placeholder="Username"
+									value={usernmae}
+									onChange={e => setUsername(e.target.value)}
+								/>
 							</FormItem>
 
 							<FormItem title="Password">
-								<Input placeholder="Password" type="password" />
+								<Input
+									placeholder="Password"
+									type="password"
+									value={password}
+									onChange={e => setPassword(e.target.value)}
+								/>
 							</FormItem>
 						</div>
 						<div className="flex items-center justify-between select-none mt-2">
