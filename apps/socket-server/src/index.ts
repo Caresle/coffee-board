@@ -5,6 +5,7 @@ import express from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import { socketTagController } from "./controllers/tag.controller";
+import { socketProjectController } from "./controllers/project.controller";
 
 const app = express();
 const server = createServer(app);
@@ -22,6 +23,7 @@ io.on("connection", (socket) => {
   });
 
   socketTagController(socket);
+  socketProjectController(socket);
 });
 
 server.listen(PORT, () => {
