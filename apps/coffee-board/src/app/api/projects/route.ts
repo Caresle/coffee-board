@@ -4,6 +4,7 @@ import { projectValidator } from "@/validators/project.validator"
 import { NextRequest } from "next/server"
 import { QueriesProject } from "./queries"
 import { getAllProjects } from "@/actions/projects/get-all-projects"
+import { getTokenData } from "@/actions/get-token-data"
 
 export async function GET() {
 	try {
@@ -21,12 +22,17 @@ export async function GET() {
 export async function POST(req: NextRequest) {
 	try {
 		const data = projectValidator.parse(await req.json())
+		const token = await getTokenData()
+
+		if (!token) {
+			return apiResponseError({ error: "Invalid token" })
+		}
+
 		const value = (
 			await pgQuery(QueriesProject.createProject, [
 				data.name,
 				data.description,
-				1, // TODO: CHANGE FOR USER ID
-				//data.id_user,
+				token.id,
 				data.visibility,
 			])
 		)?.[0]
