@@ -3,20 +3,26 @@ import React, { useMemo } from "react"
 import { useCalendarStore } from "../../_states/calendar.state"
 import { useCalendar } from "../../_hook/use-calendar"
 import { CalendarEvent } from "@/entities/calendar.entity"
+import { useEventPopoverStore } from "@/states/event-popover.state"
 
 interface CalendarDayCellProps {
 	value: number
 	children?: React.ReactNode
 	column: number
+	hoveredEvent?: CalendarEvent | null
+	setHoveredEvent?: (event: CalendarEvent | null) => void
 }
 
 export default function CalendarDayCell({
 	value,
 	children,
 	column,
+	hoveredEvent,
+	setHoveredEvent,
 }: CalendarDayCellProps) {
 	const { update, selectedIndex } = useCalendarStore(state => state)
 	const { events, setEvents } = useCalendar()
+	const { update: updateEventPopover } = useEventPopoverStore.getState()
 
 	const { isSelected, isEnd, isStart } = useMemo(() => {
 		const result = events.reduce(
@@ -53,7 +59,25 @@ export default function CalendarDayCell({
 		return result
 	}, [value, column, events])
 
+	const eventForCell = useMemo(() => {
+		return events.find(
+			event =>
+				value >= event.timeStart &&
+				value <= event.timeEnd &&
+				column === event.column,
+		)
+	}, [value, column, events])
+
 	const onClick = () => {
+		if (eventForCell) {
+			console.log("Event already exists for this cell:", eventForCell)
+			updateEventPopover({
+				item: eventForCell,
+				show: true,
+			})
+			return
+		}
+
 		if (selectedIndex.start === -1) {
 			update({
 				selectedIndex: {
@@ -68,8 +92,8 @@ export default function CalendarDayCell({
 
 		const newEvent: CalendarEvent = {
 			id: events.length + 1,
-			timeStart: selectedIndex.start,
-			timeEnd: value,
+			timeStart: selectedIndex.start < value ? selectedIndex.start : value,
+			timeEnd: value > selectedIndex.start ? value : selectedIndex.start,
 			column,
 		}
 
@@ -84,6 +108,21 @@ export default function CalendarDayCell({
 		})
 	}
 
+	const isHovered =
+		hoveredEvent && eventForCell && eventForCell.id === hoveredEvent.id
+
+	const handleMouseEnter = () => {
+		if (setHoveredEvent && eventForCell) {
+			setHoveredEvent(eventForCell)
+		}
+	}
+
+	const handleMouseLeave = () => {
+		if (setHoveredEvent) {
+			setHoveredEvent(null)
+		}
+	}
+
 	return (
 		<div
 			className={cn(
@@ -93,9 +132,13 @@ export default function CalendarDayCell({
 						isSelected,
 					"rounded-b-lg": isEnd,
 					"rounded-t-lg": isStart,
+					"bg-orange-200 dark:bg-orange-700 border-orange-200 dark:border-orange-700":
+						isHovered,
 				},
 			)}
 			onClick={onClick}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
 		>
 			{children}
 		</div>
