@@ -4,6 +4,7 @@ DotEnv.config();
 import express from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
+import { socketTagController } from "./controllers/tag.controller";
 
 const app = express();
 const server = createServer(app);
@@ -17,7 +18,10 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("A user disconnected");
+    console.log(socket.id);
   });
+
+  socketTagController(socket);
 });
 
 server.listen(PORT, () => {
