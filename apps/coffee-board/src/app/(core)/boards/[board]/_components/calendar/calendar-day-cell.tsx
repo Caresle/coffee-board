@@ -134,25 +134,22 @@ export default function CalendarDayCell({
 
 	return (
 		<div
-			className={cn(
-				"border transition-all hover:bg-orange-200 cursor-pointer dark:hover:bg-orange-700",
-				{
-					"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
-						isSelected,
-					"rounded-b-lg": isEnd,
-					"rounded-t-lg": isStart,
-					"bg-purple-200 dark:bg-indigo-800 dark:border-indigo-800 border-purple-200":
-						eventForCell?.type === CalendarEventType.MEETING,
-					"bg-teal-200 dark:bg-teal-700 dark:border-teal-700 border-teal-200":
-						eventForCell?.type === CalendarEventType.WORK,
-					"bg-amber-200 dark:bg-amber-700 dark:border-amber-700 border-amber-200":
-						eventForCell?.type === CalendarEventType.REMINDER,
-					"bg-rose-200 dark:bg-rose-700 dark:border-rose-700 border-rose-200":
-						eventForCell?.type === CalendarEventType.OTHER,
-					"bg-orange-200 dark:bg-orange-700 border-orange-200 dark:border-orange-700":
-						isHovered,
-				},
-			)}
+			className={cn("border transition-all cursor-pointer", {
+				"hover:bg-neutral-200 dark:hover:bg-neutral-500": !isHovered,
+				"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
+					isSelected,
+				"rounded-b-lg": isEnd,
+				"rounded-t-lg": isStart,
+				"bg-rose-600 dark:bg-rose-500 dark:border-rose-500 border-rose-600":
+					eventForCell?.type === CalendarEventType.MEETING,
+				"bg-amber-500 dark:bg-amber-400 dark:border-amber-400 border-amber-500":
+					eventForCell?.type === CalendarEventType.WORK,
+				"bg-indigo-600 dark:bg-indigo-500 dark:border-indigo-500 border-indigo-600":
+					eventForCell?.type === CalendarEventType.REMINDER,
+				"bg-cyan-600 dark:bg-cyan-500 dark:border-cyan-500 border-cyan-600":
+					eventForCell?.type === CalendarEventType.OTHER,
+				"brightness-125": isHovered,
+			})}
 			onClick={onClick}
 			onMouseEnter={() => handleMouseEnter(eventForCell)}
 			onMouseLeave={handleMouseLeave}
