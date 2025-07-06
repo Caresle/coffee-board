@@ -42,6 +42,7 @@ import {
 	LuTruck,
 	LuUsersRound,
 	LuWrench,
+	LuX,
 } from "react-icons/lu"
 
 const Icons = {
@@ -95,6 +96,7 @@ const Icons = {
 		Back: LuArrowLeft,
 		Settings: LuWrench,
 		Notification: LuBell,
+		Close: LuX,
 	},
 	Social: {
 		Github: LuGithub,

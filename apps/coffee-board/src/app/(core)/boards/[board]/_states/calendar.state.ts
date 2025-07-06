@@ -1,13 +1,15 @@
 import { create } from "zustand"
 
+export interface CalendarCellValues {
+	start: number
+	end: number
+	columnStart: number
+	columnEnd: number
+}
+
 interface CalendarState {
 	update: (data: Partial<CalendarState>) => void
-	selectedIndex: {
-		start: number
-		end: number
-		columnStart: number
-		columnEnd: number
-	}
+	selectedIndex: CalendarCellValues
 }
 
 export const useCalendarStore = create<CalendarState>(set => ({

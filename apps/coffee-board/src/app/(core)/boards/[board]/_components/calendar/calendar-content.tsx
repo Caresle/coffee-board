@@ -1,11 +1,7 @@
-import { useState } from "react"
 import CalendarDayCell from "./calendar-day-cell"
 import CalendarTimeCell from "./calendar-time-cell"
-import { CalendarEvent } from "@/entities/calendar.entity"
 
 export default function CalendarContent() {
-	const [hoverEvent, setHoverEvent] = useState<CalendarEvent | null>(null)
-
 	return (
 		<>
 			<div className="grid grid-cols-12 flex-1 overflow-y-auto">
@@ -22,13 +18,7 @@ export default function CalendarContent() {
 					{Array(168)
 						.fill(0)
 						.map((_, i) => (
-							<CalendarDayCell
-								key={i}
-								value={i}
-								column={i % 7}
-								hoveredEvent={hoverEvent}
-								setHoveredEvent={setHoverEvent}
-							>
+							<CalendarDayCell key={i} value={i} column={i % 7}>
 								{/* {i} */}
 							</CalendarDayCell>
 						))}
