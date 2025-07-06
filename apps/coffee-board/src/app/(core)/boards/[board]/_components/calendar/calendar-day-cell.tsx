@@ -1,71 +1,94 @@
 import { cn } from "@/lib/utils"
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import { useCalendarStore } from "../../_states/calendar.state"
 import { useCalendar } from "../../_hook/use-calendar"
-import { CalendarEvent } from "@/entities/calendar.entity"
+import { CalendarEvent, CalendarEventType } from "@/entities/calendar.entity"
 import { useEventPopoverStore } from "@/states/event-popover.state"
 
 interface CalendarDayCellProps {
 	value: number
 	children?: React.ReactNode
 	column: number
-	hoveredEvent?: CalendarEvent | null
-	setHoveredEvent?: (event: CalendarEvent | null) => void
+}
+
+const calculateEventStatus = ({
+	value,
+	events,
+	column,
+}: {
+	value: number
+	column: number
+	events: CalendarEvent[]
+}) => {
+	return events.reduce(
+		(acc, event) => {
+			if (event.column !== column) return acc
+
+			const isStart = event.timeStart === value
+			const isEnd = event.timeEnd === value
+			const isBetween = value > event.timeStart && value < event.timeEnd
+
+			if (isStart && isEnd) {
+				return { isSelected: true, isStart: true, isEnd: true }
+			}
+
+			if (isStart || isEnd || isBetween) {
+				acc.isSelected = true
+			}
+
+			if (isStart) {
+				acc.isStart = true
+			}
+
+			if (isEnd) {
+				acc.isEnd = true
+			}
+
+			return acc
+		},
+		{
+			isSelected: false,
+			isStart: false,
+			isEnd: false,
+		},
+	)
 }
 
 export default function CalendarDayCell({
 	value,
 	children,
 	column,
-	hoveredEvent,
-	setHoveredEvent,
 }: CalendarDayCellProps) {
 	const { update, selectedIndex } = useCalendarStore(state => state)
-	const { events, setEvents } = useCalendar()
+	const {
+		events,
+		createEvent,
+		handleMouseEnter,
+		handleMouseLeave,
+		hoverEvent,
+	} = useCalendar()
 	const { update: updateEventPopover } = useEventPopoverStore.getState()
 
 	const { isSelected, isEnd, isStart } = useMemo(() => {
-		const result = events.reduce(
-			(acc, event) => {
-				if (event.timeStart === value && event.column === column) {
-					acc.isSelected = true
-					acc.isStart = true
-					acc.isEnd = false
-				}
-
-				if (event.timeEnd === value && event.column === column) {
-					acc.isSelected = true
-					acc.isStart = false
-					acc.isEnd = true
-				}
-
-				if (
-					value > event.timeStart &&
-					value < event.timeEnd &&
-					column === event.column
-				) {
-					acc.isSelected = true
-				}
-
-				return acc
-			},
-			{
-				isSelected: false,
-				isStart: false,
-				isEnd: false,
-			},
-		)
+		const result = calculateEventStatus({
+			value,
+			events,
+			column,
+		})
 
 		return result
 	}, [value, column, events])
 
 	const eventForCell = useMemo(() => {
-		return events.find(
+		const found = events.find(
 			event =>
 				value >= event.timeStart &&
 				value <= event.timeEnd &&
 				column === event.column,
 		)
+
+		if (!found) return null
+		return found
 	}, [value, column, events])
 
 	const onClick = () => {
@@ -90,14 +113,12 @@ export default function CalendarDayCell({
 			return
 		}
 
-		const newEvent: CalendarEvent = {
-			id: events.length + 1,
-			timeStart: selectedIndex.start < value ? selectedIndex.start : value,
-			timeEnd: value > selectedIndex.start ? value : selectedIndex.start,
+		createEvent({
+			value,
 			column,
-		}
+			selectedCell: selectedIndex,
+		})
 
-		setEvents([...events, newEvent])
 		update({
 			selectedIndex: {
 				start: -1,
@@ -109,19 +130,7 @@ export default function CalendarDayCell({
 	}
 
 	const isHovered =
-		hoveredEvent && eventForCell && eventForCell.id === hoveredEvent.id
-
-	const handleMouseEnter = () => {
-		if (setHoveredEvent && eventForCell) {
-			setHoveredEvent(eventForCell)
-		}
-	}
-
-	const handleMouseLeave = () => {
-		if (setHoveredEvent) {
-			setHoveredEvent(null)
-		}
-	}
+		hoverEvent && eventForCell && eventForCell.id === hoverEvent.id
 
 	return (
 		<div
@@ -132,12 +141,20 @@ export default function CalendarDayCell({
 						isSelected,
 					"rounded-b-lg": isEnd,
 					"rounded-t-lg": isStart,
+					"bg-purple-200 dark:bg-indigo-800 dark:border-indigo-800 border-purple-200":
+						eventForCell?.type === CalendarEventType.MEETING,
+					"bg-teal-200 dark:bg-teal-700 dark:border-teal-700 border-teal-200":
+						eventForCell?.type === CalendarEventType.WORK,
+					"bg-amber-200 dark:bg-amber-700 dark:border-amber-700 border-amber-200":
+						eventForCell?.type === CalendarEventType.REMINDER,
+					"bg-rose-200 dark:bg-rose-700 dark:border-rose-700 border-rose-200":
+						eventForCell?.type === CalendarEventType.OTHER,
 					"bg-orange-200 dark:bg-orange-700 border-orange-200 dark:border-orange-700":
 						isHovered,
 				},
 			)}
 			onClick={onClick}
-			onMouseEnter={handleMouseEnter}
+			onMouseEnter={() => handleMouseEnter(eventForCell)}
 			onMouseLeave={handleMouseLeave}
 		>
 			{children}
