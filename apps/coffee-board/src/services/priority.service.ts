@@ -1,14 +1,22 @@
-import { getAllPriorities } from "@/actions/priority/get-all-priorities"
 import { getPriorityById as getPriorityByIdAction } from "@/actions/priority/get-priority-by-id"
 import { PriorityDatasource } from "@/datasources/priority.datasource"
 import { Priority } from "@/entities/priority.entity"
+import { ApiResponse } from "@/helpers/api-response"
 import { axiosInstance } from "@/lib/axios"
+import { AxiosResponse } from "axios"
 
 const BASE_ROUTE = "/priorities"
 
 class PriorityService implements PriorityDatasource {
 	async getPriorities(): Promise<Priority[]> {
-		return getAllPriorities()
+		try {
+			const axiosRes: AxiosResponse = await axiosInstance.get(BASE_ROUTE)
+			const res: ApiResponse = axiosRes.data as ApiResponse
+			return res.data as Priority[]
+		} catch (error) {
+			console.error(error)
+			return []
+		}
 	}
 
 	async getPriorityById(id: number): Promise<Priority | null> {

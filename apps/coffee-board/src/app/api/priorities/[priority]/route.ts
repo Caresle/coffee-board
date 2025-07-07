@@ -4,6 +4,8 @@ import { pgQuery } from "@/lib/pg"
 import { NextRequest } from "next/server"
 import { QueriesPriority } from "../queries"
 import { priorityUpdateValidator } from "@/validators/priority.validator"
+import { appCache } from "@/lib/cache"
+import { CACHE_KEYS } from "@/constants/cacheKeys"
 
 export async function GET(
 	_: NextRequest,
@@ -35,6 +37,8 @@ export async function PUT(
 			validated.id,
 		])
 
+		await appCache.delete(CACHE_KEYS.priorities)
+
 		return apiResponse({ data, message: "Priority updated successfully" })
 	} catch (error) {
 		console.error(error)
@@ -49,6 +53,8 @@ export async function DELETE(
 	try {
 		const priority = (await params).priority
 		const value = await pgQuery(QueriesPriority.deletePriority, [priority])
+
+		await appCache.delete(CACHE_KEYS.priorities)
 
 		return apiResponse({
 			data: value,
