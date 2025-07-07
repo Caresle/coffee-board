@@ -37,12 +37,13 @@ class PriorityService implements PriorityDatasource {
 
 	async updatePriority(priority: Priority): Promise<Priority | null> {
 		try {
-			const response = await axiosInstance.put(
+			const response: AxiosResponse = await axiosInstance.put(
 				`${BASE_ROUTE}/${priority.id}`,
 				priority,
 			)
-			console.log(response.data)
-			return {} as Priority
+
+			const res = response.data as ApiResponse
+			return res.data as Priority
 		} catch (error) {
 			console.error(error)
 			return null

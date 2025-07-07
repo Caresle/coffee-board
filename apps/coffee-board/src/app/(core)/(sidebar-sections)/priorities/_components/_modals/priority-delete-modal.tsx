@@ -11,19 +11,44 @@ import {
 import React from "react"
 import Icons from "@/components/shared/icons"
 import { usePriorityDeleteStore } from "../../_states/priority-delete.state"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import priorityService from "@/services/priority.service"
 import { Priority } from "@/entities/priority.entity"
-import { usePriority } from "../../_hook/use-priority"
+import { queryKeys } from "@/constants/queryKeys"
 
 export default function PriorityDeleteModal() {
-	const { QPriority } = usePriority()
+	const queryClient = useQueryClient()
 	const { show, update, item } = usePriorityDeleteStore(state => state)
 
 	const mut = useMutation({
 		mutationFn: () => priorityService.deletePriority(item.id),
+		onMutate: async () => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.priorities],
+			})
+
+			const previousPriorities = queryClient.getQueryData<Priority[]>([
+				queryKeys.priorities,
+			])
+
+			const newPriorities = previousPriorities?.filter(
+				priority => priority.id !== item.id,
+			)
+
+			queryClient.setQueryData<Priority[]>(
+				[queryKeys.priorities],
+				newPriorities,
+			)
+
+			return { previousPriorities }
+		},
+		onError: (err, newPriority, context) => {
+			queryClient.setQueryData<Priority[]>(
+				[queryKeys.priorities],
+				context?.previousPriorities,
+			)
+		},
 		onSuccess: () => {
-			QPriority.refetch()
 			update({ show: false, item: {} as Priority })
 		},
 	})
