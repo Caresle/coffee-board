@@ -1,6 +1,7 @@
 import { CalendarEvent, CalendarEventType } from "@/entities/calendar.entity"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useRef, useState } from "react"
 import { CalendarCellValues } from "../_states/calendar.state"
+import { arrow, useFloating, UseFloatingReturn } from "@floating-ui/react"
 
 interface CreateEventParams {
 	selectedCell: CalendarCellValues
@@ -16,6 +17,9 @@ interface CalendarContextProps {
 	setHoverEvent: (event: CalendarEvent | null) => void
 	handleMouseEnter: (eventForCell: CalendarEvent | null) => void
 	handleMouseLeave: () => void
+	floating: UseFloatingReturn
+	floatingOpen: boolean
+	setFloatingOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CalendarContent = createContext<CalendarContextProps>({
@@ -26,6 +30,9 @@ const CalendarContent = createContext<CalendarContextProps>({
 	setHoverEvent: () => {},
 	handleMouseEnter: () => {},
 	handleMouseLeave: () => {},
+	floating: {} as UseFloatingReturn,
+	floatingOpen: false,
+	setFloatingOpen: () => {},
 })
 
 export const useCalendar = () => useContext(CalendarContent)
@@ -39,6 +46,17 @@ export const CalendarProvider = ({
 }) => {
 	const [events, setEvents] = useState<CalendarEvent[]>(initialEvents)
 	const [hoverEvent, setHoverEvent] = useState<CalendarEvent | null>(null)
+	const arrowRef = useRef(null)
+	const [floatingOpen, setFloatingOpen] = useState(false)
+
+	const { floatingStyles, refs, ...restFloating } = useFloating({
+		open: floatingOpen,
+		middleware: [
+			arrow({
+				element: arrowRef,
+			}),
+		],
+	})
 
 	const createEvent = ({ selectedCell, column, value }: CreateEventParams) => {
 		const newEvent: CalendarEvent = {
@@ -75,6 +93,13 @@ export const CalendarProvider = ({
 		setHoverEvent,
 		handleMouseEnter,
 		handleMouseLeave,
+		floating: {
+			refs,
+			floatingStyles,
+			...restFloating,
+		},
+		floatingOpen,
+		setFloatingOpen,
 	}
 
 	return <CalendarContent value={value}>{children}</CalendarContent>

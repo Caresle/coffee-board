@@ -66,8 +66,13 @@ export default function CalendarDayCell({
 		handleMouseEnter,
 		handleMouseLeave,
 		hoverEvent,
+		floating,
 	} = useCalendar()
-	const { update: updateEventPopover } = useEventPopoverStore.getState()
+	const { update: updateEventPopover, item } = useEventPopoverStore(
+		state => state,
+	)
+
+	const { refs } = floating
 
 	const { isSelected, isEnd, isStart } = useMemo(() => {
 		const result = calculateEventStatus({
@@ -93,7 +98,6 @@ export default function CalendarDayCell({
 
 	const onClick = () => {
 		if (eventForCell) {
-			console.log("Event already exists for this cell:", eventForCell)
 			updateEventPopover({
 				item: eventForCell,
 				show: true,
@@ -134,6 +138,7 @@ export default function CalendarDayCell({
 
 	return (
 		<div
+			ref={item?.id === eventForCell?.id ? refs.setReference : null}
 			className={cn("border transition-all cursor-pointer", {
 				"hover:bg-neutral-200 dark:hover:bg-neutral-500": !isHovered,
 				"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
