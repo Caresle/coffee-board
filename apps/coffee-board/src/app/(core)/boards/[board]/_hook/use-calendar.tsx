@@ -20,6 +20,8 @@ interface CalendarContextProps {
 	floating: UseFloatingReturn
 	floatingOpen: boolean
 	setFloatingOpen: React.Dispatch<React.SetStateAction<boolean>>
+	draggingEvent: CalendarEvent | null
+	setDraggingEvent: React.Dispatch<React.SetStateAction<CalendarEvent | null>>
 }
 
 const CalendarContent = createContext<CalendarContextProps>({
@@ -33,6 +35,8 @@ const CalendarContent = createContext<CalendarContextProps>({
 	floating: {} as UseFloatingReturn,
 	floatingOpen: false,
 	setFloatingOpen: () => {},
+	draggingEvent: null,
+	setDraggingEvent: () => {},
 })
 
 export const useCalendar = () => useContext(CalendarContent)
@@ -48,6 +52,7 @@ export const CalendarProvider = ({
 	const [hoverEvent, setHoverEvent] = useState<CalendarEvent | null>(null)
 	const arrowRef = useRef(null)
 	const [floatingOpen, setFloatingOpen] = useState(false)
+	const [draggingEvent, setDraggingEvent] = useState<CalendarEvent | null>(null)
 
 	const { floatingStyles, refs, ...restFloating } = useFloating({
 		open: floatingOpen,
@@ -100,6 +105,8 @@ export const CalendarProvider = ({
 		},
 		floatingOpen,
 		setFloatingOpen,
+		draggingEvent,
+		setDraggingEvent,
 	}
 
 	return <CalendarContent value={value}>{children}</CalendarContent>

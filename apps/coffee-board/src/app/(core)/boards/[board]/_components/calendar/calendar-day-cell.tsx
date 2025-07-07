@@ -1,57 +1,14 @@
 import { cn } from "@/lib/utils"
-import { useMemo } from "react"
 import { useCalendarStore } from "../../_states/calendar.state"
 import { useCalendar } from "../../_hook/use-calendar"
-import { CalendarEvent, CalendarEventType } from "@/entities/calendar.entity"
+import { CalendarEventType } from "@/entities/calendar.entity"
 import { useEventPopoverStore } from "@/states/event-popover.state"
+import useCalendarCell from "../../_hook/use-calendar-cell"
 
 interface CalendarDayCellProps {
 	value: number
 	children?: React.ReactNode
 	column: number
-}
-
-const calculateEventStatus = ({
-	value,
-	events,
-	column,
-}: {
-	value: number
-	column: number
-	events: CalendarEvent[]
-}) => {
-	return events.reduce(
-		(acc, event) => {
-			if (event.column !== column) return acc
-
-			const isStart = event.timeStart === value
-			const isEnd = event.timeEnd === value
-			const isBetween = value > event.timeStart && value < event.timeEnd
-
-			if (isStart && isEnd) {
-				return { isSelected: true, isStart: true, isEnd: true }
-			}
-
-			if (isStart || isEnd || isBetween) {
-				acc.isSelected = true
-			}
-
-			if (isStart) {
-				acc.isStart = true
-			}
-
-			if (isEnd) {
-				acc.isEnd = true
-			}
-
-			return acc
-		},
-		{
-			isSelected: false,
-			isStart: false,
-			isEnd: false,
-		},
-	)
 }
 
 export default function CalendarDayCell({
@@ -60,6 +17,7 @@ export default function CalendarDayCell({
 	column,
 }: CalendarDayCellProps) {
 	const { update, selectedIndex } = useCalendarStore(state => state)
+
 	const {
 		events,
 		createEvent,
@@ -67,34 +25,30 @@ export default function CalendarDayCell({
 		handleMouseLeave,
 		hoverEvent,
 		floating,
+		draggingEvent,
 	} = useCalendar()
-	const { update: updateEventPopover, item } = useEventPopoverStore(
-		state => state,
-	)
+
+	const {
+		eventForCell,
+		isEnd,
+		isStart,
+		isSelected,
+		setNodeRef,
+		attributes,
+		listeners,
+	} = useCalendarCell({
+		column,
+		value,
+		events,
+	})
+
+	const {
+		update: updateEventPopover,
+		item,
+		show,
+	} = useEventPopoverStore(state => state)
 
 	const { refs } = floating
-
-	const { isSelected, isEnd, isStart } = useMemo(() => {
-		const result = calculateEventStatus({
-			value,
-			events,
-			column,
-		})
-
-		return result
-	}, [value, column, events])
-
-	const eventForCell = useMemo(() => {
-		const found = events.find(
-			event =>
-				value >= event.timeStart &&
-				value <= event.timeEnd &&
-				column === event.column,
-		)
-
-		if (!found) return null
-		return found
-	}, [value, column, events])
 
 	const onClick = () => {
 		if (eventForCell) {
@@ -138,7 +92,11 @@ export default function CalendarDayCell({
 
 	return (
 		<div
-			ref={item?.id === eventForCell?.id ? refs.setReference : null}
+			ref={
+				show && item?.id === eventForCell?.id ? refs.setReference : setNodeRef
+			}
+			{...listeners}
+			{...attributes}
 			className={cn("border transition-all cursor-pointer", {
 				"hover:bg-neutral-200 dark:hover:bg-neutral-500": !isHovered,
 				"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
@@ -154,6 +112,10 @@ export default function CalendarDayCell({
 				"bg-cyan-600 dark:bg-cyan-500 dark:border-cyan-500 border-cyan-600":
 					eventForCell?.type === CalendarEventType.OTHER,
 				"brightness-125": isHovered,
+				"opacity-25":
+					eventForCell &&
+					draggingEvent &&
+					eventForCell?.id === draggingEvent?.id,
 			})}
 			onClick={onClick}
 			onMouseEnter={() => handleMouseEnter(eventForCell)}
