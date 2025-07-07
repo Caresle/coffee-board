@@ -15,7 +15,7 @@ const NoTags = () => {
 export default function TagContainers() {
 	const { QTags, tags } = useTags()
 
-	const isLoading = QTags.isLoading || QTags.isFetching || QTags.isRefetching
+	const isLoading = QTags.isLoading
 
 	return (
 		<div className="bg-slate-100 flex-1 rounded-lg grid gap-2 p-2 overflow-y-auto dark:bg-neutral-900">
