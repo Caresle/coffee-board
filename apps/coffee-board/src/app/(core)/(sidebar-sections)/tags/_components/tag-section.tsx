@@ -1,6 +1,5 @@
 import React from "react"
 import TagItem from "./tag-item"
-import { Tag } from "@/entities/tag.entity"
 import { useTags } from "../_hook/use-tags"
 
 export default function TagSection({ title }: { title: string }) {

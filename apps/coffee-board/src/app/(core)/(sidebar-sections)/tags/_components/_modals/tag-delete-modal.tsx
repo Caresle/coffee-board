@@ -11,22 +11,42 @@ import {
 import React from "react"
 import Icons from "@/components/shared/icons"
 import { useTagDeleteStore } from "../../_states/tag-delete.state"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import tagService from "@/services/tag.service"
 import { Tag } from "@/entities/tag.entity"
 import { toast } from "sonner"
-import { useTags } from "../../_hook/use-tags"
+import { queryKeys } from "@/constants/queryKeys"
 
 export default function TagDeleteModal() {
 	const { show, update, item } = useTagDeleteStore(state => state)
-	const { QTags } = useTags()
+	const queryClient = useQueryClient()
 
 	const mut = useMutation({
 		mutationFn: tagService.deleteTag,
 		onSuccess: () => {
-			QTags.refetch()
 			update({ show: false, item: {} as Tag })
 			toast.success("Tag deleted successfully")
+		},
+		onMutate: async () => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.tags],
+			})
+
+			const previousTags = queryClient.getQueryData<Tag[]>([queryKeys.tags])
+
+			const newTags = previousTags?.filter(tag => tag.id !== item.id)
+
+			queryClient.setQueryData<Tag[]>([queryKeys.tags], newTags)
+
+			return { previousTags }
+		},
+		onError: (err, newTag, context) => {
+			queryClient.setQueryData<Tag[]>([queryKeys.tags], context?.previousTags)
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.tags],
+			})
 		},
 	})
 
