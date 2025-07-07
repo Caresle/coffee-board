@@ -1,0 +1,56 @@
+# Container volumes
+mailpit
+redis-data
+# Node modules
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm
+.pnp.*
+.cache
+
+# Build output
+.next
+dist
+out
+
+# Local environment files
+.env
+.env.*
+
+# Logs
+logs
+*.log
+
+# OS and editor files
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+Thumbs.db
+ehthumbs.db
+
+# Git-related
+.git
+.gitignore
+.gitattributes
+
+# Test coverage
+coverage
+
+# VS Code
+.vscode
+
+# Docker ignore itself
+.dockerignore
+Dockerfile
+README.md
+
+# Optional: exclude docs, tests, or scripts if not needed in the container
+docs
+test
+__tests__
+scripts

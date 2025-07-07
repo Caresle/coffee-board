@@ -1,0 +1,43 @@
+services:
+  coffee-board:
+    container_name: coffee-board
+    image: coffee-board-dev:latest
+    depends_on:
+      - coffee-board-cache
+      - coffee-board-db
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:3000"
+    networks:
+      - coffee-board-network
+  coffee-board-db:
+    container_name: coffee-board-db
+    image: postgres:17
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - coffee-board-network
+  coffee-board-cache:
+    container_name: coffee-board-cache
+    image: redis:7.4.2-alpine
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - coffee-board-network
+
+networks:
+  coffee-board-network:
+    external: true 
