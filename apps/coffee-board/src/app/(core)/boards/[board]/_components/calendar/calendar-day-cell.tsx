@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils"
-import React, { useMemo } from "react"
 import { useCalendarStore } from "../../_states/calendar.state"
 import { useCalendar } from "../../_hook/use-calendar"
-import { CalendarEvent } from "@/entities/calendar.entity"
+import { CalendarEventType } from "@/entities/calendar.entity"
+import { useEventPopoverStore } from "@/states/event-popover.state"
+import useCalendarCell from "../../_hook/use-calendar-cell"
 
 interface CalendarDayCellProps {
 	value: number
@@ -16,44 +17,48 @@ export default function CalendarDayCell({
 	column,
 }: CalendarDayCellProps) {
 	const { update, selectedIndex } = useCalendarStore(state => state)
-	const { events, setEvents } = useCalendar()
 
-	const { isSelected, isEnd, isStart } = useMemo(() => {
-		const result = events.reduce(
-			(acc, event) => {
-				if (event.timeStart === value && event.column === column) {
-					acc.isSelected = true
-					acc.isStart = true
-					acc.isEnd = false
-				}
+	const {
+		events,
+		createEvent,
+		handleMouseEnter,
+		handleMouseLeave,
+		hoverEvent,
+		floating,
+		draggingEvent,
+	} = useCalendar()
 
-				if (event.timeEnd === value && event.column === column) {
-					acc.isSelected = true
-					acc.isStart = false
-					acc.isEnd = true
-				}
+	const {
+		eventForCell,
+		isEnd,
+		isStart,
+		isSelected,
+		setNodeRef,
+		attributes,
+		listeners,
+	} = useCalendarCell({
+		column,
+		value,
+		events,
+	})
 
-				if (
-					value > event.timeStart &&
-					value < event.timeEnd &&
-					column === event.column
-				) {
-					acc.isSelected = true
-				}
+	const {
+		update: updateEventPopover,
+		item,
+		show,
+	} = useEventPopoverStore(state => state)
 
-				return acc
-			},
-			{
-				isSelected: false,
-				isStart: false,
-				isEnd: false,
-			},
-		)
-
-		return result
-	}, [value, column, events])
+	const { refs } = floating
 
 	const onClick = () => {
+		if (eventForCell) {
+			updateEventPopover({
+				item: eventForCell,
+				show: true,
+			})
+			return
+		}
+
 		if (selectedIndex.start === -1) {
 			update({
 				selectedIndex: {
@@ -66,14 +71,12 @@ export default function CalendarDayCell({
 			return
 		}
 
-		const newEvent: CalendarEvent = {
-			id: events.length + 1,
-			timeStart: selectedIndex.start,
-			timeEnd: value,
+		createEvent({
+			value,
 			column,
-		}
+			selectedCell: selectedIndex,
+		})
 
-		setEvents([...events, newEvent])
 		update({
 			selectedIndex: {
 				start: -1,
@@ -84,18 +87,39 @@ export default function CalendarDayCell({
 		})
 	}
 
+	const isHovered =
+		hoverEvent && eventForCell && eventForCell.id === hoverEvent.id
+
 	return (
 		<div
-			className={cn(
-				"border transition-all hover:bg-orange-200 cursor-pointer dark:hover:bg-orange-700",
-				{
-					"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
-						isSelected,
-					"rounded-b-lg": isEnd,
-					"rounded-t-lg": isStart,
-				},
-			)}
+			ref={
+				show && item?.id === eventForCell?.id ? refs.setReference : setNodeRef
+			}
+			{...listeners}
+			{...attributes}
+			className={cn("border transition-all cursor-pointer", {
+				"hover:bg-neutral-200 dark:hover:bg-neutral-500": !isHovered,
+				"bg-blue-200 border-blue-200 dark:bg-blue-400 dark:border-blue-400":
+					isSelected,
+				"rounded-b-lg": isEnd,
+				"rounded-t-lg": isStart,
+				"bg-rose-600 dark:bg-rose-500 dark:border-rose-500 border-rose-600":
+					eventForCell?.type === CalendarEventType.MEETING,
+				"bg-amber-500 dark:bg-amber-400 dark:border-amber-400 border-amber-500":
+					eventForCell?.type === CalendarEventType.WORK,
+				"bg-indigo-600 dark:bg-indigo-500 dark:border-indigo-500 border-indigo-600":
+					eventForCell?.type === CalendarEventType.REMINDER,
+				"bg-cyan-600 dark:bg-cyan-500 dark:border-cyan-500 border-cyan-600":
+					eventForCell?.type === CalendarEventType.OTHER,
+				"brightness-125": isHovered,
+				"opacity-25":
+					eventForCell &&
+					draggingEvent &&
+					eventForCell?.id === draggingEvent?.id,
+			})}
 			onClick={onClick}
+			onMouseEnter={() => handleMouseEnter(eventForCell)}
+			onMouseLeave={handleMouseLeave}
 		>
 			{children}
 		</div>

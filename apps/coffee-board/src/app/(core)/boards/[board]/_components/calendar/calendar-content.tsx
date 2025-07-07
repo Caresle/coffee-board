@@ -1,4 +1,3 @@
-import React from "react"
 import CalendarDayCell from "./calendar-day-cell"
 import CalendarTimeCell from "./calendar-time-cell"
 
