@@ -5,6 +5,8 @@ import { NextRequest } from "next/server"
 import { QueriesProject } from "./queries"
 import { getAllProjects } from "@/actions/projects/get-all-projects"
 import { getTokenData } from "@/actions/get-token-data"
+import { appCache } from "@/lib/cache"
+import { CACHE_KEYS } from "@/constants/cacheKeys"
 
 export async function GET() {
 	try {
@@ -36,6 +38,8 @@ export async function POST(req: NextRequest) {
 				data.visibility,
 			])
 		)?.[0]
+
+		await appCache.delete(CACHE_KEYS.projects(token?.id))
 
 		return apiResponse({ data: value, message: "Project created successfully" })
 	} catch (error) {

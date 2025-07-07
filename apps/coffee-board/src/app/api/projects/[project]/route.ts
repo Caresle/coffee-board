@@ -7,6 +7,9 @@ import {
 } from "@/validators/project.validator"
 import { NextRequest } from "next/server"
 import { QueriesProject } from "../queries"
+import { getTokenData } from "@/actions/get-token-data"
+import { CACHE_KEYS } from "@/constants/cacheKeys"
+import { appCache } from "@/lib/cache"
 
 export async function GET(
 	_: NextRequest,
@@ -29,6 +32,11 @@ export async function PUT(
 	try {
 		const project = (await params).project
 		const json = await req.json()
+		const token = await getTokenData()
+
+		if (!token) {
+			return apiResponseError({ error: "Invalid token" })
+		}
 
 		const validated = projectUpdateValidator.parse({ id: project, ...json })
 
@@ -36,12 +44,14 @@ export async function PUT(
 			await pgQuery(QueriesProject.updateProject, [
 				validated.name,
 				validated.description,
-				1, // TODO: CHANGE FOR USER ID
+				token.id,
 				//validated.id_user,
 				validated.visibility,
 				validated.id,
 			])
 		)?.[0]
+
+		await appCache.delete(CACHE_KEYS.projects(token?.id))
 
 		return apiResponse({ data, message: "Project updated successfully" })
 	} catch (error) {
@@ -56,10 +66,13 @@ export async function DELETE(
 ) {
 	try {
 		const project = (await params).project
+		const token = await getTokenData()
 
 		const id = projectDeleteValidator.parse({ id: project }).id
 
 		const value = (await pgQuery(QueriesProject.deleteProjectSoft, [id]))?.[0]
+
+		await appCache.delete(CACHE_KEYS.projects(token?.id || 0))
 
 		return apiResponse({ data: value, message: "Project deleted successfully" })
 	} catch (error) {
