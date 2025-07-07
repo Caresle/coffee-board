@@ -13,16 +13,16 @@ import Icons from "@/components/shared/icons"
 import FormItem from "@/components/shared/form-item"
 import { Input } from "@/components/ui/input"
 import { useTagStore } from "../../_states/tag.state"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import ColorSelector from "../color-selector"
 import tagService from "@/services/tag.service"
 import { Tag } from "@/entities/tag.entity"
-import { useTags } from "../../_hook/use-tags"
+import { queryKeys } from "@/constants/queryKeys"
 
 export default function TagModal() {
 	const { show, update, isEdit, item } = useTagStore(state => state)
-	const { QTags } = useTags()
+	const queryClient = useQueryClient()
 
 	const mut = useMutation({
 		mutationFn: (data: Tag) => {
@@ -31,14 +31,41 @@ export default function TagModal() {
 			}
 			return tagService.createTag(data)
 		},
+		onMutate: async newTag => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.tags],
+			})
+
+			const previousTags = queryClient.getQueryData<Tag[]>([queryKeys.tags])
+
+			const newTags = isEdit
+				? previousTags?.map(tag => {
+						if (tag.id === newTag.id) {
+							return { ...tag, ...newTag }
+						}
+						return tag
+				  })
+				: [...(previousTags ?? []), newTag]
+
+			queryClient.setQueryData<Tag[]>([queryKeys.tags], newTags)
+
+			return { previousTags }
+		},
+		onError: (err, newTag, context) => {
+			queryClient.setQueryData<Tag[]>([queryKeys.tags], context?.previousTags)
+		},
 		onSuccess: () => {
-			QTags.refetch()
 			update({ show: false, item: {} as Tag, isEdit: false })
 			if (isEdit) {
 				toast.success("Tag updated successfully")
 				return
 			}
 			toast.success("Tag created successfully")
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.tags],
+			})
 		},
 	})
 

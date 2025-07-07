@@ -51,6 +51,11 @@ export default function PriorityDeleteModal() {
 		onSuccess: () => {
 			update({ show: false, item: {} as Priority })
 		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.priorities],
+			})
+		},
 	})
 
 	const onSubmit = () => {
