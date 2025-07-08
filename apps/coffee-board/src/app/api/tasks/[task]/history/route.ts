@@ -3,11 +3,14 @@ import { pgQuery } from "@/lib/pg"
 import { taskHistoryValidator } from "@/validators/task.validator"
 import { NextRequest } from "next/server"
 import { QueriesTaskHistory } from "./queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function POST(
-	req: NextRequest,
-	{ params }: { params: Promise<{ task: string }> },
-) {
+interface HistoryParams {
+	params: Promise<{ task: string }>
+}
+
+const createHistory = async (req: NextRequest, { params }: HistoryParams) => {
 	try {
 		const { task } = await params
 
@@ -34,3 +37,11 @@ export async function POST(
 		})
 	}
 }
+
+export const POST = async (req: NextRequest, params: HistoryParams) =>
+	hasAccess({
+		method: createHistory,
+		permission: PERMISSIONS.CreateTasks.name,
+		req,
+		params,
+	})

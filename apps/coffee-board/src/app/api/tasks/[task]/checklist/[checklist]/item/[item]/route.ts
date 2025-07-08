@@ -2,12 +2,17 @@ import { apiResponse, apiResponseError } from "@/helpers/api-response"
 import { NextRequest } from "next/server"
 import { QueriesTaskChecklistItem } from "../queries"
 import { pgQuery } from "@/lib/pg"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
 interface CheckListItemParams {
 	params: Promise<{ task: string; checklist: string; item: string }>
 }
 
-export async function DELETE(_: NextRequest, { params }: CheckListItemParams) {
+const deleteCheckListItem = async (
+	_: NextRequest,
+	{ params }: CheckListItemParams,
+) => {
 	try {
 		const { item } = await params
 
@@ -26,3 +31,11 @@ export async function DELETE(_: NextRequest, { params }: CheckListItemParams) {
 		})
 	}
 }
+
+export const DELETE = async (req: NextRequest, params: CheckListItemParams) =>
+	hasAccess<CheckListItemParams>({
+		method: deleteCheckListItem,
+		permission: PERMISSIONS.DeleteTasks.name,
+		params,
+		req,
+	})

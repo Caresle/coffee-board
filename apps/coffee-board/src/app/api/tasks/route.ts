@@ -4,8 +4,10 @@ import { pgQuery } from "@/lib/pg"
 import { taskValidator } from "@/validators/task.validator"
 import { NextRequest } from "next/server"
 import { QueriesTask } from "./queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET(req: NextRequest) {
+const getTask = async (req: NextRequest) => {
 	try {
 		const searchParams = Object.fromEntries(req.nextUrl.searchParams.entries())
 
@@ -33,7 +35,7 @@ export async function GET(req: NextRequest) {
 	}
 }
 
-export async function POST(req: NextRequest) {
+const createTask = async (req: NextRequest) => {
 	try {
 		const validated = taskValidator.parse(await req.json())
 
@@ -61,3 +63,17 @@ export async function POST(req: NextRequest) {
 		})
 	}
 }
+
+export const GET = async (req: NextRequest) =>
+	hasAccess({
+		method: getTask,
+		permission: PERMISSIONS.ReadTasks.name,
+		req,
+	})
+
+export const POST = async (req: NextRequest) =>
+	hasAccess({
+		method: createTask,
+		permission: PERMISSIONS.CreateTasks.name,
+		req,
+	})

@@ -3,12 +3,17 @@ import { pgQuery } from "@/lib/pg"
 import { taskCheckListItemValidator } from "@/validators/task.validator"
 import { NextRequest } from "next/server"
 import { QueriesTaskChecklistItem } from "./queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
 interface CheckListItemParams {
 	params: Promise<{ task: string; checklist: string }>
 }
 
-export async function POST(req: NextRequest, { params }: CheckListItemParams) {
+const createCheckListItem = async (
+	req: NextRequest,
+	{ params }: CheckListItemParams,
+) => {
 	try {
 		const { checklist } = await params
 
@@ -41,3 +46,11 @@ export async function POST(req: NextRequest, { params }: CheckListItemParams) {
 		})
 	}
 }
+
+export const POST = async (req: NextRequest, params: CheckListItemParams) =>
+	hasAccess({
+		method: createCheckListItem,
+		permission: PERMISSIONS.CreateTasks.name,
+		req,
+		params,
+	})
