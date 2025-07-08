@@ -7,8 +7,10 @@ import { getAllProjects } from "@/actions/projects/get-all-projects"
 import { getTokenData } from "@/actions/get-token-data"
 import { appCache } from "@/lib/cache"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET() {
+const getProjects = async () => {
 	try {
 		const projects = await getAllProjects()
 		return apiResponse({
@@ -21,7 +23,7 @@ export async function GET() {
 	}
 }
 
-export async function POST(req: NextRequest) {
+const createProject = async (req: NextRequest) => {
 	try {
 		const data = projectValidator.parse(await req.json())
 		const token = await getTokenData()
@@ -47,3 +49,13 @@ export async function POST(req: NextRequest) {
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async () =>
+	hasAccess({ method: getProjects, permission: PERMISSIONS.ReadProjects.name })
+
+export const POST = async (req: NextRequest) =>
+	hasAccess({
+		permission: PERMISSIONS.CreateProject.name,
+		method: createProject,
+		req,
+	})

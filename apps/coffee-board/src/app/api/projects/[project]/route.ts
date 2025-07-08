@@ -10,11 +10,14 @@ import { QueriesProject } from "../queries"
 import { getTokenData } from "@/actions/get-token-data"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
 import { appCache } from "@/lib/cache"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET(
-	_: NextRequest,
-	{ params }: { params: Promise<{ project: string }> },
-) {
+interface ProjectParams {
+	params: Promise<{ project: string }>
+}
+
+const getProject = async (_: NextRequest, { params }: ProjectParams) => {
 	try {
 		const project = (await params).project
 		const data = await getProjectById(+project)
@@ -25,10 +28,7 @@ export async function GET(
 	}
 }
 
-export async function PUT(
-	req: NextRequest,
-	{ params }: { params: Promise<{ project: string }> },
-) {
+const updateProject = async (req: NextRequest, { params }: ProjectParams) => {
 	try {
 		const project = (await params).project
 		const json = await req.json()
@@ -45,7 +45,6 @@ export async function PUT(
 				validated.name,
 				validated.description,
 				token.id,
-				//validated.id_user,
 				validated.visibility,
 				validated.id,
 			])
@@ -60,10 +59,7 @@ export async function PUT(
 	}
 }
 
-export async function DELETE(
-	_: NextRequest,
-	{ params }: { params: Promise<{ project: string }> },
-) {
+const deleteProject = async (_: NextRequest, { params }: ProjectParams) => {
 	try {
 		const project = (await params).project
 		const token = await getTokenData()
@@ -80,3 +76,27 @@ export async function DELETE(
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async (req: NextRequest, params: ProjectParams) =>
+	hasAccess<ProjectParams>({
+		method: getProject,
+		permission: PERMISSIONS.ReadProjects.name,
+		params,
+		req,
+	})
+
+export const PUT = async (req: NextRequest, params: ProjectParams) =>
+	hasAccess<ProjectParams>({
+		method: updateProject,
+		permission: PERMISSIONS.UpdateProject.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: ProjectParams) =>
+	hasAccess<ProjectParams>({
+		method: deleteProject,
+		permission: PERMISSIONS.DeleteProject.name,
+		params,
+		req,
+	})
