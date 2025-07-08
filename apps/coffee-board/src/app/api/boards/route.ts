@@ -4,8 +4,10 @@ import { pgQuery } from "@/lib/pg"
 import { boardValidator } from "@/validators/board.validator"
 import { NextRequest } from "next/server"
 import { QueriesBoard } from "./queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET() {
+const getBoards = async () => {
 	try {
 		const data = await getAllBoards()
 		return apiResponse({ data })
@@ -15,7 +17,7 @@ export async function GET() {
 	}
 }
 
-export async function POST(req: NextRequest) {
+const createBoard = async (req: NextRequest) => {
 	try {
 		const validated = boardValidator.parse(await req.json())
 
@@ -32,3 +34,16 @@ export async function POST(req: NextRequest) {
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async () =>
+	hasAccess({
+		method: getBoards,
+		permission: PERMISSIONS.ReadBoards.name,
+	})
+
+export const POST = async (req: NextRequest) =>
+	hasAccess({
+		permission: PERMISSIONS.CreateBoards.name,
+		method: createBoard,
+		req,
+	})

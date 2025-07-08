@@ -4,11 +4,14 @@ import { NextRequest } from "next/server"
 import { QueriesBoard } from "../queries"
 import { pgQuery } from "@/lib/pg"
 import { boardUpdateValidator } from "@/validators/board.validator"
+import { PERMISSIONS } from "@/constants/access"
+import { hasAccess } from "@/middlewares/has-access"
 
-export async function GET(
-	_: NextRequest,
-	{ params }: { params: Promise<{ board: string }> },
-) {
+interface BoardParams {
+	params: Promise<{ board: string }>
+}
+
+const getBoard = async (_: NextRequest, { params }: BoardParams) => {
 	try {
 		const boardId = (await params).board
 
@@ -21,10 +24,7 @@ export async function GET(
 	}
 }
 
-export async function PUT(
-	req: NextRequest,
-	{ params }: { params: Promise<{ board: string }> },
-) {
+const updateBoard = async (req: NextRequest, { params }: BoardParams) => {
 	try {
 		const id = (await params).board
 		const json = await req.json()
@@ -45,10 +45,7 @@ export async function PUT(
 	}
 }
 
-export async function DELETE(
-	_: NextRequest,
-	{ params }: { params: Promise<{ board: string }> },
-) {
+const deleteBoard = async (_: NextRequest, { params }: BoardParams) => {
 	try {
 		const id = (await params).board
 		const data = await pgQuery(QueriesBoard.deleteBoardSoft, [id])
@@ -62,3 +59,27 @@ export async function DELETE(
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async (req: NextRequest, params: BoardParams) =>
+	hasAccess<BoardParams>({
+		method: getBoard,
+		permission: PERMISSIONS.ReadBoards.name,
+		params,
+		req,
+	})
+
+export const PUT = async (req: NextRequest, params: BoardParams) =>
+	hasAccess<BoardParams>({
+		method: updateBoard,
+		permission: PERMISSIONS.UpdateBoards.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: BoardParams) =>
+	hasAccess<BoardParams>({
+		method: deleteBoard,
+		permission: PERMISSIONS.DeleteBoards.name,
+		params,
+		req,
+	})
