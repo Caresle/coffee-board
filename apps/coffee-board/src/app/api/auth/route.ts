@@ -22,11 +22,17 @@ export async function POST(req: NextRequest) {
 		const data = (await pgQuery(query, [validated.username]))?.[0]
 
 		if (!data) {
-			return apiResponseError({ error: "Invalid username or password" })
+			return apiResponseError({
+				error: "Invalid username or password",
+				status: 400,
+			})
 		}
 
 		if (!compare(validated.password, data.password)) {
-			return apiResponseError({ error: "Invalid username or password" })
+			return apiResponseError({
+				error: "Invalid username or password",
+				status: 400,
+			})
 		}
 
 		const token = await signToken({
