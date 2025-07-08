@@ -6,8 +6,10 @@ import { QueriesPriority } from "./queries"
 import { getAllPriorities } from "@/actions/priority/get-all-priorities"
 import { appCache } from "@/lib/cache"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET() {
+const getPriorities = async () => {
 	try {
 		const hasCache = await appCache.get(CACHE_KEYS.priorities)
 
@@ -26,7 +28,7 @@ export async function GET() {
 	}
 }
 
-export async function POST(req: NextRequest) {
+const createPriority = async (req: NextRequest) => {
 	try {
 		const validated = priorityValidator.parse(await req.json())
 		const value = (
@@ -46,3 +48,16 @@ export async function POST(req: NextRequest) {
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async () =>
+	hasAccess({
+		permission: PERMISSIONS.ReadPriority.name,
+		method: getPriorities,
+	})
+
+export const POST = async (req: NextRequest) =>
+	hasAccess({
+		permission: PERMISSIONS.CreatePriority.name,
+		method: createPriority,
+		req,
+	})

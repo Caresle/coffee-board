@@ -6,11 +6,14 @@ import { QueriesPriority } from "../queries"
 import { priorityUpdateValidator } from "@/validators/priority.validator"
 import { appCache } from "@/lib/cache"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET(
-	_: NextRequest,
-	{ params }: { params: Promise<{ priority: string }> },
-) {
+interface PriorityParams {
+	params: Promise<{ priority: string }>
+}
+
+const getPriority = async (_: NextRequest, { params }: PriorityParams) => {
 	try {
 		const priority = (await params).priority
 		const data = await getPriorityById(+priority)
@@ -21,10 +24,7 @@ export async function GET(
 	}
 }
 
-export async function PUT(
-	req: NextRequest,
-	{ params }: { params: Promise<{ priority: string }> },
-) {
+const updatePriority = async (req: NextRequest, { params }: PriorityParams) => {
 	try {
 		const priority = (await params).priority
 		const json = await req.json()
@@ -46,10 +46,7 @@ export async function PUT(
 	}
 }
 
-export async function DELETE(
-	_: NextRequest,
-	{ params }: { params: Promise<{ priority: string }> },
-) {
+const deletePriority = async (_: NextRequest, { params }: PriorityParams) => {
 	try {
 		const priority = (await params).priority
 		const value = await pgQuery(QueriesPriority.deletePriority, [priority])
@@ -65,3 +62,27 @@ export async function DELETE(
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async (req: NextRequest, params: PriorityParams) =>
+	hasAccess({
+		method: getPriority,
+		permission: PERMISSIONS.ReadPriority.name,
+		params,
+		req,
+	})
+
+export const PUT = async (req: NextRequest, params: PriorityParams) =>
+	hasAccess<PriorityParams>({
+		method: updatePriority,
+		permission: PERMISSIONS.UpdatePriority.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: PriorityParams) =>
+	hasAccess<PriorityParams>({
+		method: deletePriority,
+		permission: PERMISSIONS.DeletePriority.name,
+		params,
+		req,
+	})
