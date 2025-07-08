@@ -4,8 +4,10 @@ import { calendarValidator } from "@/validators/calendar.validator"
 import { NextRequest } from "next/server"
 import { QueriesCalendar } from "./queries"
 import { getTokenData } from "@/actions/get-token-data"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function POST(req: NextRequest) {
+const createCalendar = async (req: NextRequest) => {
 	try {
 		const json = await req.json()
 		const token = await getTokenData()
@@ -32,3 +34,10 @@ export async function POST(req: NextRequest) {
 		})
 	}
 }
+
+export const POST = async (req: NextRequest) =>
+	hasAccess({
+		permission: PERMISSIONS.CreateCalendar.name,
+		method: createCalendar,
+		req,
+	})
