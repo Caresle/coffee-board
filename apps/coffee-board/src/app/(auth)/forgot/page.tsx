@@ -46,7 +46,7 @@ export default function ForgotPage() {
 	const [email, setEmail] = useState("")
 	return (
 		<div className="h-full p-2 bg-orange-50 flex flex-col items-center justify-center select-none dark:bg-neutral-900">
-			<div className="w-1/4">
+			<div className="lg:w-1/3 max-w-[400px]">
 				<Card>
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2">
