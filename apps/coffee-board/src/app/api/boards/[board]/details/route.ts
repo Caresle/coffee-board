@@ -3,14 +3,17 @@ import { pgQuery } from "@/lib/pg"
 import { boardDetailValidator } from "@/validators/board.validator"
 import { NextRequest } from "next/server"
 import { QueriesBoardDetails } from "./queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
 interface BoardDetailsProps {
 	params: Promise<{ board: string }>
 }
 
-export async function GET() {}
-
-export async function POST(req: NextRequest, { params }: BoardDetailsProps) {
+const createDetail = async (
+	req: NextRequest,
+	{ params }: BoardDetailsProps,
+) => {
 	try {
 		const { board } = await params
 		const json = await req.json()
@@ -36,3 +39,13 @@ export async function POST(req: NextRequest, { params }: BoardDetailsProps) {
 		return apiResponseError({ error })
 	}
 }
+
+export async function GET() {}
+
+export const POST = async (req: NextRequest, params: BoardDetailsProps) =>
+	hasAccess<BoardDetailsProps>({
+		method: createDetail,
+		permission: PERMISSIONS.CreateBoardDets.name,
+		params,
+		req,
+	})
