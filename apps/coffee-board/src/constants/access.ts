@@ -25,4 +25,8 @@ export const PERMISSIONS = Object.freeze({
 	DeleteCalendar: { id: 24, name: "Delete Calendar", action: "DELETE" },
 	ReadSettings: { id: 25, name: "Read Settings", action: "GET" },
 	UpdateSettings: { id: 26, name: "Update Settings", action: "POST" },
+	ReadTasks: { id: 27, name: "Read Tasks", action: "GET" },
+	CreateTasks: { id: 28, name: "Create Tasks", action: "POST" },
+	UpdateTasks: { id: 29, name: "Update Tasks", action: "PUT" },
+	DeleteTasks: { id: 30, name: "Delete Tasks", action: "DELETE" },
 })
