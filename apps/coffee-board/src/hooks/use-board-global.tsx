@@ -12,6 +12,8 @@ interface BoardContextType {
 	setSelectedBoard: (board: Board | null) => void
 	boardSelected: ComboboxState<Board>
 	QBoards: UseQueryResult<Board[]>
+	reOrderBoard: boolean
+	setReOrderBoard: (reOrderBoard: boolean) => void
 }
 
 const BoardContext = createContext<BoardContextType | undefined>(undefined)
@@ -26,6 +28,8 @@ export const useBoardGlobal = () => {
 
 export const BoardProvider = ({ children }: { children: React.ReactNode }) => {
 	const [selectedBoard, setSelectedBoard] = useState<Board | null>(null)
+	const [reOrderBoard, setReOrderBoard] = useState(false)
+
 	const boardSelected = useCombobox<Board>(null)
 	const pathname = usePathname()
 
@@ -55,6 +59,9 @@ export const BoardProvider = ({ children }: { children: React.ReactNode }) => {
 		setSelectedBoard,
 		boardSelected,
 		QBoards,
+
+		reOrderBoard,
+		setReOrderBoard,
 	}
 
 	return <BoardContext value={value}>{children}</BoardContext>

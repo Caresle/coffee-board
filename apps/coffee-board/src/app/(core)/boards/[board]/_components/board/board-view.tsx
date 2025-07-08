@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import BoardCard from "./board-card"
 import DeleteTaskModal from "../_modals/delete-task-modal"
 import TaskModal from "../_modals/task-modal"
@@ -27,6 +27,8 @@ import { BoardDetails } from "@/entities/board.entity"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import taskService from "@/services/task.service"
 import { queryKeys } from "@/constants/queryKeys"
+import { restrictToHorizontalAxis } from "@dnd-kit/modifiers"
+
 const BoardAddButton = dynamic(() => import("./board-add-button"), {
 	ssr: false,
 })
@@ -42,10 +44,18 @@ const SelectBoard = () => {
 
 export default function BoardView() {
 	const { isNewBoard } = useViewSection()
-	const { selectedBoard } = useBoardGlobal()
+	const { selectedBoard, reOrderBoard } = useBoardGlobal()
 	const [parent, setParent] = useState<string | null>(null)
 	const [draggedItem, setDraggedItem] = useState<Task | null>(null)
+	const [draggedBoard, setDraggedBoard] = useState<BoardDetails | null>(null)
 	const queryClient = useQueryClient()
+
+	const modifiers = useMemo(() => {
+		if (reOrderBoard) {
+			return [restrictToHorizontalAxis]
+		}
+		return []
+	}, [reOrderBoard])
 
 	// Sensors
 	const mouseSensor = useSensor(MouseSensor, {
@@ -77,6 +87,10 @@ export default function BoardView() {
 
 	const onDragStart = (event: DragStartEvent) => {
 		setParent(event.active.id as string)
+		if (reOrderBoard) {
+			setDraggedBoard(event.active.data.current as BoardDetails)
+			return
+		}
 		setDraggedItem(event.active.data.current as Task)
 	}
 
@@ -84,7 +98,22 @@ export default function BoardView() {
 		const { active, over } = event
 
 		setParent(null)
-		setDraggedItem(null)
+		if (reOrderBoard) {
+			setDraggedBoard(null)
+
+			if (!over) return
+
+			const boardDetail = over.data.current as BoardDetails
+
+			if (draggedBoard?.id === boardDetail.id) return
+
+			console.log("over", over)
+			return
+		}
+
+		if (!reOrderBoard) {
+			setDraggedItem(null)
+		}
 
 		if (!over) return
 
@@ -111,9 +140,13 @@ export default function BoardView() {
 				onDragStart={onDragStart}
 				onDragEnd={onDragEnd}
 				sensors={sensors}
+				modifiers={modifiers}
 			>
 				<DragOverlay>
-					<div>{parent && <TaskCardFloat task={draggedItem!} />}</div>
+					<div>
+						{!reOrderBoard && parent && <TaskCardFloat task={draggedItem!} />}
+					</div>
+					<div>{reOrderBoard && draggedBoard && <div>draggin board</div>}</div>
 				</DragOverlay>
 				<div className="flex-1 overflow-y-auto flex gap-2 overflow-x-auto">
 					{selectedBoard ? (
