@@ -28,11 +28,11 @@ values
 	(26, 'Update Settings', 'POST'),
 	(27, 'Read Tasks', 'GET'),
 	(28, 'Create Tasks', 'POST'),
-	(28, 'Update Tasks', 'PUT'),
-	(29, 'Delete Tasks', 'DELETE');
+	(29, 'Update Tasks', 'PUT'),
+	(30, 'Delete Tasks', 'DELETE');
 
 
-select setval('permissions_id_seq', 29);
+select setval('permissions_id_seq', 30);
 
 -- Admin role permissions
 insert into permissions_app_role(id_app_role, id_permission, allowed)
@@ -50,4 +50,5 @@ select
 	id,
 	1::bit
 from permissions
-and id <= 26;
+where
+	id <= 30;
