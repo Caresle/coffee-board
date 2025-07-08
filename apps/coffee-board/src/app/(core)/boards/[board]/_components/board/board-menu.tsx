@@ -14,6 +14,7 @@ import {
 	useDetailDeleteStore,
 } from "../../_states/boardDetails.state"
 import { useBoard } from "../../_hook/use-board"
+import { useBoardGlobal } from "@/hooks/use-board-global"
 
 const DeleteDetail = () => {
 	const { update } = useDetailDeleteStore.getState()
@@ -58,6 +59,16 @@ const ArchiveDetail = () => {
 	)
 }
 
+const ReOrder = () => {
+	const { setReOrderBoard } = useBoardGlobal()
+	return (
+		<DropdownMenuItem onClick={() => setReOrderBoard(true)}>
+			<Icons.Misc.Order />
+			Re Order
+		</DropdownMenuItem>
+	)
+}
+
 export default function BoardMenu() {
 	return (
 		<DropdownMenu>
@@ -67,6 +78,7 @@ export default function BoardMenu() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
+				<ReOrder />
 				<ArchiveDetail />
 				<DeleteDetail />
 			</DropdownMenuContent>
