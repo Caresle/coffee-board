@@ -4,12 +4,14 @@ import { calendarUpdateValidator } from "@/validators/calendar.validator"
 import { NextRequest } from "next/server"
 import { QueriesCalendar } from "../queries"
 import { pgQuery } from "@/lib/pg"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
 interface CalendarParams {
 	params: Promise<{ calendar: string }>
 }
 
-export async function PUT(req: NextRequest, { params }: CalendarParams) {
+const updateCalendar = async (req: NextRequest, { params }: CalendarParams) => {
 	try {
 		const { calendar } = await params
 		const token = await getTokenData()
@@ -41,7 +43,7 @@ export async function PUT(req: NextRequest, { params }: CalendarParams) {
 	}
 }
 
-export async function DELETE(_: NextRequest, { params }: CalendarParams) {
+const deleteCalendar = async (_: NextRequest, { params }: CalendarParams) => {
 	try {
 		const { calendar } = await params
 
@@ -59,3 +61,19 @@ export async function DELETE(_: NextRequest, { params }: CalendarParams) {
 		})
 	}
 }
+
+export const PUT = async (req: NextRequest, params: CalendarParams) =>
+	hasAccess<CalendarParams>({
+		method: updateCalendar,
+		permission: PERMISSIONS.UpdateCalendar.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: CalendarParams) =>
+	hasAccess<CalendarParams>({
+		method: deleteCalendar,
+		permission: PERMISSIONS.DeleteCalendar.name,
+		params,
+		req,
+	})
