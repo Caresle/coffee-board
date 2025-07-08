@@ -3,11 +3,14 @@ import { pgQuery } from "@/lib/pg"
 import { NextRequest } from "next/server"
 import { QueriesTaskHistory } from "../queries"
 import { taskHistoryUpdateValidator } from "@/validators/task.validator"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function PUT(
-	req: NextRequest,
-	{ params }: { params: Promise<{ task: string; history: string }> },
-) {
+interface HistoryParams {
+	params: Promise<{ task: string; history: string }>
+}
+
+const updateHistory = async (req: NextRequest, { params }: HistoryParams) => {
 	try {
 		const { task, history } = await params
 
@@ -36,10 +39,7 @@ export async function PUT(
 	}
 }
 
-export async function DELETE(
-	_: NextRequest,
-	{ params }: { params: Promise<{ task: string; history: string }> },
-) {
+const deleteHistory = async (_: NextRequest, { params }: HistoryParams) => {
 	try {
 		const { history } = await params
 
@@ -57,3 +57,19 @@ export async function DELETE(
 		})
 	}
 }
+
+export const PUT = async (req: NextRequest, params: HistoryParams) =>
+	hasAccess<HistoryParams>({
+		method: updateHistory,
+		permission: PERMISSIONS.UpdateTasks.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: HistoryParams) =>
+	hasAccess<HistoryParams>({
+		method: deleteHistory,
+		permission: PERMISSIONS.DeleteTasks.name,
+		params,
+		req,
+	})

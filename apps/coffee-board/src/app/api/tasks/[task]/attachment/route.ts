@@ -3,12 +3,17 @@ import fileManager from "@/helpers/file-manager"
 import { pgQuery } from "@/lib/pg"
 import { NextRequest } from "next/server"
 import { QueriesAttachment } from "./queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
 interface AttachmentParams {
 	params: Promise<{ task: string }>
 }
 
-export async function POST(req: NextRequest, { params }: AttachmentParams) {
+const createAttachment = async (
+	req: NextRequest,
+	{ params }: AttachmentParams,
+) => {
 	try {
 		const { task } = await params
 
@@ -46,3 +51,11 @@ export async function POST(req: NextRequest, { params }: AttachmentParams) {
 		return apiResponseError({ error })
 	}
 }
+
+export const POST = async (req: NextRequest, params: AttachmentParams) =>
+	hasAccess({
+		method: createAttachment,
+		permission: PERMISSIONS.CreateTasks.name,
+		req,
+		params,
+	})

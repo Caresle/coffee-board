@@ -1,5 +1,7 @@
+import { PERMISSIONS } from "@/constants/access"
 import { apiResponse, apiResponseError } from "@/helpers/api-response"
 import { pgQuery } from "@/lib/pg"
+import { hasAccess } from "@/middlewares/has-access"
 import { taskUpdateBoard } from "@/validators/task.validator"
 import { NextRequest } from "next/server"
 
@@ -13,7 +15,10 @@ const query = `
     WHERE id = $2
 `
 
-export async function PUT(req: NextRequest, { params }: TaskBoardUpdate) {
+const updateTaskBoard = async (
+	req: NextRequest,
+	{ params }: TaskBoardUpdate,
+) => {
 	try {
 		const { task } = await params
 
@@ -35,3 +40,11 @@ export async function PUT(req: NextRequest, { params }: TaskBoardUpdate) {
 		return apiResponseError({ error })
 	}
 }
+
+export const PUT = async (req: NextRequest, params: TaskBoardUpdate) =>
+	hasAccess({
+		method: updateTaskBoard,
+		permission: PERMISSIONS.UpdateTasks.name,
+		params,
+		req,
+	})

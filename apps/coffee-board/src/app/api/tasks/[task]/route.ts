@@ -4,11 +4,14 @@ import { pgQuery } from "@/lib/pg"
 import { taskUpdateValidator } from "@/validators/task.validator"
 import { NextRequest } from "next/server"
 import { QueriesTask } from "../queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET(
-	_: NextRequest,
-	{ params }: { params: Promise<{ task: string }> },
-) {
+interface TaskParams {
+	params: Promise<{ task: string }>
+}
+
+const getTask = async (_: NextRequest, { params }: TaskParams) => {
 	try {
 		const { task } = await params
 
@@ -21,10 +24,7 @@ export async function GET(
 	}
 }
 
-export async function PUT(
-	req: NextRequest,
-	{ params }: { params: Promise<{ task: string }> },
-) {
+const updateTask = async (req: NextRequest, { params }: TaskParams) => {
 	try {
 		const { task } = await params
 		const json = await req.json()
@@ -51,10 +51,7 @@ export async function PUT(
 	}
 }
 
-export async function DELETE(
-	_: NextRequest,
-	{ params }: { params: Promise<{ task: string }> },
-) {
+const deleteTask = async (_: NextRequest, { params }: TaskParams) => {
 	try {
 		const { task } = await params
 
@@ -66,3 +63,27 @@ export async function DELETE(
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async (req: NextRequest, params: TaskParams) =>
+	hasAccess<TaskParams>({
+		method: getTask,
+		permission: PERMISSIONS.ReadTasks.name,
+		params,
+		req,
+	})
+
+export const PUT = async (req: NextRequest, params: TaskParams) =>
+	hasAccess<TaskParams>({
+		method: updateTask,
+		permission: PERMISSIONS.UpdateTasks.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: TaskParams) =>
+	hasAccess<TaskParams>({
+		method: deleteTask,
+		permission: PERMISSIONS.DeleteTasks.name,
+		params,
+		req,
+	})

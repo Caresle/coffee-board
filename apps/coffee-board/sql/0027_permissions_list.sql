@@ -25,9 +25,14 @@ values
 	(23, 'Update Calendar', 'PUT'),
 	(24, 'Delete Calendar', 'DELETE'),
 	(25, 'Read Settings', 'GET'),
-	(26, 'Update Settings', 'POST');
+	(26, 'Update Settings', 'POST'),
+	(27, 'Read Tasks', 'GET'),
+	(28, 'Create Tasks', 'POST'),
+	(28, 'Update Tasks', 'PUT'),
+	(29, 'Delete Tasks', 'DELETE');
 
-select setval('permissions_id_seq', 26);
+
+select setval('permissions_id_seq', 29);
 
 -- Admin role permissions
 insert into permissions_app_role(id_app_role, id_permission, allowed)

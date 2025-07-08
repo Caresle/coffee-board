@@ -3,12 +3,14 @@ import { pgQuery } from "@/lib/pg"
 import { taskChecklistUpdateValidator } from "@/validators/task.validator"
 import { NextRequest } from "next/server"
 import { QueriesTaskChecklist } from "../queries"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
 interface CheckListParams {
 	params: Promise<{ task: string; checklist: string }>
 }
 
-export async function PUT(req: NextRequest, params: CheckListParams) {
+const updateChecklist = async (req: NextRequest, params: CheckListParams) => {
 	try {
 		const { checklist } = await params.params
 		const json = await req.json()
@@ -38,7 +40,7 @@ export async function PUT(req: NextRequest, params: CheckListParams) {
 	}
 }
 
-export async function DELETE(_: NextRequest, params: CheckListParams) {
+const deleteChecklist = async (_: NextRequest, params: CheckListParams) => {
 	try {
 		const { checklist } = await params.params
 
@@ -58,3 +60,19 @@ export async function DELETE(_: NextRequest, params: CheckListParams) {
 		})
 	}
 }
+
+export const PUT = async (req: NextRequest, params: CheckListParams) =>
+	hasAccess<CheckListParams>({
+		method: updateChecklist,
+		permission: PERMISSIONS.UpdateTasks.name,
+		params,
+		req,
+	})
+
+export const DELETE = async (req: NextRequest, params: CheckListParams) =>
+	hasAccess<CheckListParams>({
+		method: deleteChecklist,
+		permission: PERMISSIONS.DeleteTasks.name,
+		params,
+		req,
+	})
