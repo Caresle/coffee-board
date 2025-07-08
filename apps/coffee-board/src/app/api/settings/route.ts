@@ -1,8 +1,10 @@
 import { getTokenData } from "@/actions/get-token-data"
+import { PERMISSIONS } from "@/constants/access"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
 import { apiResponse, apiResponseError } from "@/helpers/api-response"
 import { appCache } from "@/lib/cache"
 import { pgQuery } from "@/lib/pg"
+import { hasAccess } from "@/middlewares/has-access"
 import { NextRequest } from "next/server"
 import { z } from "zod"
 
@@ -22,7 +24,7 @@ const validator = z.object({
 	emailNotifications: z.number().optional().default(0),
 })
 
-export async function GET() {
+const getSettings = async () => {
 	try {
 		const token = await getTokenData()
 
@@ -45,7 +47,7 @@ export async function GET() {
 	}
 }
 
-export async function POST(req: NextRequest) {
+const createSettings = async (req: NextRequest) => {
 	try {
 		const body = await req.json()
 		const token = await getTokenData()
@@ -73,3 +75,13 @@ export async function POST(req: NextRequest) {
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = async () =>
+	hasAccess({ method: getSettings, permission: PERMISSIONS.ReadSettings.name })
+
+export const POST = async (req: NextRequest) =>
+	hasAccess({
+		method: createSettings,
+		permission: PERMISSIONS.UpdateSettings.name,
+		req,
+	})
