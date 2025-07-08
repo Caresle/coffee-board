@@ -6,11 +6,17 @@ import { QueriesTag } from "../queries"
 import { tagUpdateValidator } from "@/validators/tag.validator"
 import { appCache } from "@/lib/cache"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET(
+interface TagParams {
+	params: Promise<{ tag: string }>
+}
+
+const getTag = async (
 	_: NextRequest,
-	{ params }: { params: Promise<{ tag: string }> },
-) {
+	{ params }: TagParams,
+): Promise<Response> => {
 	try {
 		const tag = (await params).tag
 		const data = await getTagById(+tag)
@@ -22,10 +28,7 @@ export async function GET(
 	}
 }
 
-export async function PUT(
-	req: NextRequest,
-	{ params }: { params: Promise<{ tag: string }> },
-) {
+const updateTag = async (req: NextRequest, { params }: TagParams) => {
 	try {
 		const tag = (await params).tag
 		const json = await req.json()
@@ -49,10 +52,7 @@ export async function PUT(
 	}
 }
 
-export async function DELETE(
-	_: NextRequest,
-	{ params }: { params: Promise<{ tag: string }> },
-) {
+const deleteTag = async (_: NextRequest, { params }: TagParams) => {
 	try {
 		const tag = (await params).tag
 		const value = (await pgQuery(QueriesTag.deleteTag, [tag]))?.[0]
@@ -64,3 +64,27 @@ export async function DELETE(
 		return apiResponseError({ error })
 	}
 }
+
+export const GET = (req: NextRequest, params: TagParams) =>
+	hasAccess<TagParams>({
+		method: getTag,
+		permission: PERMISSIONS.ReadTags.name,
+		params,
+		req,
+	})
+
+export const PUT = (req: NextRequest, params: TagParams) =>
+	hasAccess<TagParams>({
+		method: updateTag,
+		permission: PERMISSIONS.UpdateTag.name,
+		params,
+		req,
+	})
+
+export const DELETE = (req: NextRequest, params: TagParams) =>
+	hasAccess<TagParams>({
+		method: deleteTag,
+		permission: PERMISSIONS.DeleteTag.name,
+		params,
+		req,
+	})
