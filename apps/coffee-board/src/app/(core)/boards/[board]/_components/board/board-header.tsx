@@ -3,8 +3,24 @@ import { useBoard } from "../../_hook/use-board"
 import BoardMenu from "./board-menu"
 import BoardAddTaskButton from "./board-add-task-button"
 import { Button } from "@/components/ui/button"
+import { useBoardGlobal } from "@/hooks/use-board-global"
+import Icons from "@/components/shared/icons"
+
+const CancelReOrder = () => {
+	const { setReOrderBoard } = useBoardGlobal()
+	return (
+		<Button
+			variant={"ghost"}
+			className="w-fit"
+			onClick={() => setReOrderBoard(false)}
+		>
+			<Icons.Actions.Close />
+		</Button>
+	)
+}
 
 export default function BoardHeader() {
+	const { reOrderBoard } = useBoardGlobal()
 	const { boardDetail } = useBoard()
 
 	return (
@@ -18,8 +34,13 @@ export default function BoardHeader() {
 				</Button>
 			</div>
 			<div className="w-fit flex items-center">
-				<BoardMenu />
-				<BoardAddTaskButton />
+				{reOrderBoard && <CancelReOrder />}
+				{!reOrderBoard && (
+					<>
+						<BoardMenu />
+						<BoardAddTaskButton />
+					</>
+				)}
 			</div>
 		</div>
 	)
