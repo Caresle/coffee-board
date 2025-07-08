@@ -4,6 +4,7 @@ import {
 	LuArrowDownUp,
 	LuArrowLeft,
 	LuArrowLeftRight,
+	LuArrowRight,
 	LuBell,
 	LuBookText,
 	LuBox,
@@ -73,6 +74,7 @@ const Icons = {
 		FolderOpen: LuFolderOpen,
 		File: LuFile,
 		Logout: LuLogOut,
+		ArrowRight: LuArrowRight,
 		Order: LuArrowLeftRight,
 	},
 	Navbar: {
