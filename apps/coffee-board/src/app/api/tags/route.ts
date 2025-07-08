@@ -6,8 +6,10 @@ import { NextRequest } from "next/server"
 import { QueriesTag } from "./queries"
 import { appCache } from "@/lib/cache"
 import { CACHE_KEYS } from "@/constants/cacheKeys"
+import { hasAccess } from "@/middlewares/has-access"
+import { PERMISSIONS } from "@/constants/access"
 
-export async function GET() {
+const getTags = async () => {
 	try {
 		const hasCache = await appCache.get(CACHE_KEYS.tags)
 
@@ -22,7 +24,7 @@ export async function GET() {
 	}
 }
 
-export async function POST(req: NextRequest) {
+const createTag = async (req: NextRequest) => {
 	try {
 		const data = tagValidator.parse(await req.json())
 		const value = (
@@ -37,3 +39,14 @@ export async function POST(req: NextRequest) {
 		return apiResponseError({ error })
 	}
 }
+
+const GET = () =>
+	hasAccess({
+		permission: PERMISSIONS.ReadTags.name,
+		method: getTags,
+	})
+
+const POST = () =>
+	hasAccess({ permission: PERMISSIONS.CreateTag.name, method: createTag })
+
+export { GET, POST }
