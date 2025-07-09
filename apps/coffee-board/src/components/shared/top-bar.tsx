@@ -96,9 +96,24 @@ const UserSection = () => {
 export default function TopBar() {
 	return (
 		<nav className="bg-white p-2 flex items-center justify-between dark:bg-neutral-900">
-			<LogoSection />
-			<SearchButton />
-			<UserSection />
+			<div className="sm:hidden w-full flex items-center justify-between">
+				<Button variant={"outline"} size={"icon"}>
+					<Icons.Misc.Menu />
+				</Button>
+				<div className="flex items-center gap-2">
+					<Button size="icon" variant={"outline"}>
+						<Icons.Actions.Search />
+					</Button>
+					<Button size="icon" variant={"outline"}>
+						<Icons.Misc.Users />
+					</Button>
+				</div>
+			</div>
+			<div className="sm:flex items-center justify-between hidden w-full">
+				<LogoSection />
+				<SearchButton />
+				<UserSection />
+			</div>
 		</nav>
 	)
 }

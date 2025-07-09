@@ -89,7 +89,7 @@ export default function Sidebar() {
 	return (
 		<div
 			className={cn(
-				"bg-white border rounded-lg w-1/5 p-1 dark:bg-neutral-800",
+				"bg-white border rounded-lg w-1/5 p-1 dark:bg-neutral-800 hidden md:flex flex-col",
 				{
 					"w-fit": !isExpanded,
 				},
