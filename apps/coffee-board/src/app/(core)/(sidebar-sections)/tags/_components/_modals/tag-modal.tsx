@@ -33,6 +33,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 } from "@/components/ui/drawer"
+import { mediaQueries } from "@/constants/media-query"
 
 const TagForm = ({
 	mut,
@@ -59,7 +60,7 @@ const TagForm = ({
 export default function TagModal() {
 	const { show, update, isEdit, item } = useTagStore(state => state)
 	const queryClient = useQueryClient()
-	const isDesktop = useMediaQuery("(min-width: 768px)")
+	const isDesktop = useMediaQuery(mediaQueries.desktop)
 
 	const mut = useMutation({
 		mutationFn: (data: Tag) => {
