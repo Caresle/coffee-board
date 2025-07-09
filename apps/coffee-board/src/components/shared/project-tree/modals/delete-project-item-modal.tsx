@@ -21,8 +21,34 @@ export default function DeleteProjectItemModal() {
 
 	const mut = useMutation({
 		mutationFn: (id: number) => boardService.delete(id),
+		onMutate: async (id: number) => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.boards, { id: item.id_project }],
+			})
+			const previousData = queryClient.getQueryData<Board[]>([
+				queryKeys.boards,
+				{ id: item.id_project },
+			])
+
+			const newData = previousData?.filter(board => board.id !== id)
+
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: item.id_project }],
+				newData,
+			)
+
+			return { previousData }
+		},
 		onSuccess: () => {
 			update({ show: false, item: {} as Board })
+		},
+		onError: (err, id, context) => {
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: item.id_project }],
+				context?.previousData,
+			)
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: [queryKeys.boards, { id: item.id_project }],
 			})

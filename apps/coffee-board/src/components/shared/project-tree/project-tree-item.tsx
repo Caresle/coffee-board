@@ -22,6 +22,9 @@ import { FOCUS_IDS } from "@/constants/focus"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import boardService from "@/services/board.service"
 import { queryKeys } from "@/constants/queryKeys"
+import { toast } from "sonner"
+import { INVALID_ID } from "@/constants/invalid-id"
+import { cn } from "@/lib/utils"
 
 const TreeItemActions = () => {
 	const { update } = useTreeItemDeleteStore.getState()
@@ -68,7 +71,40 @@ const TreeItemRenaming = () => {
 
 	const mut = useMutation({
 		mutationFn: boardService.update,
+		onMutate: async (updated: Board) => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.boards, { id: board.id_project }],
+			})
+
+			const previousData = queryClient.getQueryData<Board[]>([
+				queryKeys.boards,
+				{ id: board.id_project },
+			])
+
+			const newData = previousData?.map(board => {
+				if (board.id === updated.id) {
+					return { ...board, ...updated }
+				}
+				return board
+			})
+
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: board.id_project }],
+				newData,
+			)
+
+			return { previousData }
+		},
 		onSuccess: () => {
+			toast.success("Board renamed successfully")
+		},
+		onError: (err, updated, context) => {
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: board.id_project }],
+				context?.previousData,
+			)
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: [queryKeys.boards, { id: board.id_project }],
 			})
@@ -111,6 +147,7 @@ const TreeItem = () => {
 	const router = useRouter()
 
 	const handleBoardClick = () => {
+		if (board.id === INVALID_ID.boardTreeItem) return
 		// Update the global board context
 		setSelectedBoard(board)
 		boardSelected.set(board)
@@ -129,7 +166,12 @@ const TreeItem = () => {
 					<div className="w-[1px] h-5 border border-slate-400 dark:border-neutral-700"></div>
 				</div>
 				<div
-					className="flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full"
+					className={cn(
+						"flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full",
+						{
+							"opacity-50": board.id === INVALID_ID.boardTreeItem,
+						},
+					)}
 					onClick={handleBoardClick}
 				>
 					<Icons.Misc.File className="size-5" />

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Icons from "../icons"
 import { queryKeys } from "@/constants/queryKeys"
+import { INVALID_ID } from "@/constants/invalid-id"
+import { toast } from "sonner"
 
 export default function AddBoardButton({ projectId }: { projectId: number }) {
 	const [isNew, setIsNew] = useState(false)
@@ -14,7 +16,35 @@ export default function AddBoardButton({ projectId }: { projectId: number }) {
 
 	const mut = useMutation({
 		mutationFn: (body: Omit<Board, "id">) => boardService.create(body),
+		onMutate: async (newBoard: Board) => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.boards, { id: projectId }],
+			})
+
+			const previousData = queryClient.getQueryData<Board[]>([
+				queryKeys.boards,
+				{ id: projectId },
+			])
+
+			const newData = [...(previousData ?? []), newBoard]
+
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: projectId }],
+				newData,
+			)
+
+			return { previousData }
+		},
 		onSuccess: () => {
+			toast.success("Board created successfully")
+		},
+		onError: (err, newBoard, context) => {
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: projectId }],
+				context?.previousData,
+			)
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: [queryKeys.boards, { id: projectId }],
 			})
@@ -36,7 +66,7 @@ export default function AddBoardButton({ projectId }: { projectId: number }) {
 		setIsNew(false)
 
 		const board: Board = {
-			id: 0,
+			id: INVALID_ID.boardTreeItem,
 			id_project: projectId,
 			name: boardName,
 			description: null,
