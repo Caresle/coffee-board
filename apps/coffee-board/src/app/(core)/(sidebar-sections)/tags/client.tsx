@@ -2,8 +2,6 @@
 
 import Icons from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
-import React from "react"
-import TagSection from "./_components/tag-section"
 import TagModal from "./_components/_modals/tag-modal"
 import { useTagStore } from "./_states/tag.state"
 import TagDeleteModal from "./_components/_modals/tag-delete-modal"

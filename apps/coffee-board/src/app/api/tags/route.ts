@@ -46,7 +46,7 @@ const GET = () =>
 		method: getTags,
 	})
 
-const POST = () =>
-	hasAccess({ permission: PERMISSIONS.CreateTag.name, method: createTag })
+const POST = (req: NextRequest) =>
+	hasAccess({ permission: PERMISSIONS.CreateTag.name, method: createTag, req })
 
 export { GET, POST }
