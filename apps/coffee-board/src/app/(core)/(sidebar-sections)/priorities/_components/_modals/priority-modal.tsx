@@ -12,16 +12,62 @@ import React from "react"
 import Icons from "@/components/shared/icons"
 import FormItem from "@/components/shared/form-item"
 import { Input } from "@/components/ui/input"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+	useMutation,
+	UseMutationResult,
+	useQueryClient,
+} from "@tanstack/react-query"
 import { toast } from "sonner"
 import { usePriorityStore } from "../../_states/priority.state"
 import priorityService from "@/services/priority.service"
 import { Priority } from "@/entities/priority.entity"
 import { queryKeys } from "@/constants/queryKeys"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { mediaQueries } from "@/constants/media-query"
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+} from "@/components/ui/drawer"
+
+const PriorityForm = ({
+	mut,
+}: {
+	mut: UseMutationResult<Priority | null, unknown, Priority, unknown>
+}) => {
+	const { update, item } = usePriorityStore(state => state)
+	return (
+		<form className="flex flex-col gap-2">
+			<FormItem title="Name">
+				<Input
+					disabled={mut.isPending}
+					placeholder="Name"
+					value={item?.name ?? ""}
+					onChange={e => update({ item: { ...item, name: e.target.value } })}
+				/>
+			</FormItem>
+			<FormItem title="Order">
+				<Input
+					disabled={mut.isPending}
+					placeholder="Order"
+					type="number"
+					min="0"
+					step={0.1}
+					value={item?.value ?? ""}
+					onChange={e => update({ item: { ...item, value: +e.target.value } })}
+				/>
+			</FormItem>
+		</form>
+	)
+}
 
 export default function PriorityModal() {
 	const { show, update, isEdit, item } = usePriorityStore(state => state)
 	const queryClient = useQueryClient()
+	const isDesktop = useMediaQuery(mediaQueries.desktop)
 
 	const mut = useMutation({
 		mutationFn: async (priority: Priority) => {
@@ -82,6 +128,32 @@ export default function PriorityModal() {
 		mut.mutate(item)
 	}
 
+	if (!isDesktop) {
+		return (
+			<Drawer open={show} onOpenChange={value => update({ show: value })}>
+				<DrawerContent>
+					<DrawerHeader>
+						<DrawerTitle className="flex gap-2 items-center justify-center">
+							<Icons.Misc.UpDown />
+							{isEdit ? "Edit Priority" : "Create Priority"}
+						</DrawerTitle>
+					</DrawerHeader>
+					<div className="px-2">
+						<PriorityForm mut={mut} />
+					</div>
+					<DrawerFooter>
+						<Button onClick={onSubmit} disabled={mut.isPending}>
+							Save
+						</Button>
+						<DrawerClose asChild>
+							<Button variant={"secondary"}>Cancel</Button>
+						</DrawerClose>
+					</DrawerFooter>
+				</DrawerContent>
+			</Drawer>
+		)
+	}
+
 	return (
 		<Dialog open={show} onOpenChange={value => update({ show: value })}>
 			<DialogContent className="max-w-none min-w-[35%]">
@@ -94,31 +166,7 @@ export default function PriorityModal() {
 						Create custom tags for your projects
 					</DialogDescription>
 				</DialogHeader>
-				<form className="flex flex-col gap-2">
-					<FormItem title="Name">
-						<Input
-							disabled={mut.isPending}
-							placeholder="Name"
-							value={item?.name ?? ""}
-							onChange={e =>
-								update({ item: { ...item, name: e.target.value } })
-							}
-						/>
-					</FormItem>
-					<FormItem title="Order">
-						<Input
-							disabled={mut.isPending}
-							placeholder="Order"
-							type="number"
-							min="0"
-							step={0.1}
-							value={item?.value ?? ""}
-							onChange={e =>
-								update({ item: { ...item, value: +e.target.value } })
-							}
-						/>
-					</FormItem>
-				</form>
+				<PriorityForm mut={mut} />
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button variant={"secondary"}>Cancel</Button>
