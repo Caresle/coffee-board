@@ -7,8 +7,10 @@ const query = `
     SELECT
         *
     FROM v_cf_boards
-    WHERE id_project = $1
-	and deleted = 0
+    WHERE
+		id_project = $1
+		and deleted = 0
+	order by id asc
 `
 
 export default async function getAllBoardsByProject(
