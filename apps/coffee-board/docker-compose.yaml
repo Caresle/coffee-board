@@ -19,8 +19,6 @@ services:
       - .env
     ports:
       - "${REDIS_PORT}:6379"
-    volumes:
-      - ./redis-data:/data
   coffe-board-mailpit:
     container_name: coffee-board-mailpit
     image: axllent/mailpit:v1.25
