@@ -31,7 +31,7 @@ export default function ProjectContainer() {
 			)}
 			{!isLoading && projects.length === 0 && <NoProjects />}
 			{!isLoading && projects.length > 0 && (
-				<div className="gap-2 overflow-y-auto p-2 grid grid-cols-3">
+				<div className="gap-2 overflow-y-auto p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
 					{projects.map(project => (
 						<ProjectProvider key={`project-${project.id}`} project={project}>
 							<ProjectCard />
