@@ -5,6 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import boardDetailsService from "@/services/boardDetails.service"
 import { useBoardGlobal } from "@/hooks/use-board-global"
 import { queryKeys } from "@/constants/queryKeys"
+import { Board, BoardDetails } from "@/entities/board.entity"
+import { INVALID_ID } from "@/constants/invalid-id"
 
 export default function BoardNewInput() {
 	const [name, setName] = useState("")
@@ -14,12 +16,36 @@ export default function BoardNewInput() {
 
 	const mut = useMutation({
 		mutationFn: boardDetailsService.create,
+		onMutate: async (newBoardDet: Omit<BoardDetails, "id">) => {
+			await queryClient.cancelQueries({
+				queryKey: [queryKeys.boards, { id: selectedBoard?.id_project }],
+			})
+
+			const previousData = queryClient.getQueryData<Board[]>([
+				queryKeys.boards,
+				{ id: selectedBoard?.id_project },
+			])
+
+			const newData = previousData?.map(board => {
+				if (board.id !== newBoardDet.id_board) return board
+
+				board.details = [
+					...board.details,
+					{ ...newBoardDet, id: INVALID_ID.boardColumnItem },
+				]
+				return board
+			})
+
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: selectedBoard?.id_project }],
+				newData,
+			)
+
+			return { previousData }
+		},
 		onSuccess: data => {
 			setIsNewBoard(false)
 			setName("")
-			queryClient.invalidateQueries({
-				queryKey: [queryKeys.boards, { id: selectedBoard?.id_project }],
-			})
 
 			const details = selectedBoard?.details || []
 
@@ -29,12 +55,20 @@ export default function BoardNewInput() {
 
 			if (!selectedBoard) return
 
-			console.log(selectedBoard)
-			console.log(newDetails)
-
 			setSelectedBoard({
 				...selectedBoard,
 				details: newDetails,
+			})
+		},
+		onError: (err, newBoard, context) => {
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: selectedBoard?.id_project }],
+				context?.previousData,
+			)
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({
+				queryKey: [queryKeys.boards, { id: selectedBoard?.id_project }],
 			})
 		},
 	})

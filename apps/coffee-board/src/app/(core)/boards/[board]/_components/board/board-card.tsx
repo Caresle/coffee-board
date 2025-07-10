@@ -7,6 +7,7 @@ import TaskCreateCard from "../task/task-create-card"
 import { useDraggable, useDroppable } from "@dnd-kit/core"
 import { cn } from "@/lib/utils"
 import { useBoardGlobal } from "@/hooks/use-board-global"
+import { INVALID_ID } from "@/constants/invalid-id"
 
 const NoTasks = () => {
 	return (
@@ -59,6 +60,7 @@ export default function BoardCard() {
 				"border p-2 bg-white rounded-lg flex flex-col gap-2 overflow-y-auto w-[300px] dark:bg-neutral-800 shrink-0",
 				{
 					"border-red-500": isOver,
+					"opacity-50": boardDetail.id === INVALID_ID.boardColumnItem,
 				},
 			)}
 		>
