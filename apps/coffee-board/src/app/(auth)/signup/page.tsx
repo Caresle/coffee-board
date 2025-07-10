@@ -59,7 +59,6 @@ export default function SignUp() {
 		}
 
 		if (form.password !== form.confirmPassword) {
-			console.log("Passwords do not match")
 			setErrors({
 				...errors,
 				confirmPassword: ["Passwords do not match"],

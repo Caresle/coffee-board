@@ -95,7 +95,6 @@ export default function PriorityModal() {
 				  })
 				: [...(previousPriorities ?? []), newPriority]
 
-			console.log(newPriorities)
 			queryClient.setQueryData<Priority[]>(
 				[queryKeys.priorities],
 				newPriorities,
