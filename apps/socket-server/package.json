@@ -9,6 +9,7 @@
     "build": "tsc",
     "start": "node build/index.js",
     "format": "biome format",
+    "docker:build": "docker build -t coffee-board-socket .",
     "lint": "biome lint",
     "clean": "biome clean"
   },
