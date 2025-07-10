@@ -14,6 +14,7 @@ import BoardView from "./_components/board/board-view"
 import CalendarView from "./_components/calendar/calendar-view"
 import { Board } from "@/entities/board.entity"
 import DeleteProjectItemModal from "@/components/shared/project-tree/modals/delete-project-item-modal"
+import { Project } from "@/entities/project.entity"
 
 const ViewDisplay = () => {
 	const { section } = useViewSection()
@@ -33,13 +34,19 @@ const ViewDisplay = () => {
 
 export default function Client({
 	initialBoards = [],
+	initialProject,
 	boardId,
 }: {
 	initialBoards?: Board[]
+	initialProject: Project
 	boardId: number
 }) {
 	return (
-		<ViewSectionProvider initialBoards={initialBoards} boardId={boardId}>
+		<ViewSectionProvider
+			initialBoards={initialBoards}
+			boardId={boardId}
+			initialProject={initialProject}
+		>
 			<DeleteProjectItemModal />
 
 			<div className="flex flex-col gap-2 flex-1 overflow-y-auto p-2">
