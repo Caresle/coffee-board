@@ -22,8 +22,30 @@ export default function DeleteTaskModal() {
 
 	const mut = useMutation({
 		mutationFn: taskService.delete,
+		onMutate: async (id: number) => {
+			const queryKey = [queryKeys.tasks, { id: item.id_board_det }]
+			await queryClient.cancelQueries({
+				queryKey,
+			})
+
+			const previousData = queryClient.getQueryData<Task[]>(queryKey)
+
+			const newData = previousData?.filter(task => task.id !== id)
+
+			queryClient.setQueryData<Task[]>(queryKey, newData)
+
+			return { previousData }
+		},
 		onSuccess: () => {
 			update({ show: false, item: {} as Task })
+		},
+		onError: (err, id, context) => {
+			queryClient.setQueryData<Task[]>(
+				[queryKeys.tasks, { id: item.id_board_det }],
+				context?.previousData,
+			)
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: [queryKeys.tasks, { id: item.id_board_det }],
 			})

@@ -1,3 +1,4 @@
+import { INVALID_ID } from "@/constants/invalid-id"
 import { Priority } from "./priority.entity"
 import { Tag } from "./tag.entity"
 
@@ -17,6 +18,24 @@ export interface Task {
 	checklist: Array<TaskCheckList> | null
 	history: Array<TaskHistory> | null
 	attachments: []
+}
+
+export const EmptyTask: Task = {
+	id: INVALID_ID.taskInputId,
+	id_board_det: INVALID_ID.boardColumnItem,
+	name: "",
+	description: null,
+	date_begin: null,
+	date_end: null,
+	priority: {} as Priority,
+	tags: [],
+	checklist: null,
+	history: null,
+	attachments: [],
+	time_estimation: null,
+	created_at: new Date(),
+	id_priority: null,
+	id_assigned: null,
 }
 
 export type TaskQuick = Pick<Task, "name" | "id_board_det">
