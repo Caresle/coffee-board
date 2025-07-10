@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import taskService from "@/services/task.service"
 import { queryKeys } from "@/constants/queryKeys"
+import { EmptyTask, Task, TaskQuick } from "@/entities/task.entity"
 
 export default function TaskCreateCard() {
 	const { setIsNewTask, boardDetail } = useBoard()
@@ -12,7 +13,42 @@ export default function TaskCreateCard() {
 
 	const mut = useMutation({
 		mutationFn: taskService.createQuickTask,
+		onMutate: async (newTask: TaskQuick) => {
+			const queryKey = [
+				queryKeys.tasks,
+				{
+					id: boardDetail.id,
+				},
+			]
+
+			await queryClient.cancelQueries({
+				queryKey,
+			})
+
+			const previousData = queryClient.getQueryData<Task[]>(queryKey)
+
+			const newData: Task[] = [
+				...(previousData ?? []),
+				{
+					...EmptyTask,
+					...newTask,
+				},
+			]
+
+			queryClient.setQueryData<Task[]>(queryKey, newData)
+
+			return { previousData }
+		},
+		onError: (err, newTask, context) => {
+			queryClient.setQueryData<Task[]>(
+				[queryKeys.tasks, { id: boardDetail.id }],
+				context?.previousData,
+			)
+		},
 		onSuccess: () => {
+			setIsNewTask(false)
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: [
 					queryKeys.tasks,
@@ -21,7 +57,6 @@ export default function TaskCreateCard() {
 					},
 				],
 			})
-			setIsNewTask(false)
 		},
 	})
 
