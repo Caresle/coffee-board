@@ -12,7 +12,7 @@ import React from "react"
 import Icons from "@/components/shared/icons"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useDetailDeleteStore } from "../../../_states/boardDetails.state"
-import { BoardDetails } from "@/entities/board.entity"
+import { Board, BoardDetails } from "@/entities/board.entity"
 import { queryKeys } from "@/constants/queryKeys"
 import { useBoardGlobal } from "@/hooks/use-board-global"
 import boardDetailsService from "@/services/boardDetails.service"
@@ -24,8 +24,36 @@ export default function DeleteBoardModal() {
 
 	const mut = useMutation({
 		mutationFn: boardDetailsService.delete,
+		onMutate: async (id: number) => {
+			const queryKey = [queryKeys.boards, { id: selectedBoard?.id_project }]
+			await queryClient.cancelQueries({
+				queryKey,
+			})
+
+			const previousData = queryClient.getQueryData<Board[]>(queryKey)
+
+			const newBoards = previousData?.map(board => {
+				if (board.id !== item.id_board) return board
+
+				board.details = board.details.filter(boardDet => boardDet.id !== id)
+
+				return board
+			})
+
+			queryClient.setQueryData<Board[]>(queryKey, newBoards)
+
+			return { previousData }
+		},
 		onSuccess: () => {
 			update({ show: false, item: {} as BoardDetails })
+		},
+		onError: (err, id, context) => {
+			queryClient.setQueryData<Board[]>(
+				[queryKeys.boards, { id: selectedBoard?.id_project }],
+				context?.previousData,
+			)
+		},
+		onSettled: () => {
 			queryClient.invalidateQueries({
 				queryKey: [queryKeys.boards, { id: selectedBoard?.id_project }],
 			})

@@ -30,7 +30,7 @@ export default function BoardNewInput() {
 				if (board.id !== newBoardDet.id_board) return board
 
 				board.details = [
-					...board.details,
+					...(board.details ?? []),
 					{ ...newBoardDet, id: INVALID_ID.boardColumnItem },
 				]
 				return board
