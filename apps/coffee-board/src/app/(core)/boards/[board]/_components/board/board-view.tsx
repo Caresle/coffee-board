@@ -71,6 +71,7 @@ export default function BoardView() {
 			id_task: number
 			id_board_det: number
 			id_board_original: number
+			task_order: number | null
 		}) => {
 			await taskService.updateBoard(body)
 			return body
@@ -117,15 +118,33 @@ export default function BoardView() {
 
 		if (!over) return
 
+		console.log(active.data.current)
+		console.log(over.data.current)
+		const overTask = over.data.current
+		let taskOrder = null
+		let boardDetailId = null
+
+		if (overTask?.sortable?.containerId) {
+			const overTask = over.data.current as Task
+
+			taskOrder = (overTask.task_order ?? 1) - 1
+			boardDetailId = overTask.id_board_det
+		}
+
+		console.log("continue")
+
 		const boardDetail = over.data.current as BoardDetails
 		const task = active.data.current as Task
 
 		const body = {
 			id_task: task.id,
 			id_board_original: task.id_board_det,
-			id_board_det: boardDetail.id,
+			id_board_det: boardDetailId ?? boardDetail.id,
+			task_order: taskOrder ?? task.task_order ?? null,
 		}
 
+		console.log("mutate")
+		console.log(body)
 		mut.mutate(body)
 	}
 

@@ -37,7 +37,6 @@ create or replace view v_cf_tasks as (
 			end priority
 		from tasks t
 		left join priorities p on p.id = t.id_priority
-		order by t.task_order asc
 	), tasks_tags as (
 		select
 			th.id id_task,
@@ -78,4 +77,5 @@ create or replace view v_cf_tasks as (
 	left join v_cf_tasks_checklist tc on tc.id_task = h.id
 	left join tasks_history_ds th on th.id_task = h.id
 	left join v_cf_tasks_attachments tca on tca.id_task = h.id
+	order by h.task_order asc
 );
