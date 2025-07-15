@@ -18,6 +18,7 @@ export interface Task {
 	checklist: Array<TaskCheckList> | null
 	history: Array<TaskHistory> | null
 	attachments: []
+	task_order: number | null
 }
 
 export const EmptyTask: Task = {
@@ -36,6 +37,7 @@ export const EmptyTask: Task = {
 	created_at: new Date(),
 	id_priority: null,
 	id_assigned: null,
+	task_order: null,
 }
 
 export type TaskQuick = Pick<Task, "name" | "id_board_det">

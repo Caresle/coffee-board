@@ -170,6 +170,8 @@ const TreeItem = () => {
 						"flex items-center gap-2 p-1 transiton-all hover:bg-slate-100 dark:hover:bg-neutral-700 rounded-sm cursor-pointer w-full",
 						{
 							"opacity-50": board.id === INVALID_ID.boardTreeItem,
+							"text-orange-500 bg-orange-50 rounded-lg dark:bg-orange-950 dark:text-orange-300 transition-all hover:bg-orange-100 dark:hover:bg-orange-900":
+								board.id === boardSelected.value?.id,
 						},
 					)}
 					onClick={handleBoardClick}

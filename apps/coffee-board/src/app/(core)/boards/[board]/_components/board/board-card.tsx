@@ -8,6 +8,7 @@ import { useDraggable, useDroppable } from "@dnd-kit/core"
 import { cn } from "@/lib/utils"
 import { useBoardGlobal } from "@/hooks/use-board-global"
 import { INVALID_ID } from "@/constants/invalid-id"
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 
 const NoTasks = () => {
 	return (
@@ -64,38 +65,40 @@ export default function BoardCard() {
 				},
 			)}
 		>
-			<div
-				{...attributes}
-				{...listeners}
-				ref={setNodeRefDraggable}
-				className="flex flex-1 flex-col gap-1"
-			>
-				<BoardHeader />
-
+			<SortableContext items={tasks} strategy={verticalListSortingStrategy}>
 				<div
-					ref={setNodeRef}
-					className={cn(
-						"flex flex-col gap-2 overflow-y-auto flex-1 bg-slate-100 p-2 rounded-lg dark:bg-neutral-900",
-						{
-							"opacity-50": reOrderBoard,
-						},
-					)}
+					{...attributes}
+					{...listeners}
+					ref={setNodeRefDraggable}
+					className="flex flex-1 flex-col gap-1"
 				>
-					{isNewTask && <TaskCreateCard />}
-					{QTasks.isLoading && <Loading />}
-					{!QTasks.isLoading && tasks.length === 0 && <NoTasks />}
-					{!QTasks.isLoading &&
-						tasks.length > 0 &&
-						tasks.map((task, index) => (
-							<TaskProvider
-								key={`task-${task.id}-${task.id_board_det}-${index}`}
-								task={task}
-							>
-								<TaskCard />
-							</TaskProvider>
-						))}
+					<BoardHeader />
+
+					<div
+						ref={setNodeRef}
+						className={cn(
+							"flex flex-col gap-2 overflow-y-auto flex-1 bg-slate-100 p-2 rounded-lg dark:bg-neutral-900",
+							{
+								"opacity-50": reOrderBoard,
+							},
+						)}
+					>
+						{isNewTask && <TaskCreateCard />}
+						{QTasks.isLoading && <Loading />}
+						{!QTasks.isLoading && tasks.length === 0 && <NoTasks />}
+						{!QTasks.isLoading &&
+							tasks.length > 0 &&
+							tasks.map((task, index) => (
+								<TaskProvider
+									key={`task-${task.id}-${task.id_board_det}-${index}`}
+									task={task}
+								>
+									<TaskCard />
+								</TaskProvider>
+							))}
+					</div>
 				</div>
-			</div>
+			</SortableContext>
 		</div>
 	)
 }

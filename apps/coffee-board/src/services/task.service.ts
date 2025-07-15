@@ -159,6 +159,7 @@ class TaskService implements TaskDatasource {
 	async updateBoard(body: {
 		id_task: number
 		id_board_det: number
+		task_order: number | null
 	}): Promise<void> {
 		try {
 			const res = await axiosInstance.put(

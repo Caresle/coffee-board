@@ -2,9 +2,12 @@ import Icons from "@/components/shared/icons"
 import { Button } from "@/components/ui/button"
 import React from "react"
 import { useViewSection, VIEW_SECTION } from "../_hook/use-view-section"
+import { useBoardGlobal } from "@/hooks/use-board-global"
+import TooltipBasic from "@/components/shared/tooltip-basic"
 
 export default function FilterDisplaySection() {
 	const { section, setSection } = useViewSection()
+	const { boardSelected } = useBoardGlobal()
 
 	const changeSection = (section: string) => {
 		setSection(section)
@@ -50,6 +53,12 @@ export default function FilterDisplaySection() {
 				<Icons.Misc.Calendar />
 				Calendar
 			</Button>
+
+			<TooltipBasic title="Selected board to view tasks">
+				<Button variant={boardSelected.value ? "ghost-primary" : "ghost"}>
+					{boardSelected.value?.name || "Select a board view"}
+				</Button>
+			</TooltipBasic>
 		</div>
 	)
 }
