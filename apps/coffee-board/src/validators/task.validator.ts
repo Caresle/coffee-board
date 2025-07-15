@@ -49,4 +49,5 @@ export const taskCheckListItemValidator = z.object({
 export const taskUpdateBoard = z.object({
 	id_task: z.number({ coerce: true }),
 	id_board_det: z.number({ coerce: true }),
+	task_order: z.nullable(z.number({ coerce: true })).default(null),
 })

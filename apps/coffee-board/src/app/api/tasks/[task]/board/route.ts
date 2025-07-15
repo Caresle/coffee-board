@@ -11,8 +11,9 @@ interface TaskBoardUpdate {
 
 const query = `
     UPDATE tasks
-    SET id_board_det = $1
-    WHERE id = $2
+    SET id_board_det = $1,
+		task_order = COALESCE($2, task_order)
+    WHERE id = $3
 `
 
 const updateTaskBoard = async (
@@ -29,7 +30,11 @@ const updateTaskBoard = async (
 			...json,
 		})
 
-		await pgQuery(query, [validated.id_board_det, validated.id_task])
+		await pgQuery(query, [
+			validated.id_board_det,
+			validated.task_order,
+			validated.id_task,
+		])
 
 		return apiResponse({
 			data: validated,
